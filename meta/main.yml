@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: k8s
+  namespace: nephelaiio
+  author: nephelaiio
+  description: Ansible role to bootstrap k8s cluster deployment
+  license: MIT
+  min_ansible_version: 2.8
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags: ['k8s']
+
+dependencies:
+  - nephelaiio.plugins

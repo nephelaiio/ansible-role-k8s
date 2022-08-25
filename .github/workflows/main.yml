@@ -1,0 +1,82 @@
+---
+name: Molecule
+
+on:
+
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 5 * * 5"
+
+defaults:
+
+  run:
+    working-directory: 'nephelaiio.k8s'
+
+jobs:
+
+  lint:
+
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: check out the codebase
+        uses: actions/checkout@v2
+        with:
+          path: 'nephelaiio.k8s'
+
+      - name: set up python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: install poetry
+        run: pip3 install poetry
+
+      - name: install pips
+        run: poetry install
+
+      - name: lint code
+        run: |
+          set -e
+          poetry run yamllint .
+          poetry ansible-lint .
+
+  molecule:
+
+    name: molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - ubuntu2204
+          - ubuntu2004
+          - debian11
+          - debian10
+          - centos7
+    steps:
+      - name: check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'nephelaiio.k8s'
+
+      - name: set up python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: install poetry
+        run: pip3 install poetry
+
+      - name: install pips
+        run: poetry install
+
+      - name: run molecule tests.
+        run: poetry run molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DOCKER_IMAGE: ${{ matrix.image }}

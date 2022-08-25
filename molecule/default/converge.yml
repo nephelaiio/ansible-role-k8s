@@ -1,0 +1,13 @@
+---
+- name: converge
+
+  hosts: localhost
+
+  vars:
+
+    k8s_kubeconfig: "/tmp/config.kind.molecule"
+
+  roles:
+
+    - nephelaiio.plugins
+    - nephelaiio.k8s
