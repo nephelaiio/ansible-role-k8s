@@ -23,7 +23,6 @@ The below requirements are needed on the host that executes this module.
 
 * kubernetes = "^24.2.0"
 * openshift = "^0.13.1"
-* github3.py = "^3.2.0"
 
 ### Ansible
 
