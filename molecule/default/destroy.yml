@@ -3,56 +3,20 @@
 
   hosts: localhost
 
-  connection: local
+  gather_facts: false
 
-  gather_facts: true
-
-  vars:
-
-    k8s_kubeconfig: "/tmp/config.kind.molecule"
+  vars_files: ../vars/shared.yml
 
   tasks:
 
-    - block:
+    - name: list kind clusters
+      ansible.builtin.command: >-
+        {{ _kind_bin }} get clusters -q
+      register: kind_cluster_query
+      changed_when: false
 
-        - name: create temporary directory
-          local_action:
-            module: ansible.builtin.tempfile
-            state: directory
-            prefix: kind
-          register: tmpdir
-          changed_when: false
-
-        - block:
-
-            - name: query kind releases
-              ansible.builtin.uri:
-                url: https://api.github.com/repos/kubernetes-sigs/kind/releases/latest
-              register: kind_release_query
-
-            - name: set kind release target
-              ansible.builtin.set_fact:
-                kind_release: "{{ kind_release_query.json.name }}"
-
-          when: kind_release is not defined
-
-        - name: download kind executable
-          ansible.builtin.get_url:
-            url: "https://kind.sigs.k8s.io/dl/{{ kind_release.tag }}/kind-{{ ansible_system }}-amd64"
-            dest: "{{ tmpdir.path }}/kind"
-            mode: 0777
-          changed_when: false
-
-        - name: deploy kind cluster
-          ansible.builtin.shell: >-
-            {{ _bin }} get clusters | grep molecule &&
-            {{ _bin }} delete cluster --name molecule
-          vars:
-            _bin: "{{ tmpdir.path }}/kind"
-
-      always:
-
-        - name: cleanup temp files
-          ansible.builtin.file:
-            state: absent
-            path: "{{ tmpdir.path }}"
+    - name: destroy kind cluster
+      ansible.builtin.shell: >-
+        {{ _kind_bin }} get clusters | grep molecule &&
+        {{ _kind_bin }} delete cluster --name {{ _cluster_name }}
+      when: _cluster_name in kind_cluster_query.stdout_lines

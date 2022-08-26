@@ -1,0 +1,3 @@
+---
+k8s_deployment_prefix: ""
+k8s_kubeconfig: "~/.kube/config"

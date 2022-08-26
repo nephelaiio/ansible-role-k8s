@@ -1,0 +1,34 @@
+---
+- name: query argocd-repo-server definition
+  set_fact:
+    _reposerver_def: "{{ _reposerver_query | first }}"
+  vars:
+    _reposerver_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Deployment',
+        namespace=k8s_argocd_namespace,
+        resource_name='argocd-repo-server',
+        kubeconfig=_kubeconfig
+      )
+    }}"
+  when: k8s_kubeconfig is defined
+
+- name: record argocd deployment env vars
+  set_fact:
+    argocd_env: "{{ _argocd_env }}"
+    argocd_env_exec_item: "{{ _argocd_env | selectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
+  vars:
+    _argocd_env: "{{ _reposerver_def.spec.template.spec.containers[0].env }}"
+
+- name: fail argocd exec timeout presence check
+  fail:
+    msg: "env var ARGOCD_EXEC_TIMEOUT is not set"
+  when: argocd_env_exec_item | length == 0
+
+- name: fail argocd exec timeout value check
+  fail:
+    msg: "env var ARGOCD_EXEC_TIMEOUT is not set correctly ({{ argocd_env_exec_value }})"
+  vars:
+    argocd_env_exec_value: "{{ argocd_env_exec_item[0].value }}"
+  when: argocd_env_exec_value != k8s_argocd_exec_timeout

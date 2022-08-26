@@ -1,0 +1,25 @@
+---
+- name: verify
+
+  hosts: all
+
+  gather_facts: false
+
+  vars_files: ../vars/shared.yml
+
+  roles:
+
+    - nephelaiio.plugins
+
+  tasks:
+
+    - name: mutate deployment parameters
+      set_fact:
+        k8s_argocd_exec_timeout: 2m
+
+    - name: mutate deployment
+      include_role:
+        name: nephelaiio.k8s
+
+    - name: include argocd checks
+      include_tasks: verify/argocd.yml

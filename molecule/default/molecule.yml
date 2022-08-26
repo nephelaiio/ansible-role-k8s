@@ -11,5 +11,54 @@ driver:
   name: delegated
 provisioner:
   name: ansible
+  inventory:
+    hosts:
+      all:
+        vars:
+          ansible_connection: local
+          ansible_python_interpreter: python
+          _basedir: ${MOLECULE_EPHEMERAL_DIRECTORY}
+          k8s_kubeconfig: "{{ _kubeconfig }}"
+          k8s_helm_bin: "{{ _helm_bin }}"
+          k8s_argocd_chart_ha: false
 verifier:
   name: ansible
+scenario:
+  create_sequence:
+    - dependency
+    - prepare
+    - create
+  check_sequence:
+    - dependency
+    - cleanup
+    - prepare
+    - destroy
+    - create
+    - converge
+    - check
+    - destroy
+  converge_sequence:
+    - dependency
+    - prepare
+    - create
+    - converge
+  destroy_sequence:
+    - dependency
+    - cleanup
+    - prepare
+    - destroy
+  test_sequence:
+    - dependency
+    - lint
+    - cleanup
+    - prepare
+    - destroy
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - converge
+    - verify
+    - side_effect
+    - cleanup
+    - destroy

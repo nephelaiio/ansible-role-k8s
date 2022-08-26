@@ -2,7 +2,7 @@
 - name: install argocd chart
   kubernetes.core.helm:
     name: "{{ k8s_deployment_prefix }}argocd"
-    chart_ref: argocd
+    chart_ref: argo-cd
     chart_repo_url: "{{ k8s_argocd_chart_url }}"
     chart_version: "{{ k8s_argocd_chart_release }}"
     release_namespace: "{{ k8s_argocd_namespace }}"
@@ -10,32 +10,59 @@
     state: "{{ k8s_argocd_state }}"
     wait: yes
     wait_timeout: 5m
-    values: "{{ k8s_argocd_chart_values if k8s_argocd_chart_customiz else omit }}"
+    values: "{{ k8s_argocd_chart_ha_values if k8s_argocd_chart_ha else omit }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ k8s_helm_bin | default(omit) }}"
 
-- fail:
+- name: query argocd-repo-server definition
+  set_fact:
+    _reposerver_def: "{{ _reposerver_query | first }}"
+  vars:
+    _reposerver_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Deployment',
+        namespace=k8s_argocd_namespace,
+        resource_name='argocd-repo-server',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  when: k8s_kubeconfig is defined
+
+- name: query argocd-repo-server definition
+  set_fact:
+    _reposerver_def: "{{ _reposerver_query | first }}"
+  vars:
+    _reposerver_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Deployment',
+        namespace=k8s_argocd_namespace,
+        resource_name='argocd-repo-server'
+      )
+    }}"
+
+  when: k8s_kubeconfig is not defined
 
 - name: patch argocd reposerver deployment
   kubernetes.core.k8s:
     state: present
     definition: "{{ _reposerver_patched }}"
-    namespace: "{{ argocd_namespace }}"
+    namespace: "{{ k8s_argocd_namespace }}"
     force: yes
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
   vars:
-    _manifests_yaml: "{{ argocd_manifests | map('from_yaml') }}"
-    _deployments_yaml: "{{ _manifests_yaml | selectattr('kind', 'equalto', 'Deployment') }}"
-    _reposerver_yaml: "{{ _deployments_yaml | selectattr('metadata.name', 'equalto', 'argocd-repo-server') | first }}"
-    _reposerver_container: "{{ _reposerver_yaml['spec']['template']['spec']['containers'][0] }}"
+    _reposerver_container: "{{ _reposerver_def['spec']['template']['spec']['containers'][0] }}"
     _reposerver_envnew:
       name: ARGOCD_EXEC_TIMEOUT
-      value: 3m
+      value: "{{ k8s_argocd_exec_timeout }}"
+    _reposerver_envold: "{{ _reposerver_container['env'] | rejectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
     _reposerver_envvars:
-      env: "{{ _reposerver_container['env'] + [_reposerver_envnew] }}"
+      env: "{{ _reposerver_envold + [_reposerver_envnew] }}"
     _reposerver_patch:
       spec:
         template:
           spec:
             containers:
               - "{{ _reposerver_container | combine(_reposerver_envvars) }}"
-    _reposerver_patched: "{{ _reposerver_yaml | combine(_reposerver_patch, recursive=True) }}"
-  changed_when: false
+    _reposerver_patched: "{{ _reposerver_def | combine(_reposerver_patch, recursive=True) }}"

@@ -3,11 +3,23 @@
 
   hosts: localhost
 
-  vars:
+  gather_facts: false
 
-    k8s_kubeconfig: "/tmp/config.kind.molecule"
+  vars_files: ../vars/shared.yml
 
   roles:
 
     - nephelaiio.plugins
     - nephelaiio.k8s
+
+  pre_tasks:
+
+    - name: show kubeconfig debug info
+      debug:
+        msg: >-
+          using kubeconfig at {{ k8s_kubeconfig }}
+
+    - name: show helm debug info
+      debug:
+        msg: >-
+          using helm bin at {{ k8s_helm_bin }}
