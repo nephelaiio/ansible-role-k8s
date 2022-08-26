@@ -3,6 +3,3 @@ _cluster_name: molecule
 _kubeconfig: "{{ _basedir }}/config"
 _kind_bin: "{{ _basedir }}/kind"
 _helm_bin: "{{ _basedir }}/helm"
-
-k8s_argocd_namespace: argocd
-k8s_argocd_exec_timeout: 2m

@@ -1,6 +1,6 @@
 # nephelaiio.k8s
 
-[![Build Status](https://github.com/nephelaiio/ansible-role-k8s/workflows/CI/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
+[![Build Status](https://github.com/nephelaiio/ansible-role-k8s/workflows/Molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s.vim-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to install and configure k8s
@@ -11,28 +11,45 @@ Please refer to the [defaults file](/defaults/main.yml) for an up to date list o
 
 ## Dependencies
 
-By default this role does not depend on any external roles. If any such dependency is required please [add them](/meta/main.yml) according to [the documentation](http://docs.ansible.com/ansible/playbooks_roles.html#role-dependencies)
+### Python
+
+The below requirements are needed on the host that executes this module.
+
+* netaddr = "^0.8.0"
+* kubernetes = "^24.2.0"
+* openshift = "^0.13.1"
+* github3.py = "^3.2.0"
+
+### Ansible
+
+The below pyhton roles are needed on the host that executes this module:
+
+* nephelaiio.plugins
 
 ## Example Playbook
 
-- hosts: servers
+``` yaml
+---
+- name: Deploy local kind cluster
+
+  hosts: localhost
+
+  gather_facts: false
+  
   roles:
-     - role: nephelaiio.k8s
-       k8s_package_state: latest
+
+    - nephelaiio.plugins
+    - nephelaiio.kind
+    - nephelaiio.k8s
+
+```
 
 ## Testing
 
-Please make sure your environment has [docker](https://www.docker.com) installed in order to run role validation tests. Additional python dependencies are listed in the [requirements file](https://github.com/nephelaiio/ansible-role-requirements/blob/master/requirements.txt)
+Please make sure your environment has [docker](https://www.docker.com) installed; then test the role from the project root using the following commands
 
-Role is tested against the following distributions (docker images):
-
-  * Ubuntu Focal
-  * Ubuntu Bionic
-  * Ubuntu Xenial
-  * CentOS 7
-  * Debian Buster
-
-You can test the role directly from sources using command ` molecule test `
+* ` poetry instasll`
+* ` poetry run molecule test `
 
 ## License
 

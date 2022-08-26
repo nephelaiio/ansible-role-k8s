@@ -8,6 +8,8 @@ authors = ["nephelaiio"]
 python = "^3.8"
 netaddr = "^0.8.0"
 kubernetes = "^24.2.0"
+openshift = "^0.13.1"
+"github3.py" = "^3.2.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"
@@ -19,10 +21,6 @@ pytest = "^7.1.2"
 cookiecutter = "^2.1.1"
 molecule-docker = "^2.0.0"
 molecule = "^4.0.1"
-netaddr = "^0.8.0"
-openshift = "^0.13.1"
-kubernetes = "^24.2.0"
-"github3.py" = "^3.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

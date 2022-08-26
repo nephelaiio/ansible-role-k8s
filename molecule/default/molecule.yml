@@ -21,6 +21,8 @@ provisioner:
           k8s_kubeconfig: "{{ _kubeconfig }}"
           k8s_helm_bin: "{{ _helm_bin }}"
           k8s_argocd_chart_ha: false
+          k8s_argocd_namespace: argocd
+          k8s_argocd_exec_timeout: 2m
 verifier:
   name: ansible
 scenario:
