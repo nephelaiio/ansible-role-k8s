@@ -14,6 +14,7 @@ Please refer to the [defaults file](/defaults/main.yml) for an up to date list o
 ### System
 
 The below requirements are needed on the host that executes this module.
+* Linux 64 bit OS
 * kubectl binary is available on PATH
 
 ### Python
