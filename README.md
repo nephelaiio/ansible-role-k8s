@@ -11,18 +11,22 @@ Please refer to the [defaults file](/defaults/main.yml) for an up to date list o
 
 ## Dependencies
 
+### System
+
+The below requirements are needed on the host that executes this module.
+* kubectl binary is available on PATH
+
 ### Python
 
 The below requirements are needed on the host that executes this module.
 
-* netaddr = "^0.8.0"
 * kubernetes = "^24.2.0"
 * openshift = "^0.13.1"
 * github3.py = "^3.2.0"
 
 ### Ansible
 
-The below pyhton roles are needed on the host that executes this module:
+The below python roles are needed on the host that executes this module:
 
 * nephelaiio.plugins
 
