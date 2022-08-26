@@ -3,7 +3,7 @@
 
   hosts: localhost
 
-  gather_facts: true
+  gather_facts: false
 
   vars_files: ../vars/shared.yml
 
@@ -24,7 +24,7 @@
 
     - name: download kind executable
       ansible.builtin.get_url:
-        url: "https://kind.sigs.k8s.io/dl/{{ kind_release }}/kind-{{ ansible_system }}-amd64"
+        url: "https://kind.sigs.k8s.io/dl/{{ kind_release }}/kind-linux-amd64"
         dest: "{{ _kind_bin }}"
         mode: 0777
       changed_when: false
