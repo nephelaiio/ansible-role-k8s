@@ -16,12 +16,13 @@ provisioner:
         vars:
           ansible_connection: local
           ansible_python_interpreter: python
-          _basedir: ${MOLECULE_EPHEMERAL_DIRECTORY}
-          k8s_kubeconfig: "{{ _kubeconfig }}"
-          k8s_helm_bin: "{{ _helm_bin }}"
+          kind_cluster_name: molecule
+          kind_kubeconfig: "{{ k8s_kubeconfig }}"
+          k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
+          k8s_helm_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/helm
           k8s_argocd_chart_ha: false
           k8s_argocd_namespace: argocd
-          k8s_argocd_exec_timeout: 2m
+          k8s_argocd_exec_timeout: 3m
 verifier:
   name: ansible
 scenario:

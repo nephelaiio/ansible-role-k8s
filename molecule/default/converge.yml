@@ -5,11 +5,10 @@
 
   gather_facts: false
 
-  vars_files: ../vars/shared.yml
-
   roles:
 
     - nephelaiio.plugins
+    - nephelaiio.kind
     - nephelaiio.k8s
 
   pre_tasks:

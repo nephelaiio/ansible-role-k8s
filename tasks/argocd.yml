@@ -15,7 +15,7 @@
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
 
 - name: query argocd-repo-server definition
-  set_fact:
+  ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
     _reposerver_query: "{{
@@ -30,7 +30,7 @@
   when: k8s_kubeconfig is defined
 
 - name: query argocd-repo-server definition
-  set_fact:
+  ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
     _reposerver_query: "{{

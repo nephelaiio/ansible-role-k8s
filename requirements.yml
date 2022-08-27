@@ -1,4 +1,5 @@
 ---
 roles:
   - nephelaiio.plugins
+  - nephelaiio.kind
 collections: []

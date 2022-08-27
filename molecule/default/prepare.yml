@@ -5,29 +5,7 @@
 
   gather_facts: false
 
-  vars_files: ../vars/shared.yml
-
   tasks:
-
-    - block:
-
-        - name: query kind releases
-          ansible.builtin.uri:
-            url: https://api.github.com/repos/kubernetes-sigs/kind/releases/latest
-          register: kind_release_query
-
-        - name: set kind release target
-          ansible.builtin.set_fact:
-            kind_release: "{{ kind_release_query.json.tag_name }}"
-
-      when: kind_release is not defined
-
-    - name: download kind executable
-      ansible.builtin.get_url:
-        url: "https://kind.sigs.k8s.io/dl/{{ kind_release }}/kind-linux-amd64"
-        dest: "{{ _kind_bin }}"
-        mode: 0777
-      changed_when: false
 
     - block:
 
@@ -57,6 +35,10 @@
             src: "https://get.helm.sh/helm-{{ helm_release }}-linux-amd64.tar.gz"
             dest: "{{ _tmpdir.path }}"
             remote_src: true
+          register: helm_dl_op
+          retries: 3
+          delay: 10
+          until: helm_dl_op is success
           changed_when: false
 
         - name: find helm executable
@@ -72,7 +54,7 @@
         - name: copy helm executable
           ansible.builtin.copy:
             src: "{{ helm_bin.files[0].path }}"
-            dest: "{{ _helm_bin }}"
+            dest: "{{ k8s_helm_bin }}"
             mode: '0755'
 
       always:

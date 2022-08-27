@@ -5,18 +5,11 @@
 
   gather_facts: false
 
-  vars_files: ../vars/shared.yml
+  vars:
 
-  tasks:
+    kind_state: absent
+    kind_cluster_state: absent
 
-    - name: list kind clusters
-      ansible.builtin.command: >-
-        {{ _kind_bin }} get clusters -q
-      register: kind_cluster_query
-      changed_when: false
+  roles:
 
-    - name: destroy kind cluster
-      ansible.builtin.shell: >-
-        {{ _kind_bin }} get clusters | grep molecule &&
-        {{ _kind_bin }} delete cluster --name {{ _cluster_name }}
-      when: _cluster_name in kind_cluster_query.stdout_lines
+    - nephelaiio.kind

@@ -1,7 +1,7 @@
 # nephelaiio.k8s
 
 [![Build Status](https://github.com/nephelaiio/ansible-role-k8s/workflows/Molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
-[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s.vim-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
+[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to install and configure k8s
 

@@ -484,6 +484,14 @@ lint = ["pre-commit (>=1.21.0)"]
 docs = ["sphinx-ansible-theme (>=0.2.2)", "sphinx", "simplejson"]
 
 [[package]]
+name = "netaddr"
+version = "0.8.0"
+description = "A network address manipulation library for Python"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "oauthlib"
 version = "3.2.0"
 description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
@@ -968,7 +976,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "76d79f86efe0d4a61ebb4a3356629f61eb20da9aea44c7e9f96a715097529cb2"
+content-hash = "e87445bc439b0a87ad7493013a7d2ba72529e467bca7f5cb9f574f40b13f9a67"
 
 [metadata.files]
 ansible = [
@@ -1265,6 +1273,10 @@ molecule = [
 molecule-docker = [
     {file = "molecule-docker-2.0.0.tar.gz", hash = "sha256:12c180c95c3f022d89aedd52e42b57e5c1e0ee4d4be8ec997c3dcb9c28d7e2a3"},
     {file = "molecule_docker-2.0.0-py3-none-any.whl", hash = "sha256:c447842ee4817fe6efa64ca6a73b1e3081cd60710ed86385b6ad7569d9599ab5"},
+]
+netaddr = [
+    {file = "netaddr-0.8.0-py2.py3-none-any.whl", hash = "sha256:9666d0232c32d2656e5e5f8d735f58fd6c7457ce52fc21c98d45f2af78f990ac"},
+    {file = "netaddr-0.8.0.tar.gz", hash = "sha256:d6cc57c7a07b1d9d2e917aa8b36ae8ce61c35ba3fcd1b83ca31c5a0ee2b5a243"},
 ]
 oauthlib = [
     {file = "oauthlib-3.2.0-py3-none-any.whl", hash = "sha256:6db33440354787f9b7f3a6dbd4febf5d0f93758354060e802f6c06cb493022fe"},

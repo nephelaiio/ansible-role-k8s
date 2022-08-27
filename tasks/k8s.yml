@@ -1,0 +1,7 @@
+---
+- name: check nginx ingress controller release
+  ansible.builtin.fail:
+    msg: "k8s_nginx_chart_release must be at least '{{ nginx_chart_release_min }}'"
+  vars:
+    nginx_chart_release_min: '4.0.15'
+  when: k8s_nginx_chart_release is version(nginx_chart_release_min, operator='lt')

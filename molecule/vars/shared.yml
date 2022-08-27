@@ -1,5 +1,0 @@
----
-_cluster_name: molecule
-_kubeconfig: "{{ _basedir }}/config"
-_kind_bin: "{{ _basedir }}/kind"
-_helm_bin: "{{ _basedir }}/helm"
