@@ -1,0 +1,11 @@
+---
+- name: create
+
+  hosts: localhost
+
+  gather_facts: false
+
+  roles:
+
+    - nephelaiio.plugins
+    - nephelaiio.kind

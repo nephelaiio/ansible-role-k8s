@@ -15,24 +15,11 @@
       ansible.builtin.debug:
         msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
-    - name: query helm deployments
-      ansible.builtin.shell: >-
-        {{ k8s_helm_bin }} list -A -o json
-      environment:
-        KUBECONFIG: "{{ k8s_kubeconfig }}"
-      register: helm_query
+    - name: include helm checks
+      include_tasks: verify/helm.yml
 
-    - name: record failed helm deployments
-      ansible.builtin.set_fact:
-        helm_failed: "{{ helm_errors | map('map_join', ['namespace', 'name', 'app_version'], '.') }}"
-      vars:
-        helm_deployments: "{{ helm_query.stdout | from_json }}"
-        helm_errors: "{{ helm_deployments | rejectattr('status', 'equalto', 'deployed') }}"
-
-    - name: fail helm deployment check
-      ansible.builtin.fail:
-        msg: "the following helm deployments failed [{{ helm_failed | join(', ') }}]"
-      when: helm_failed | length > 0
+    - name: include helm checks
+      include_tasks: verify/pods.yml
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml

@@ -6,4 +6,6 @@
 
 - include_tasks: k8s.yml
 
+- include_tasks: olm.yml
+
 - include_tasks: argocd.yml

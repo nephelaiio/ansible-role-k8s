@@ -2,6 +2,7 @@
 k8s_deployment_prefix: ""
 k8s_kubeconfig: "~/.kube/config"
 k8s_cluster_type: local
+k8s_wait_timeout: 600
 k8s_address_pools:
   local:
     private:

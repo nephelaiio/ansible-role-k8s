@@ -1,0 +1,8 @@
+---
+k8s_olm_release: v0.22.0
+k8s_olm_repo_org: operator-framework
+k8s_olm_repo_name: operator-lifecycle-manager
+k8s_olm_manifest_baseurl: "https://github.com/{{ k8s_olm_repo_org }}/{{ k8s_olm_repo_name }}/releases/download"
+k8s_olm_manifest_crds: "{{ k8s_olm_manifest_baseurl }}/{{ k8s_olm_release }}/crds.yaml"
+k8s_olm_manifest_olm: "{{ k8s_olm_manifest_baseurl }}/{{ k8s_olm_release }}/olm.yaml"
+k8s_olm_wait_timeout: "{{ k8s_wait_timeout }}"

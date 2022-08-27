@@ -5,6 +5,12 @@
 
   gather_facts: false
 
+  vars:
+
+    kind_net_prefix: "{{ kind_net_addr | ipaddr('prefix') }}"
+    kind_net_gateway: "{{ kind_net_addr | ipaddr(1) | ipaddr('address') }}"
+    kind_net_iprange: "{{ kind_net_addr | ansible.netcommon.ipsubnet(kind_net_prefix | int + 2, 0) }}"
+
   tasks:
 
     - block:

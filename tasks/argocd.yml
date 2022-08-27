@@ -9,8 +9,8 @@
     create_namespace: true
     state: "{{ k8s_argocd_state }}"
     wait: yes
-    wait_timeout: 5m
-    values: "{{ k8s_argocd_chart_ha_values if k8s_argocd_chart_ha else omit }}"
+    wait_timeout: "{{ k8s_argocd_wait_timeout }}"
+    values: "{{ k8s_argocd_chart_values }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
 
@@ -27,22 +27,6 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
-  when: k8s_kubeconfig is defined
-
-- name: query argocd-repo-server definition
-  ansible.builtin.set_fact:
-    _reposerver_def: "{{ _reposerver_query | first }}"
-  vars:
-    _reposerver_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Deployment',
-        namespace=k8s_argocd_namespace,
-        resource_name='argocd-repo-server'
-      )
-    }}"
-
-  when: k8s_kubeconfig is not defined
 
 - name: patch argocd reposerver deployment
   kubernetes.core.k8s:

@@ -1,0 +1,19 @@
+---
+- name: record pod metadata
+  ansible.builtin.set_fact:
+    pods_failed: "{{ pod_query | rejectattr('status.phase', 'equalto', 'Running') }}"
+  vars:
+    pod_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Pod',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
+- name: validate helm deployments
+  ansible.builtin.fail:
+    msg: "the following pods are in failed status [{{ pods_names | join(', ') }}]"
+  vars:
+    pod_names: "{{ pods_failed | map(attribute='metadata.name') }}"
+  when: pods_failed | length > 0

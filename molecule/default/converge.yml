@@ -8,17 +8,14 @@
   roles:
 
     - nephelaiio.plugins
-    - nephelaiio.kind
     - nephelaiio.k8s
 
   pre_tasks:
 
-    - name: show kubeconfig debug info
+    - name: print kubeconfig debug info
       debug:
-        msg: >-
-          using kubeconfig at {{ k8s_kubeconfig }}
+        msg: "using kubeconfig at {{ k8s_kubeconfig }}"
 
-    - name: show helm debug info
+    - name: print helm debug info
       debug:
-        msg: >-
-          using helm bin at {{ k8s_helm_bin }}
+        msg: "using helm bin at {{ k8s_helm_bin }}"
