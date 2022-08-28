@@ -1,5 +1,4 @@
 ---
 k8s_nginx_namespace : nginx
-k8s_nginx_chart_url: https://kubernetes.github.io/ingress-nginx
 k8s_nginx_chart_release: 4.0.15
 k8s_nginx_wait_timeout: "{{ k8s_wait_timeout }}"

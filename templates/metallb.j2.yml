@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ k8s_metallb_namespace }}
+  name: metallb-config
+data:
+  config: |
+    address-pools:
+{% for item in rke_metallb_pools %}
+      - name: {{ item.name }}
+        protocol: layer2
+        addresses:
+          - "{{ item.pool | ipaddr(1) | ipaddr('address') }}-{{ item.pool | ipaddr(-2) | ipaddr('address') }}"
+{% endfor %}

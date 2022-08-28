@@ -2,7 +2,7 @@
 - name: deploy olm crds
   kubernetes.core.k8s:
     resource_definition: "{{ lookup('url', k8s_olm_manifest_crds, split_lines=False) }}"
-    wait: yes
+    wait: true
     wait_timeout: "{{ k8s_olm_wait_timeout }}"
     wait_condition:
       reason: InitialNamesAccepted
@@ -12,6 +12,6 @@
 - name: deploy olm operator
   kubernetes.core.k8s:
     resource_definition: "{{ lookup('url', k8s_olm_manifest_olm, split_lines=False) }}"
-    wait: yes
+    wait: true
     wait_timeout: "{{ k8s_olm_wait_timeout }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"

@@ -11,7 +11,7 @@
       )
     }}"
 
-- name: validate helm deployments
+- name: validate pod status
   ansible.builtin.fail:
     msg: "the following pods are in failed status [{{ pods_names | join(', ') }}]"
   vars:

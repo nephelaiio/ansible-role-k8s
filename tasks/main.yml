@@ -1,11 +1,10 @@
 ---
-- name: check cluster type input
-  ansible.builtin.fail:
-    msg: "k8s_cluster_type must be one of [{{ k8s_address_pools.values() | map('map_format', \"'%s'\") | join(', ') }}]"
-  when: k8s_cluster_type not in k8s_address_pools
+- include_tasks: "checks.yml"
 
-- include_tasks: k8s.yml
+- include_tasks: "metallb.yml"
 
-- include_tasks: olm.yml
+- include_tasks: "nginx/{{ k8s_cluster_type }}.yml"
 
-- include_tasks: argocd.yml
+- include_tasks: "argocd.yml"
+
+- include_tasks: "olm.yml"

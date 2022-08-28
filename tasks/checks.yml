@@ -1,0 +1,51 @@
+---
+- name: check cluster type input
+  ansible.builtin.fail:
+    msg: "k8s_cluster_type must be one of [{{ valid_cluster_types | map('map_format', \"'%s'\") | join(', ') }}]"
+  vars:
+    valid_cluster_types:
+      - local
+      - aws
+  when: k8s_cluster_type not in valid_cluster_types
+
+- name: check local cluster settings
+  block:
+
+    - name: check private address pool range
+      ansible.builtin.fail:
+        msg: "private address pool range must be set"
+      when: k8s_address_pool_private_iprange == ""
+
+    - name: check ispa address pool name
+      ansible.builtin.fail:
+        msg: "ispa address pool name must be set"
+      when: k8s_address_pool_ispa_name == ""
+
+    - name: check ispa address pool range
+      ansible.builtin.fail:
+        msg: "ispa address pool range must be set as subnet/prefix"
+      when: k8s_address_pool_ispa_iprange == "" or not (k8s_address_pool_ispa_iprange | ansible.utils.ipaddr('network/prefix'))
+
+    - name: check ispb address pool name
+      ansible.builtin.fail:
+        msg: "ispb address pool name must be set"
+      when: k8s_address_pool_ispb_name == ""
+
+    - name: check ispa address pool range
+      ansible.builtin.fail:
+        msg: "ispb address pool range must be set as subnet/prefix"
+      when: k8s_address_pool_ispb_iprange == "" or not (k8s_address_pool_ispb_iprange | ansible.utils.ipaddr('network/prefix'))
+
+  when: k8s_cluster_type == 'local'
+
+- name: check metallb speaker secret is set
+  ansible.builtin.fail:
+    msg: "k8s_metallb_speaker_secret must be set"
+  when: k8s_metallb_speaker_secret is not defined or k8s_metallb_speaker_secret == ''
+
+- name: check nginx ingress controller release
+  ansible.builtin.fail:
+    msg: "k8s_nginx_chart_release must be at least '{{ nginx_chart_release_min }}'"
+  vars:
+    nginx_chart_release_min: '4.0.15'
+  when: k8s_nginx_chart_release is version(nginx_chart_release_min, operator='lt')

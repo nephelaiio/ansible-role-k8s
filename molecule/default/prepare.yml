@@ -5,15 +5,10 @@
 
   gather_facts: false
 
-  vars:
-
-    kind_net_prefix: "{{ kind_net_addr | ipaddr('prefix') }}"
-    kind_net_gateway: "{{ kind_net_addr | ipaddr(1) | ipaddr('address') }}"
-    kind_net_iprange: "{{ kind_net_addr | ansible.netcommon.ipsubnet(kind_net_prefix | int + 2, 0) }}"
-
   tasks:
 
-    - block:
+    - name: set kind release metadata
+      block:
 
         - name: query helm releases
           ansible.builtin.uri:
@@ -27,14 +22,14 @@
       when: helm_release is not defined
 
     - name: create temporary directory
-      local_action:
-        module: ansible.builtin.tempfile
+      ansible.builtin.tempfile:
         state: directory
         prefix: kind
       register: _tmpdir
       changed_when: false
 
-    - block:
+    - name: install helm binary
+      block:
 
         - name: download helm release package
           ansible.builtin.unarchive:

@@ -1,15 +1,15 @@
 ---
 - name: install argocd chart
   kubernetes.core.helm:
-    name: "{{ k8s_deployment_prefix }}argocd"
+    name: argocd
     chart_ref: argo-cd
-    chart_repo_url: "{{ k8s_argocd_chart_url }}"
+    chart_repo_url: https://argoproj.github.io/argo-helm
     chart_version: "{{ k8s_argocd_chart_release }}"
     release_namespace: "{{ k8s_argocd_namespace }}"
     create_namespace: true
-    state: "{{ k8s_argocd_state }}"
-    wait: yes
-    wait_timeout: "{{ k8s_argocd_wait_timeout }}"
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_argocd_wait_timeout }}s"
     values: "{{ k8s_argocd_chart_values }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
@@ -33,7 +33,7 @@
     state: present
     definition: "{{ _reposerver_patched }}"
     namespace: "{{ k8s_argocd_namespace }}"
-    force: yes
+    force: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
   vars:
     _reposerver_container: "{{ _reposerver_def['spec']['template']['spec']['containers'][0] }}"

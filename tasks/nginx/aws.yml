@@ -3,14 +3,14 @@
   kubernetes.core.helm:
     name: "{{ ingress_name }}"
     chart_ref: ingress-nginx
-    chart_repo_url: "{{ k8s_nginx_chart_url }}"
+    chart_repo_url: https://kubernetes.github.io/ingress-nginx
     chart_version: "{{ k8s_nginx_chart_release }}"
     release_namespace: "{{ ingress_namespace }}"
     state: "{{ item.value.state }}"
     wait: true
     wait_timeout: "{{ k8s_nginx_wait_timeout }}"
-    update_repo_cache: yes
-    create_namespace: yes
+    update_repo_cache: true
+    create_namespace: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
     values:
@@ -31,8 +31,8 @@
               service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
               service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.key }}"
   vars:
-    ingress_class: "nginx-{{ item.key }}"
-    ingress_name: "{{ ingress_class }}"
+    ingress_class: "nginx-{{ item.value.name }}"
+    ingress_name: "{{ item.value.name }}"
     ingress_namespace: "{{ ingress_class }}"
   loop_control:
     label: "{{ item.key }}"

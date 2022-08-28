@@ -1,0 +1,26 @@
+---
+- name: deploy metallb
+  kubernetes.core.helm:
+    name: metallb
+    chart_ref: metallb
+    chart_repo_url: https://charts.bitnami.com/bitnami
+    chart_version: "{{ k8s_metallb_chart_release }}"
+    release_namespace: "{{ k8s_metallb_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_metallb_wait_timeout }}s"
+    values:
+      speaker:
+        secretValue: "{{ k8s_metallb_speaker_secret }}"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+
+- name: deploy metallb manifest
+  kubernetes.core.k8s:
+    namespace: "{{ k8s_metallb_namespace }}"
+    state: present
+    resource_definition: "{{ lookup('template', 'metallb.j2.yml') }}"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+  vars:
+    rke_metallb_pools: "{{ k8s_address_pools[k8s_cluster_type].values() }}"
