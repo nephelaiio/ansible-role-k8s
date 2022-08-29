@@ -3,6 +3,8 @@
 
 - include_tasks: "metallb.yml"
 
+- include_tasks: "certmanager.yml"
+
 - include_tasks: "nginx/{{ k8s_cluster_type }}.yml"
 
 - include_tasks: "argocd.yml"

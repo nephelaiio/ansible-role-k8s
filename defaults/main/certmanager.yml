@@ -1,0 +1,5 @@
+---
+k8s_certmanager_issuer: cloudflare
+k8s_certmanager_namespace: cert-manager
+k8s_certmanager_chart_release: v1.9.1
+k8s_certmanager_wait_timeout: "{{ k8s_wait_timeout }}"

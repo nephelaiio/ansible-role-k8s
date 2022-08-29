@@ -45,7 +45,14 @@
 
 - name: check nginx ingress controller release
   ansible.builtin.fail:
-    msg: "k8s_nginx_chart_release must be at least '{{ nginx_chart_release_min }}'"
+    msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
   vars:
-    nginx_chart_release_min: '4.0.15'
-  when: k8s_nginx_chart_release is version(nginx_chart_release_min, operator='lt')
+    chart_release_min: '4.0.15'
+  when: (k8s_nginx_chart_release | regex_replace('^v' ,'')) is version(chart_release_min | regex_replace('^v', ''), operator='lt')
+
+- name: check certmanager release
+  ansible.builtin.fail:
+    msg: "k8s_certmanager_chart_release must be at least '{{ chart_release_min }}'"
+  vars:
+    chart_release_min: 'v1.6.1'
+  when: (k8s_certmanager_chart_release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')

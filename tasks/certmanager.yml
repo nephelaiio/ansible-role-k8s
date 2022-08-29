@@ -1,0 +1,82 @@
+---
+- name: manage cert-manager helm chart
+  kubernetes.core.helm:
+    name: cert-manager
+    chart_ref: cert-manager
+    chart_repo_url: https://charts.jetstack.io
+    chart_version: "{{ k8s_certmanager_chart_release }}"
+    release_namespace: "{{ k8s_certmanager_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_certmanager_wait_timeout }}s"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+    values:
+      installCRDs: true
+      podDnsConfig:
+        nameservers:
+          - 1.1.1.1
+          - 8.8.8.8
+
+- name: deploy cloudflare cluster issuer
+  block:
+
+    - name: create certmanager secret
+      kubernetes.core.k8s:
+        name: "{{ k8s_certmanager_namespace }}"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        state: present
+        resource_definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: cloudflare-api-token-secret
+            namespace: "{{ k8s_certmanager_namespace }}"
+          type: Opaque
+          data:
+            api-token: "{{ k8s_certmanager_secret | b64encode }}"
+
+    - name: create certmanager issuer
+      kubernetes.core.k8s:
+        name: "{{ k8s_certmanager_namespace }}"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        state: present
+        resource_definition:
+          apiVersion: cert-manager.io/v1
+          kind: ClusterIssuer
+          metadata:
+            name: cloudflare_issuer
+          spec:
+            acme:
+              server: "{{ k8s_certmanager_issuer_server | default('https://acme-staging-v02.api.letsencrypt.org/directory') }}"
+              email: "{{ k8s_certmanager_acme_email }}"
+              privateKeySecretRef:
+                name: letsencrypt-production
+              solvers:
+                - dns01:
+                    cloudflare:
+                      email: "{{ k8s_certmanager_acme_email }}"
+                      apiKeySecretRef:
+                        name: cloudflare-api-token-secret
+                        key: api-token
+
+  when: k8s_certmanager_issuer != 'local'
+
+- name: deploy local cluster issuer
+  block:
+
+    - name: create certmanager issuer
+      kubernetes.core.k8s:
+        name: "{{ k8s_certmanager_namespace }}"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        state: present
+        resource_definition:
+          apiVersion: cert-manager.io/v1
+          kind: ClusterIssuer
+          metadata:
+            name: selfsigned-cluster-issuer
+          spec:
+            selfSigned: {}
+
+  when: k8s_certmanager_issuer == 'local'

@@ -1,7 +1,6 @@
 # nephelaiio.k8s
 
-[![Build Status](https://github.com/nephelaiio/ansible-role-k8s/workflows/Molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
-[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
+[![Build Status](htAnsible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to bootstrap K8s cluster deployments with the following components:
 * MetalLB (Helm deployment)
@@ -46,10 +45,19 @@ OLM paramters
 
 MetalLB parameters:
 
-| Parameter                  |     Default | Type   | Description                                | Required |
-|:---------------------------|------------:|:-------|:-------------------------------------------|----------|
-| k8s_metallb_chart_release  |      2.6.14 | string | From command `search repo bitnami/metallb` | no       |
-| k8s_metallb_speaker_secret | _undefined_ | string |                                            | yes      |
+| Parameter                  |     Default | Type   | Description                                     | Required |
+|:---------------------------|------------:|:-------|:------------------------------------------------|----------|
+| k8s_metallb_chart_release  |      2.6.14 | string | From command `helm search repo bitnami/metallb` | no       |
+| k8s_metallb_speaker_secret | _undefined_ | string |                                                 | yes      |
+
+Cert-Manager parameters:
+
+| Parameter                     |                                                Default | Type   | Description                              | Required |
+|:------------------------------|-------------------------------------------------------:|:-------|:-----------------------------------------|----------|
+| k8s_certmanager_chart_release |                                                 v1.9.1 | string | From command `helm search repo jetstack` | no       |
+| k8s_certmanager_acme_secret   |                                            _undefined_ | string | Cloudflare api token                     | yes      |
+| k8s_certmanager_acme_email    |                                            _undefined_ | string | Cloudflare api email                     | yes      |
+| k8s_certmanager_issuer_server | https://acme-staging-v02.api.letsencrypt.org/directory | string | LetsEncrypt registration server          | no       |
 
 ## Dependencies
 

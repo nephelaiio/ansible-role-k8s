@@ -31,6 +31,7 @@ provisioner:
           k8s_address_pool_ispa_iprange: 172.19.2.0/24
           k8s_address_pool_ispb_iprange: 172.19.3.0/24
           k8s_metallb_speaker_secret: secret
+          k8s_certmanager_issuer: local
 verifier:
   name: ansible
 scenario:
