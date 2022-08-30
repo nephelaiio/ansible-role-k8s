@@ -1,0 +1,29 @@
+---
+- name: install bubblewrap
+  ansible.builtin.package:
+    name: bubblewrap
+  become: yes
+
+- name: create wrapper command
+  copy:
+    content: |
+      #!/usr/bin/env bash
+
+      set -euo pipefail
+      {{ _cmd }}
+    dest: "{{ k8s_tempdir }}/bwrap"
+    mode: 0755
+  vars:
+    _cmd: "bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c \"$@\""
+    _bind_dev: "--dev-bind / /"
+    _bind_hosts: "--bind {{ k8s_tempdir }}/hosts /etc/hosts"
+    _bind_ca: "--bind {{ k8s_tempdir }}/ca-certificates/ /usr/local/share/ca-certificates"
+    _bind_certs: "--bind {{ k8s_tempdir }}/certs /etc/ssl/certs"
+
+- name: execute check commands
+  ansible.builtin.command: "{{ _cmd }}"
+  vars:
+    _cmd: "{{ k8s_tempdir }}/bwrap \"{{ item }}\""
+  loop_control:
+    label: "{{ _cmd }}"
+  loop: "{{ k8s_verify_cmds | default(ingress_cmds) }}"

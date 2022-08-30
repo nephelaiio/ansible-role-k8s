@@ -12,5 +12,11 @@
 - name: include cert checks
   include_tasks: verify/certs.yml
 
+- name: include ingress checks
+  include_tasks: verify/ingress.yml
+
 - name: include argocd checks
   ansible.builtin.include_tasks: verify/argocd.yml
+
+- name: include command checks
+  ansible.builtin.include_tasks: verify/cmds.yml

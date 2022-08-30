@@ -37,7 +37,7 @@
           data:
             api-token: "{{ k8s_certmanager_secret | b64encode }}"
 
-    - name: create certmanager issuer
+    - name: create letsencrypt issuer
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -46,7 +46,7 @@
           apiVersion: cert-manager.io/v1
           kind: ClusterIssuer
           metadata:
-            name: cluster-issuer
+            name: "{{ k8s_certmanager_issuer_name }}"
           spec:
             acme:
               server: "{{ k8s_certmanager_issuer_server | default('https://acme-staging-v02.api.letsencrypt.org/directory') }}"
@@ -82,7 +82,6 @@
 
     - name: create ca certificate
       kubernetes.core.k8s:
-        name: ca-cert
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         state: present
@@ -104,14 +103,13 @@
 
     - name: create cluster issuer
       kubernetes.core.k8s:
-        name: cluster-issuer
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         state: present
         resource_definition:
           apiVersion: cert-manager.io/v1
           kind: ClusterIssuer
           metadata:
-            name: cluster-issuer
+            name: "{{ k8s_certmanager_issuer_name }}"
           spec:
             ca:
               secretName: cluster-issuer-secret

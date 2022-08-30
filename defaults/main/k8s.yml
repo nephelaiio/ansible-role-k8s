@@ -11,15 +11,10 @@ k8s_address_pools:
       name: "{{ k8s_address_pool_private_name }}"
       pool: "{{ k8s_address_pool_private_iprange }}"
       state: present
-    ispa:
+    public:
       scheme: 'internet-facing'
-      name: "{{ k8s_address_pool_ispa_name }}"
-      pool: "{{ k8s_address_pool_ispa_iprange }}"
-      state: present
-    ispb:
-      scheme: 'internet-facing'
-      name: "{{ k8s_address_pool_ispb_name }}"
-      pool: "{{ k8s_address_pool_ispb_iprange }}"
+      name: "{{ k8s_address_pool_public_name }}"
+      pool: "{{ k8s_address_pool_public_iprange }}"
       state: present
   aws:
     private:
@@ -34,8 +29,5 @@ k8s_address_pools:
 k8s_address_pool_private_name: "private"
 k8s_address_pool_private_iprange: ""
 
-k8s_address_pool_ispa_name: "ispa"
-k8s_address_pool_ispa_iprange: ""
-
-k8s_address_pool_ispb_name: "ispb"
-k8s_address_pool_ispb_iprange: ""
+k8s_address_pool_public_name: "public"
+k8s_address_pool_public_iprange: ""

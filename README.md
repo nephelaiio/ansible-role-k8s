@@ -4,9 +4,17 @@
 
 An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to bootstrap K8s cluster deployments with the following components:
 * MetalLB (Helm deployment)
-* ArgoCD (Helm deployment)
-* OLM_(Manifest deployment)
+* Cert-Manager (Helm deployment)
 * NGINX ingress controllers (Helm deployment)
+* ArgoCD (Helm deployment)
+* OLM (Manifest deployment)
+* ExternalDNS (TODO)
+* LongHorn (TODO) 
+* Strimzi (TODO)
+* Zalando Postgres Operator (TODO)
+* Grafana (TODO)
+* Hashicorp Vault (TODO)
+* Kyverno (TODO)
 
 All components are configured for 2 public + 1 private external networks
 
@@ -25,17 +33,16 @@ Cluster wide parameters
 | k8s_cluster_name                 | k8s.nephelai.io | string | Cluster base fqdn                                     | no       |
 | k8s_address_pool_private_name    |         private | string | Private pool name                                     | no       |
 | k8s_address_pool_private_iprange |     _undefined_ | string | LB private network address (in network/prefix format) | yes      |
-| k8s_address_pool_ispa_name       |            ispa | string | LB public network name                                | no       |
-| k8s_address_pool_ispa_iprange    |     _undefined_ | string | LB public network address (in network/prefix format)  | yes      |
-| k8s_address_pool_ispb_name       |            ispb | string | LB public network name                                | no       |
-| k8s_address_pool_ispa_iprange    |     _undefined_ | string | LB public network address (in network/prefix format)  | yes      |
+| k8s_address_pool_public_name     |          public | string | LB public network name                                | no       |
+| k8s_address_pool_public_iprange  |     _undefined_ | string | LB public network address (in network/prefix format)  | yes      |
 
 ArgoCD parameters
 
-| Parameter                | Default | Type   | Description                                                         | Required |
-|:-------------------------|--------:|:-------|:--------------------------------------------------------------------|----------|
-| k8s_argocd_chart_release |  4.10.9 | string | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
-| k8s_argocd_exec_timeout  |      3m | string | ArgoCD git operation timeout fo                                     | no       |
+| Parameter                |                   Default | Type   | Description                                                         | Required |
+|:-------------------------|--------------------------:|:-------|:--------------------------------------------------------------------|----------|
+| k8s_argocd_chart_release |                    4.10.9 | string | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
+| k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string | ArgoCD ingress hostname                                             | no       |
+| k8s_argocd_exec_timeout  |                        3m | string | ArgoCD git operation timeout fo                                     | no       |
 
 OLM paramters
 

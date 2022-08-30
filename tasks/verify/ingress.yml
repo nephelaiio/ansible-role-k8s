@@ -1,0 +1,47 @@
+---
+- name: record ingress metadata
+  ansible.builtin.set_fact:
+    ingress_failed: "{{ ingress_query | community.general.json_query(ingress_filter) | map(attribute='metadata.name') }}"
+  vars:
+    ingress_filter: "[?!not_null(status.loadBalancer)]"
+    ingress_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Ingress',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
+- name: validate ingress status
+  ansible.builtin.fail:
+    msg: "the following ingress are in failed status [{{ ingress_failed | join(', ') }}]"
+  when: ingress_failed | length > 0
+
+- name: set ingress metadata
+  ansible.builtin.set_fact:
+    ingress_data: "{{ ingress_query | community.general.json_query(ingress_filter) }}"
+    ingress_hosts: []
+    ingress_cmds: []
+  vars:
+    ingress_filter: "[].to_array([status.loadBalancer.ingress[].ip, spec.tls[0].hosts[]])"
+    ingress_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Ingress',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
+- name: set ingress data
+  ansible.builtin.set_fact:
+    ingress_hosts: "{{ ingress_hosts + (ingress_hostentries | flatten )}}"
+    ingress_cmds: "{{ ingress_cmds + (ingress_cmdentries | flatten )}}"
+  vars:
+    ingress_hostentries: "{{ item[0] | product(item[1]) | map('join', ' ') }}"
+    ingress_cmdentries: "{{ ['curl -fLD- https://'] | product(item[1]) | map('join', '') }}"
+  loop: "{{ ingress_data }}"
+
+- name: write ingress hostfile
+  ansible.builtin.copy:
+    content: "{{ ingress_hosts | join('\n') }}"
+    dest: "{{ k8s_tempdir }}/hosts"

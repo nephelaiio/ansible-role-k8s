@@ -16,25 +16,15 @@
         msg: "private address pool range must be set"
       when: k8s_address_pool_private_iprange == ""
 
-    - name: check ispa address pool name
+    - name: check public address pool name
       ansible.builtin.fail:
-        msg: "ispa address pool name must be set"
-      when: k8s_address_pool_ispa_name == ""
+        msg: "public address pool name must be set"
+      when: k8s_address_pool_public_name == ""
 
-    - name: check ispa address pool range
+    - name: check public address pool range
       ansible.builtin.fail:
-        msg: "ispa address pool range must be set as subnet/prefix"
-      when: k8s_address_pool_ispa_iprange == "" or not (k8s_address_pool_ispa_iprange | ansible.utils.ipaddr('network/prefix'))
-
-    - name: check ispb address pool name
-      ansible.builtin.fail:
-        msg: "ispb address pool name must be set"
-      when: k8s_address_pool_ispb_name == ""
-
-    - name: check ispa address pool range
-      ansible.builtin.fail:
-        msg: "ispb address pool range must be set as subnet/prefix"
-      when: k8s_address_pool_ispb_iprange == "" or not (k8s_address_pool_ispb_iprange | ansible.utils.ipaddr('network/prefix'))
+        msg: "public address pool range must be set as subnet/prefix"
+      when: k8s_address_pool_public_iprange == "" or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
 
   when: k8s_cluster_type == 'local'
 
