@@ -1,0 +1,16 @@
+---
+- name: print debug information
+  ansible.builtin.debug:
+    msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
+
+- name: include helm checks
+  include_tasks: verify/helm.yml
+
+- name: include pod checks
+  include_tasks: verify/pods.yml
+
+- name: include cert checks
+  include_tasks: verify/certs.yml
+
+- name: include argocd checks
+  ansible.builtin.include_tasks: verify/argocd.yml
