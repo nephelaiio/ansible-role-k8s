@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        kind_image:
+        image:
           - latest
           - v1.24.0
           - v1.23.6
