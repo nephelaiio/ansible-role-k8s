@@ -20,17 +20,17 @@
 - name: create ca cert dir
   ansible.builtin.file:
     state: directory
-    path: "{{ k8s_tempdir }}/ca-certificates"
+    path: "{{ k8s_verifier_path }}/ca-certificates"
 
 - name: create ssl cert dir
   ansible.builtin.file:
     state: directory
-    path: "{{ k8s_tempdir }}/certs"
+    path: "{{ k8s_verifier_path }}/certs"
 
 - name: write ca certificate file
   ansible.builtin.copy:
     content: "{{ _cacert }}"
-    dest: "{{ k8s_tempdir }}/ca-certificates/{{ k8s_cluster_name }}.crt"
+    dest: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
     mode: '0755'
   vars:
     _cacert: "{{ _cacert_data.data['ca.crt'] | b64decode }}"
@@ -48,7 +48,7 @@
   ansible.builtin.command: "bwrap {{ _bind_dev }} {{ _bind_ca }} {{ _bind_certs }} {{ _cmd }}"
   vars:
     _bind_dev: "--dev-bind / /"
-    _bind_ca: "--bind {{ k8s_tempdir }}/ca-certificates/ /usr/local/share/ca-certificates"
-    _bind_certs: "--bind {{ k8s_tempdir }}/certs /etc/ssl/certs"
+    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
+    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
     _cmd: "sh -c 'update-ca-certificates'"
   changed_when: false

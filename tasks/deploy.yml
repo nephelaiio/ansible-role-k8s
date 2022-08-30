@@ -1,0 +1,16 @@
+---
+- name: print debug information
+  ansible.builtin.debug:
+    msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
+
+- include_tasks: "deploy/check.yml"
+
+- include_tasks: "deploy/metallb.yml"
+
+- include_tasks: "deploy/certmanager.yml"
+
+- include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
+
+- include_tasks: "deploy/argocd.yml"
+
+- include_tasks: "deploy/olm.yml"

@@ -8,14 +8,12 @@
   roles:
 
     - nephelaiio.plugins
-    - nephelaiio.k8s
 
-  pre_tasks:
+  tasks:
 
-    - name: print kubeconfig debug info
-      debug:
-        msg: "using kubeconfig at {{ k8s_kubeconfig }}"
-
-    - name: print helm debug info
-      debug:
-        msg: "using helm bin at {{ k8s_helm_bin }}"
+    - name: verify cluster
+      include_role:
+        name: nephelaiio.k8s
+      vars:
+        k8s_deploy: true
+        k8s_verify: false

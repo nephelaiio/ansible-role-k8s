@@ -18,7 +18,6 @@ provisioner:
           ansible_connection: local
           ansible_python_interpreter: python
           docker_net_addr: 172.19.0.0/16
-          k8s_tempdir: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
           k8s_helm_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/helm
           k8s_certmanager_issuer: local
@@ -33,6 +32,7 @@ provisioner:
           k8s_address_pool_private_iprange: 172.19.1.0/24
           k8s_address_pool_public_iprange: 172.19.2.0/24
           k8s_metallb_speaker_secret: secret
+          k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
 verifier:
   name: ansible
 scenario:

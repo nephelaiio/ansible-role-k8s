@@ -1,6 +1,8 @@
 ---
 k8s_cluster_name: k8s.nephelai.io
 k8s_cluster_type: local
+k8s_deploy: true
+k8s_verify: false
 
 k8s_kubeconfig: "~/.kube/config"
 k8s_wait_timeout: 600

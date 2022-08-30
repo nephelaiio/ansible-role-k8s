@@ -16,7 +16,14 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * Hashicorp Vault (TODO)
 * Kyverno (TODO)
 
-All components are configured for 2 public + 1 private external networks
+Role includes a cluster verifier that can be activated by setting `k8s_verify: true` that performs the following checks:
+* All pods are in OK status
+* All helm deployments are successful
+* All certificates are in OK status
+* All ingresses haven been assigned external ips
+* All ingresses respond with HTTP 200
+* All ArgoCD deployments are in OK status (TODO)
+* All volumes are in OK status (TODO)
 
 ## Role Variables
 
@@ -24,17 +31,19 @@ The following is the list of parameters intended for end-user manipulation:
 
 Cluster wide parameters
 
-| Parameter                        |         Default | Type   | Description                                           | Required |
-|:---------------------------------|----------------:|:-------|:------------------------------------------------------|:---------|
-| k8s_cluster_type                 |           local | string | One of ['local', 'aws']                               | no       |
-| k8s_kubeconfig                   |  ~/.kube/config | string | Kubeconfig file for deployment operations             | no       |
-| k8s_helm_bin                     |    _autodetect_ | string | Helm bin file for deployment operations               | no       |
-| k8s_wait_timeout                 |             600 | int    | Global wait timeout for deployemnt operations         | no       |
-| k8s_cluster_name                 | k8s.nephelai.io | string | Cluster base fqdn                                     | no       |
-| k8s_address_pool_private_name    |         private | string | Private pool name                                     | no       |
-| k8s_address_pool_private_iprange |     _undefined_ | string | LB private network address (in network/prefix format) | yes      |
-| k8s_address_pool_public_name     |          public | string | LB public network name                                | no       |
-| k8s_address_pool_public_iprange  |     _undefined_ | string | LB public network address (in network/prefix format)  | yes      |
+| Parameter                        |         Default | Type    | Description                                           | Required |
+|:---------------------------------|----------------:|:--------|:------------------------------------------------------|:---------|
+| k8s_deploy                       |            true | boolean | Toggle flag for cluster deployer tasks                | no       |
+| k8s_verify                       |           false | boolean | Toggle flag for cluster verifier tasks                | no       |
+| k8s_cluster_type                 |           local | string  | One of ['local', 'aws']                               | no       |
+| k8s_kubeconfig                   |  ~/.kube/config | string  | Kubeconfig file for deployment operations             | no       |
+| k8s_helm_bin                     |    _autodetect_ | string  | Helm bin file for deployment operations               | no       |
+| k8s_wait_timeout                 |             600 | int     | Global wait timeout for deployemnt operations         | no       |
+| k8s_cluster_name                 | k8s.nephelai.io | string  | Cluster base fqdn                                     | no       |
+| k8s_address_pool_private_name    |         private | string  | Private pool name                                     | no       |
+| k8s_address_pool_private_iprange |     _undefined_ | string  | LB private network address (in network/prefix format) | yes      |
+| k8s_address_pool_public_name     |          public | string  | LB public network name                                | no       |
+| k8s_address_pool_public_iprange  |     _undefined_ | string  | LB public network address (in network/prefix format)  | yes      |
 
 ArgoCD parameters
 
@@ -65,6 +74,12 @@ Cert-Manager parameters:
 | k8s_certmanager_acme_secret   |                                            _undefined_ | string | Cloudflare api token                     | yes      |
 | k8s_certmanager_acme_email    |                                            _undefined_ | string | Cloudflare api email                     | yes      |
 | k8s_certmanager_issuer_server | https://acme-staging-v02.api.letsencrypt.org/directory | string | LetsEncrypt registration server          | no       |
+
+Verifier parameters:
+
+| Parameter         |     Default | Type   | Description                     | Required |
+|:------------------|------------:|:-------|:--------------------------------|----------|
+| k8s_verifier_path | _undefined_ | string | Verification artifact directory | no       |
 
 ## Dependencies
 

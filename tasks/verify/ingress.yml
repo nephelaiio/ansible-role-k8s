@@ -44,4 +44,4 @@
 - name: write ingress hostfile
   ansible.builtin.copy:
     content: "{{ ingress_hosts | join('\n') }}"
-    dest: "{{ k8s_tempdir }}/hosts"
+    dest: "{{ k8s_verifier_path }}/hosts"

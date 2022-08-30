@@ -3,20 +3,42 @@
   ansible.builtin.debug:
     msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
-- name: include helm checks
-  include_tasks: verify/helm.yml
+- name: create temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: kind
+  register: _tmpdir
+  when: k8s_verifier_path is not defined
 
-- name: include pod checks
-  include_tasks: verify/pods.yml
+- name: set verification directory default
+  ansible.builtin.set_fact:
+    k8s_verifier_path: "{{ _tmpdir.path }}"
+  when: _tmpdir is not skipped
 
-- name: include cert checks
-  include_tasks: verify/certs.yml
+- block:
 
-- name: include ingress checks
-  include_tasks: verify/ingress.yml
+    - name: include helm checks
+      include_tasks: verify/helm.yml
 
-- name: include argocd checks
-  ansible.builtin.include_tasks: verify/argocd.yml
+    - name: include pod checks
+      include_tasks: verify/pods.yml
 
-- name: include command checks
-  ansible.builtin.include_tasks: verify/cmds.yml
+    - name: include cert checks
+      include_tasks: verify/certs.yml
+
+    - name: include ingress checks
+      include_tasks: verify/ingress.yml
+
+    - name: include argocd checks
+      ansible.builtin.include_tasks: verify/argocd.yml
+
+    - name: include command checks
+      ansible.builtin.include_tasks: verify/cmds.yml
+
+  always:
+
+    - name: cleanup temp files
+      ansible.builtin.file:
+        state: absent
+        path: "{{ _tmpdir.path }}"
+      when: _tmpdir is not skipped

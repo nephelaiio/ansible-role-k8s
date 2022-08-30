@@ -1,12 +1,8 @@
 ---
-- include_tasks: "deploy/check.yml"
+- name: include deployment tasks
+  include_tasks: "deploy.yml"
+  when: k8s_deploy | bool
 
-- include_tasks: "deploy/metallb.yml"
-
-- include_tasks: "deploy/certmanager.yml"
-
-- include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
-
-- include_tasks: "deploy/argocd.yml"
-
-- include_tasks: "deploy/olm.yml"
+- name: include verification tasks
+  include_tasks: "verify.yml"
+  when: k8s_verify | bool

@@ -9,7 +9,6 @@
     state: "{{ item.value.state }}"
     wait: true
     wait_timeout: "{{ k8s_nginx_wait_timeout }}"
-    update_repo_cache: true
     create_namespace: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
