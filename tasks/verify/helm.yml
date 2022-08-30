@@ -1,10 +1,10 @@
 ---
 - name: query helm deployments
-  ansible.builtin.shell: >-
-    {{ k8s_helm_bin }} list -A -o json
+  ansible.builtin.command: "{{ k8s_helm_bin }} list -A -o json"
   environment:
     KUBECONFIG: "{{ k8s_kubeconfig }}"
   register: helm_query
+  changed_when: false
 
 - name: record helm deployment metadata
   ansible.builtin.set_fact:

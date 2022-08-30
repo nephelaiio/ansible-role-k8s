@@ -1,6 +1,9 @@
 ---
 extends: default
 
+ignore: |
+  *.j2.yml
+
 rules:
   braces:
     max-spaces-inside: 1

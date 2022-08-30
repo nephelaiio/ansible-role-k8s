@@ -34,8 +34,8 @@
 
 - name: set ingress data
   ansible.builtin.set_fact:
-    ingress_hosts: "{{ ingress_hosts + (ingress_hostentries | flatten )}}"
-    ingress_cmds: "{{ ingress_cmds + (ingress_cmdentries | flatten )}}"
+    ingress_hosts: "{{ ingress_hosts + (ingress_hostentries | flatten) }}"
+    ingress_cmds: "{{ ingress_cmds + (ingress_cmdentries | flatten) }}"
   vars:
     ingress_hostentries: "{{ item[0] | product(item[1]) | map('join', ' ') }}"
     ingress_cmdentries: "{{ ['curl -fLD- https://'] | product(item[1]) | map('join', '') }}"

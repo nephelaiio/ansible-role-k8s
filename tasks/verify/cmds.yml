@@ -27,3 +27,4 @@
   loop_control:
     label: "{{ _cmd }}"
   loop: "{{ k8s_verify_cmds | default(ingress_cmds) }}"
+  changed_when: false

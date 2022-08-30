@@ -14,24 +14,24 @@
     - name: check private address pool range
       ansible.builtin.fail:
         msg: "private address pool range must be set"
-      when: k8s_address_pool_private_iprange == ""
+      when: k8s_address_pool_private_iprange | length == 0
 
     - name: check public address pool name
       ansible.builtin.fail:
         msg: "public address pool name must be set"
-      when: k8s_address_pool_public_name == ""
+      when: k8s_address_pool_public_name | length == 0
 
     - name: check public address pool range
       ansible.builtin.fail:
         msg: "public address pool range must be set as subnet/prefix"
-      when: k8s_address_pool_public_iprange == "" or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
+      when: k8s_address_pool_public_iprange | length == 0 or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
 
   when: k8s_cluster_type == 'local'
 
 - name: check metallb speaker secret is set
   ansible.builtin.fail:
     msg: "k8s_metallb_speaker_secret must be set"
-  when: k8s_metallb_speaker_secret is not defined or k8s_metallb_speaker_secret == ''
+  when: k8s_metallb_speaker_secret is not defined or k8s_metallb_speaker_secret | length == 0
 
 - name: check nginx ingress controller release
   ansible.builtin.fail:

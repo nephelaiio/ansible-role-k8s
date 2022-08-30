@@ -51,3 +51,4 @@
     _bind_ca: "--bind {{ k8s_tempdir }}/ca-certificates/ /usr/local/share/ca-certificates"
     _bind_certs: "--bind {{ k8s_tempdir }}/certs /etc/ssl/certs"
     _cmd: "sh -c 'update-ca-certificates'"
+  changed_when: false
