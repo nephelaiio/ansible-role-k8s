@@ -73,12 +73,17 @@ The below requirements are needed on the host that executes this module.
 
 * kubernetes = "^24.2.0"
 * openshift = "^0.13.1"
+* jmespath = "^1.0.1"
 
 ### Ansible
 
-The below python roles are needed on the host that executes this module:
+The below Ansible roles are needed on the host that executes this module:
 
 * nephelaiio.plugins
+
+The below Ansible collections  are needed on the host that executes this module:
+
+* community.general
 
 ## Example Playbook
 

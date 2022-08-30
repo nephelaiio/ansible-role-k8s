@@ -8,6 +8,7 @@ authors = ["nephelaiio"]
 python = "^3.8"
 kubernetes = "^24.2.0"
 openshift = "^0.13.1"
+jmespath = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"

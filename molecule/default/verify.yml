@@ -18,8 +18,11 @@
     - name: include helm checks
       include_tasks: verify/helm.yml
 
-    - name: include helm checks
+    - name: include pod checks
       include_tasks: verify/pods.yml
+
+    - name: include cert checks
+      include_tasks: verify/certs.yml
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml

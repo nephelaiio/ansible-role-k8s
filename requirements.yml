@@ -2,4 +2,5 @@
 roles:
   - nephelaiio.plugins
   - nephelaiio.kind
-collections: []
+collections:
+  - community.general
