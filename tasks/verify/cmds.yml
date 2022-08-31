@@ -1,9 +1,4 @@
 ---
-- name: install bubblewrap
-  ansible.builtin.package:
-    name: bubblewrap
-  become: yes
-
 - name: create wrapper command
   copy:
     content: |

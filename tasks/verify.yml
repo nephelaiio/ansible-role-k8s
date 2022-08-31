@@ -3,6 +3,9 @@
   ansible.builtin.debug:
     msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
+- name: include verifier requirement tasks
+  include_tasks: verify/requirements.yml
+
 - name: create temporary directory
   ansible.builtin.tempfile:
     state: directory

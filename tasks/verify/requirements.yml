@@ -1,0 +1,5 @@
+---
+- name: install bubblewrap
+  ansible.builtin.package:
+    name: bubblewrap
+  become: yes
