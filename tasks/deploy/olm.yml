@@ -15,3 +15,4 @@
     wait: true
     wait_timeout: "{{ k8s_olm_wait_timeout }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+  changed_when: false
