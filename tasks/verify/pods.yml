@@ -13,7 +13,7 @@
 
 - name: validate pod status
   ansible.builtin.fail:
-    msg: "the following pods are in failed status [{{ pods_names | join(', ') }}]"
+    msg: "the following pods are in failed status [{{ pod_names | join(', ') }}]"
   vars:
     pod_names: "{{ pods_failed | map(attribute='metadata.name') }}"
   when: pods_failed | length > 0
