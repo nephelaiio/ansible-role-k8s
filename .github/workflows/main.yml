@@ -52,10 +52,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - latest
-          - v1.24.0
-          - v1.23.6
-          - v1.22.9
+          - v1.24.3
     steps:
       - name: check out the codebase.
         uses: actions/checkout@v2

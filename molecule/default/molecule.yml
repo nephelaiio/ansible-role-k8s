@@ -24,6 +24,7 @@ provisioner:
           k8s_cluster_name: molecule.nephelai.io
 
           # kind vardefs
+          kind_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/kind
           kind_net_addr: 172.19.0.0/24
           kind_cluster_name: molecule-k8s
           kind_kubeconfig: "{{ k8s_kubeconfig }}"
@@ -33,6 +34,8 @@ provisioner:
           k8s_address_pool_public_iprange: 172.19.2.0/24
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
+          k8s_longhorn_deploy: true
+          k8s_awxoperator_deploy: true
 verifier:
   name: ansible
 scenario:

@@ -38,11 +38,11 @@
     msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
   vars:
     chart_release_min: '4.0.15'
-  when: (k8s_nginx_chart_release | regex_replace('^v' ,'')) is version(chart_release_min | regex_replace('^v', ''), operator='lt')
+  when: (k8s_nginx_chart.release | regex_replace('^v' ,'')) is version(chart_release_min | regex_replace('^v', ''), operator='lt')
 
 - name: check certmanager release
   ansible.builtin.fail:
-    msg: "k8s_certmanager_chart_release must be at least '{{ chart_release_min }}'"
+    msg: "k8s_certmanager_chart.release must be at least '{{ chart_release_min }}'"
   vars:
     chart_release_min: 'v1.6.1'
-  when: (k8s_certmanager_chart_release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')
+  when: (k8s_certmanager_chart.release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')

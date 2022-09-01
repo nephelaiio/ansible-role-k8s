@@ -3,3 +3,55 @@
   ansible.builtin.package:
     name: bubblewrap
   become: yes
+
+- name: create ca cert dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ k8s_verifier_path }}/ca-certificates"
+
+- name: create ssl cert dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ k8s_verifier_path }}/certs"
+
+- name: write ca certificate file
+  ansible.builtin.copy:
+    content: "{{ _cacert }}"
+    dest: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
+    mode: '0755'
+  vars:
+    _cacert: "{{ _cacert_data.data['ca.crt'] | b64decode }}"
+    _cacert_data: "{{ _cacert_query | selectattr('metadata.name', 'equalto', 'cluster-issuer-secret') | first }}"
+    _cacert_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Secret',
+        namespace=k8s_certmanager_namespace,
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
+- name: add cluster ca certificate to wrapped env
+  ansible.builtin.command: "bwrap {{ _bind_dev }} {{ _bind_ca }} {{ _bind_certs }} {{ _cmd }}"
+  vars:
+    _bind_dev: "--dev-bind / /"
+    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
+    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
+    _cmd: "sh -c 'update-ca-certificates'"
+  changed_when: false
+
+- name: create wrapper command
+  copy:
+    content: |
+      #!/usr/bin/env bash
+
+      set -euo pipefail
+      {{ _cmd }}
+    dest: "{{ k8s_verifier_path }}/bwrap"
+    mode: 0755
+  vars:
+    _cmd: "bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c \"$@\""
+    _bind_dev: "--dev-bind / /"
+    _bind_hosts: "--bind {{ k8s_verifier_path }}/hosts /etc/hosts"
+    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
+    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"

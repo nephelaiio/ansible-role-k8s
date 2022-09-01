@@ -3,8 +3,8 @@
   kubernetes.core.helm:
     name: "{{ ingress_name }}"
     chart_ref: ingress-nginx
-    chart_repo_url: https://kubernetes.github.io/ingress-nginx
-    chart_version: "{{ k8s_nginx_chart_release }}"
+    chart_repo_url: "{{ k8s_nginx_chart.repo }}"
+    chart_version: "{{ k8s_nginx_chart.release }}"
     release_namespace: "{{ ingress_namespace }}"
     state: present
     wait: true
@@ -22,8 +22,8 @@
             metallb.universe.tf/address-pool: "{{ item.key }}"
   vars:
     ingress_class: "nginx-{{ item.value.name }}"
-    ingress_name: "{{ item.value.name }}"
+    ingress_name: "{{ ingress_class }}"
     ingress_namespace: "{{ ingress_class }}"
   loop_control:
-    label: "{{ item.key }}"
+    label: "{{ ingress_class }}"
   loop: "{{ k8s_address_pools[k8s_cluster_type] | dict2items }}"

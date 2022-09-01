@@ -1,4 +1,6 @@
 ---
 k8s_metallb_namespace: metallb-system
-k8s_metallb_chart_release: "2.6.14"
+k8s_metallb_chart:
+  repo: "https://charts.bitnami.com/bitnami"
+  release: "2.6.14"
 k8s_metallb_wait_timeout: "{{ k8s_wait_timeout }}"

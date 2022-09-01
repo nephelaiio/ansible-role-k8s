@@ -14,3 +14,9 @@
 - include_tasks: "deploy/argocd.yml"
 
 - include_tasks: "deploy/olm.yml"
+
+- include_tasks: "deploy/longhorn.yml"
+  when: k8s_longhorn_deploy | bool
+
+- include_tasks: "deploy/awx-operator.yml"
+  when: k8s_awxoperator_deploy | bool

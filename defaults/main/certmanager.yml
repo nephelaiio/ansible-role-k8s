@@ -1,6 +1,8 @@
 ---
 k8s_certmanager_issuer_name: letsencrypt
 k8s_certmanager_namespace: cert-manager
-k8s_certmanager_chart_release: v1.9.1
+k8s_certmanager_chart:
+  repo: "https://charts.jetstack.io"
+  release: "v1.9.1"
 k8s_certmanager_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_certmanager_cacert: "/usr/share/ca-certificates/{{ k8s_cluster_name }}.crt"

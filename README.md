@@ -3,18 +3,19 @@
 [![Build Status](htAnsible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to bootstrap K8s cluster deployments with the following components:
-* MetalLB (Helm deployment)
-* Cert-Manager (Helm deployment)
+* MetalLB (Regular Helm deployment)
+* Cert-Manager (Regular Helm deployment)
 * NGINX ingress controllers (Helm deployment)
-* ArgoCD (Helm deployment)
+* ArgoCD (Regular Helm deployment)
 * OLM (Manifest deployment)
-* ExternalDNS (TODO)
-* LongHorn (TODO) 
-* Strimzi (TODO)
-* Zalando Postgres Operator (TODO)
+* LongHorn (Regular Helm deployment)
+* AWX Operator (ArgoCD Helm deployment)
 * Grafana (TODO)
-* Hashicorp Vault (TODO)
+* Strimzi (TODO)
+* ExternalDNS (TODO)
 * Kyverno (TODO)
+* Hashicorp Vault (TODO)
+* Zalando Postgres Operator (TODO)
 
 Role includes a cluster verifier that can be activated by setting `k8s_verify: true` that performs the following checks:
 * All pods are in OK status
@@ -22,8 +23,8 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 * All certificates are in OK status
 * All ingresses haven been assigned external ips
 * All ingresses respond with HTTP 200
-* All ArgoCD deployments are in OK status (TODO)
-* All volumes are in OK status (TODO)
+* All volumes are in OK status
+* All ArgoCD deployments are in OK status
 
 ## Role Variables
 
@@ -49,7 +50,7 @@ ArgoCD parameters
 
 | Parameter                |                   Default | Type   | Description                                                         | Required |
 |:-------------------------|--------------------------:|:-------|:--------------------------------------------------------------------|----------|
-| k8s_argocd_chart_release |                    4.10.9 | string | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
+| k8s_argocd_chart.release |                    4.10.9 | string | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
 | k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string | ArgoCD ingress hostname                                             | no       |
 | k8s_argocd_exec_timeout  |                        3m | string | ArgoCD git operation timeout fo                                     | no       |
 
@@ -63,17 +64,25 @@ MetalLB parameters:
 
 | Parameter                  |     Default | Type   | Description                                     | Required |
 |:---------------------------|------------:|:-------|:------------------------------------------------|----------|
-| k8s_metallb_chart_release  |      2.6.14 | string | From command `helm search repo bitnami/metallb` | no       |
+| k8s_metallb_chart.release  |      2.6.14 | string | From command `helm search repo bitnami/metallb` | no       |
 | k8s_metallb_speaker_secret | _undefined_ | string |                                                 | yes      |
 
 Cert-Manager parameters:
 
 | Parameter                     |                                                Default | Type   | Description                              | Required |
 |:------------------------------|-------------------------------------------------------:|:-------|:-----------------------------------------|----------|
-| k8s_certmanager_chart_release |                                                 v1.9.1 | string | From command `helm search repo jetstack` | no       |
+| k8s_certmanager_chart.release |                                                 v1.9.1 | string | From command `helm search repo jetstack` | no       |
 | k8s_certmanager_acme_secret   |                                            _undefined_ | string | Cloudflare api token                     | yes      |
 | k8s_certmanager_acme_email    |                                            _undefined_ | string | Cloudflare api email                     | yes      |
 | k8s_certmanager_issuer_server | https://acme-staging-v02.api.letsencrypt.org/directory | string | LetsEncrypt registration server          | no       |
+
+Longhorn parameters:
+
+| Parameter                  |  Default | Type       | Description                                                                    | Required |
+|:---------------------------|---------:|:-----------|:-------------------------------------------------------------------------------|----------|
+| k8s_longhorn_deploy        |     true | boolean    | Toggle flag for Longhorn deployment                                            | no       |
+| k8s_longhorn_chart.release |    1.3.1 | boolean    | From command `helm search repo longhorn`                                       | no       |
+| k8s_longhorn_chart.release | _object_ | dictionary | See https://github.com/longhorn/charts/blob/master/charts/longhorn/values.yaml | no       |
 
 Verifier parameters:
 

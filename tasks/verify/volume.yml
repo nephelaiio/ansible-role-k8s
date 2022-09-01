@@ -1,0 +1,66 @@
+---
+- name: create test namespace
+  kubernetes.core.k8s:
+    namespace: longhorn-test
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: longhorn-test
+
+- name: create test volume claim
+  kubernetes.core.k8s:
+    namespace: longhorn-test
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: longhorn-test
+        namespace: longhorn-test
+      spec:
+        storageClassName: longhorn
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 3Gi
+
+- name: validate persistent volume status
+  ansible.builtin.fail:
+    msg: "the following pvs are in failed status [{{ pv_names | join(', ') }}]"
+  vars:
+    pv_names: "{{ pv_failed | map(attribute='metadata.name') }}"
+    pv_failed: "{{ pv_query | rejectattr('status.phase', 'equalto', 'Bound') }}"
+    pv_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='PersistentVolume',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  retries: 3
+  delay: 30
+  until: pv_failed | length == 0
+  failed_when: pv_failed | length > 0
+
+- name: validate persistent claim status
+  ansible.builtin.fail:
+    msg: "the following pvcs are in failed status [{{ pvc_names | join(', ') }}]"
+  vars:
+    pvc_names: "{{ pvc_failed | map(attribute='metadata.name') }}"
+    pvc_failed: "{{ pvc_query | rejectattr('status.phase', 'equalto', 'Bound') }}"
+    pvc_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='PersistentVolumeClaim',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  retries: 3
+  delay: 30
+  until: pvc_failed | length == 0
+  failed_when: pvc_failed | length > 0

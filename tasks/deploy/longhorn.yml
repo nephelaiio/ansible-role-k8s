@@ -1,0 +1,15 @@
+---
+- name: deploy longhorn
+  kubernetes.core.helm:
+    name: longhorn
+    chart_ref: longhorn
+    chart_repo_url: "{{ k8s_longhorn_chart.repo }}"
+    chart_version: "{{ k8s_longhorn_chart.release }}"
+    release_namespace: "{{ k8s_longhorn_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_longhorn_wait_timeout }}s"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+    values: "{{ k8s_longhorn_chart_values }}"

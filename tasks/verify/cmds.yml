@@ -1,20 +1,4 @@
 ---
-- name: create wrapper command
-  copy:
-    content: |
-      #!/usr/bin/env bash
-
-      set -euo pipefail
-      {{ _cmd }}
-    dest: "{{ k8s_verifier_path }}/bwrap"
-    mode: 0755
-  vars:
-    _cmd: "bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c \"$@\""
-    _bind_dev: "--dev-bind / /"
-    _bind_hosts: "--bind {{ k8s_verifier_path }}/hosts /etc/hosts"
-    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
-    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
-
 - name: execute check commands
   ansible.builtin.command: "{{ _cmd }}"
   vars:

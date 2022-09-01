@@ -3,8 +3,8 @@
   kubernetes.core.helm:
     name: metallb
     chart_ref: metallb
-    chart_repo_url: https://charts.bitnami.com/bitnami
-    chart_version: "{{ k8s_metallb_chart_release }}"
+    chart_repo_url: "{{ k8s_metallb_chart.repo }}"
+    chart_version: "{{ k8s_metallb_chart.release }}"
     release_namespace: "{{ k8s_metallb_namespace }}"
     create_namespace: true
     state: present
