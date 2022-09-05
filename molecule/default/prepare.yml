@@ -7,7 +7,7 @@
 
   tasks:
 
-    - name: set kind release metadata
+    - name: set helm release metadata
       block:
 
         - name: query helm releases
