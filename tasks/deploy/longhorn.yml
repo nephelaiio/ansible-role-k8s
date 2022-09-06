@@ -12,4 +12,4 @@
     wait_timeout: "{{ k8s_longhorn_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
-    values: "{{ k8s_longhorn_chart.values }}"
+    values: "{{ k8s_longhorn_chart_values }}"
