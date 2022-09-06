@@ -2,7 +2,7 @@
 - name: install argocd chart
   kubernetes.core.helm:
     name: argocd
-    chart_ref: argo-cd
+    chart_ref: "{{ k8s_argocd_chart.name }}"
     chart_repo_url: "{{ k8s_argocd_chart.repo }}"
     chart_version: "{{ k8s_argocd_chart.release }}"
     release_namespace: "{{ k8s_argocd_namespace }}"

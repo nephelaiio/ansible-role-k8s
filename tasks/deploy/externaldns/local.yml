@@ -2,7 +2,7 @@
 - name: deploy nginx local extenal-dns controllers
   kubernetes.core.helm:
     name: "external-dns-rfc-{{ domain_filter | regex_replace('\\.', '-') }}"
-    chart_ref: "{{ externaldns_helm_repo_name }}/external-dns"
+    chart_ref: "external-dns"
     chart_version: "{{ externaldns_helm_chart_version }}"
     release_namespace: "{{ externaldns_namespace }}"
     create_namespace: true
@@ -43,7 +43,7 @@
 - name: manage external-dns helm chart for external records
   kubernetes.core.helm:
     name: external-dns-cf
-    chart_ref: "{{ externaldns_helm_repo_name }}/external-dns"
+    chart_ref: "external-dns"
     chart_version: "{{ externaldns_helm_chart_version }}"
     release_namespace: "{{ externaldns_namespace }}"
     create_namespace: true

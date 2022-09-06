@@ -2,7 +2,7 @@
 - name: deploy nginx local ingress controllers
   kubernetes.core.helm:
     name: "{{ ingress_name }}"
-    chart_ref: ingress-nginx
+    chart_ref: "{{ k8s_nginx_chart.name }}"
     chart_repo_url: "{{ k8s_nginx_chart.repo }}"
     chart_version: "{{ k8s_nginx_chart.release }}"
     release_namespace: "{{ ingress_namespace }}"

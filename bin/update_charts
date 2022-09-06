@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+chart_refs=$(grep -R "chart:" defaults/)
+for chart_ref in $chart_refs; do
+    file=$(echo "$chart_ref" | cut -d: -f 1)
+    vardef=$(echo "$chart_ref" | cut -d: -f 2)
+    repo=$(yq ".$vardef.repo" < "$file")
+    chart=$(yq ".$vardef.name" < "$file")
+    if [[ "$repo" != "null" && "$chart" != "null" ]]; then
+        helm repo add "$chart" "$repo"  >/dev/null 2>&1
+        helm repo update >/dev/null 2>&1
+        version=$(helm search repo "$chart/$chart" -o json | jq '.[0].version' -r)
+        tmp="$(mktemp)"
+        timestamp=$(date --iso-8601=seconds)
+        yq eval-all '. as $item ireduce ({}; . * $item)' \
+            "$file" \
+            <(printf '%s:\n  release: "%s"\n  last_checked: "%s"' "$vardef" "$version" "$timestamp") \
+            > "$tmp"
+        mv "$tmp" "$file"
+    fi
+done

@@ -2,7 +2,7 @@
 - name: deploy metallb
   kubernetes.core.helm:
     name: metallb
-    chart_ref: metallb
+    chart_ref: "{{ k8s_metallb_chart.name }}"
     chart_repo_url: "{{ k8s_metallb_chart.repo }}"
     chart_version: "{{ k8s_metallb_chart.release }}"
     release_namespace: "{{ k8s_metallb_namespace }}"
