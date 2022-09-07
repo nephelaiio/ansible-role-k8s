@@ -54,7 +54,6 @@ jobs:
         release:
           - v0.15.0
         image:
-          - v1.25.0
           - v1.24.4
     steps:
       - name: check out the codebase.
