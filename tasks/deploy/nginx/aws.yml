@@ -6,7 +6,7 @@
     chart_repo_url: "{{ k8s_nginx_chart.repo }}"
     chart_version: "{{ k8s_nginx_chart.release }}"
     release_namespace: "{{ ingress_namespace }}"
-    state: "{{ item.value.state }}"
+    state: present
     wait: true
     wait_timeout: "{{ k8s_nginx_wait_timeout }}"
     create_namespace: true
@@ -26,13 +26,13 @@
               service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
               service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
               service.beta.kubernetes.io/aws-load-balancer-type: "external"
-              service.beta.kubernetes.io/aws-load-balancer-scheme: "{{ item.value.scheme }}"
+              service.beta.kubernetes.io/aws-load-balancer-scheme: "{{ item.scheme }}"
               service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
-              service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.key }}"
+              service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.name }}"
   vars:
-    ingress_class: "nginx-{{ item.value.name }}"
-    ingress_name: "{{ item.value.name }}"
+    ingress_class: "nginx-{{ item.name }}"
+    ingress_name: "{{ item.name }}"
     ingress_namespace: "{{ ingress_class }}"
   loop_control:
-    label: "{{ item.key }}"
-  loop: "{{ k8s_address_pools[k8s_cluster_type] | dict2items }}"
+    label: "{{ ingress_name }}"
+  loop: "{{ k8s_address_pools }}"

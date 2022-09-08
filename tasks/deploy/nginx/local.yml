@@ -19,11 +19,11 @@
           controllerValue: "k8s.io/{{ ingress_name }}"
         service:
           annotations:
-            metallb.universe.tf/address-pool: "{{ item.key }}"
+            metallb.universe.tf/address-pool: "{{ item.name }}"
   vars:
-    ingress_class: "nginx-{{ item.value.name }}"
+    ingress_class: "nginx-{{ item.name }}"
     ingress_name: "{{ ingress_class }}"
     ingress_namespace: "{{ ingress_class }}"
   loop_control:
     label: "{{ ingress_class }}"
-  loop: "{{ k8s_address_pools[k8s_cluster_type] | dict2items }}"
+  loop: "{{ k8s_address_pools }}"

@@ -23,4 +23,4 @@
     resource_definition: "{{ lookup('template', 'metallb.j2.yml') }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
   vars:
-    rke_metallb_pools: "{{ k8s_address_pools[k8s_cluster_type].values() }}"
+    rke_metallb_pools: "{{ k8s_address_pools }}"

@@ -26,7 +26,24 @@
         msg: "public address pool range must be set as subnet/prefix"
       when: k8s_address_pool_public_iprange | length == 0 or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
 
-  when: k8s_cluster_type == 'local'
+    - name: set k8s_address_pool metadata
+      ansible.builtin.set_fact:
+        k8s_address_pools: "{{ k8s_address_pools_local }}"
+
+  when:
+    - k8s_cluster_type == 'local'
+    - k8s_address_pools is undefined
+
+- name: check aws cluster settings
+  block:
+
+    - name: set k8s_address_pool metadata
+      ansible.builtin.set_fact:
+        k8s_address_pools: "{{ k8s_address_pools_aws }}"
+
+  when:
+    - k8s_cluster_type == 'aws'
+    - k8s_address_pools is undefined
 
 - name: check metallb speaker secret is set
   ansible.builtin.fail:

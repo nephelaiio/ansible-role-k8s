@@ -27,12 +27,12 @@
       logLevel: debug
       logFormat: json
   vars:
-    controller_class: "externaldns-{{ item.value.name }}"
+    controller_class: "externaldns-{{ item.name }}"
     controller_name: "{{ controller_class }}"
     controller_namespace: "{{ controller_class }}"
   loop_control:
-    label: "{{ item.key }}"
-  loop: "{{ k8s_address_pools[k8s_cluster_type] | dict2items }}"
+    label: "{{ controller_name }}"
+  loop: "{{ k8s_address_pools }}"
 
 - name: manage external-dns helm chart for internal rfc2136 records
   kubernetes.core.helm:

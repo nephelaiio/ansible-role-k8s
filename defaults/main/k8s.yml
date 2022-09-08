@@ -6,27 +6,18 @@ k8s_verify: false
 
 k8s_kubeconfig: "~/.kube/config"
 k8s_wait_timeout: 600
-k8s_address_pools:
-  local:
-    private:
-      scheme: 'internal'
-      name: "{{ k8s_address_pool_private_name }}"
-      pool: "{{ k8s_address_pool_private_iprange }}"
-      state: present
-    public:
-      scheme: 'internet-facing'
-      name: "{{ k8s_address_pool_public_name }}"
-      pool: "{{ k8s_address_pool_public_iprange }}"
-      state: present
-  aws:
-    private:
-      scheme: 'internal'
-      name: private
-      state: present
-    public:
-      scheme: 'internet-facing'
-      name: public
-      state: present
+k8s_address_pools_local:
+  - scheme: 'internal'
+    name: "{{ k8s_address_pool_private_name }}"
+    pool: "{{ k8s_address_pool_private_iprange }}"
+  - scheme: 'internet-facing'
+    name: "{{ k8s_address_pool_public_name }}"
+    pool: "{{ k8s_address_pool_public_iprange }}"
+k8s_address_pools_aws:
+  - scheme: 'internal'
+    name: private
+  - scheme: 'internet-facing'
+    name: public
 
 k8s_address_pool_private_name: "private"
 k8s_address_pool_private_iprange: ""
