@@ -4,6 +4,15 @@
     name: bubblewrap
   become: yes
 
+- name: install certutil
+  ansible.builtin.package:
+    name: libnss3-tools
+  become: yes
+
+- name: set cert metadata
+  ansible.builtin.set_fact:
+    k8s_cacert_path: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
+
 - name: create ca cert dir
   ansible.builtin.file:
     state: directory
@@ -17,7 +26,7 @@
 - name: write ca certificate file
   ansible.builtin.copy:
     content: "{{ _cacert }}"
-    dest: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
+    dest: "{{ k8s_cacert_path }}"
     mode: '0755'
   vars:
     _cacert: "{{ _cacert_data.data['ca.crt'] | b64decode }}"
@@ -30,6 +39,9 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
+
+- name: install certificate in edge truststore
+  ansible.builtin.command: "certutil -d sql:$HOME/.pki/nssdb -A -t C,, -n {{ k8s_cluster_name }} -i {{ k8s_cacert_path }}"
 
 - name: add cluster ca certificate to wrapped env
   ansible.builtin.command: "bwrap {{ _bind_dev }} {{ _bind_ca }} {{ _bind_certs }} {{ _cmd }}"
