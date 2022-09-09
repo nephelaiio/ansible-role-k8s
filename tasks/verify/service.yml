@@ -1,0 +1,32 @@
+---
+- name: set service metadata
+  ansible.builtin.set_fact:
+    loadbalancer_data: "{{ _loadbalancers }}"
+    loadbalancer_failed: "{{ _loadbalancers | json_query(status_filter) }}"
+    loadbalancer_dns: "{{ _loadbalancers | json_query(dns_filter) | json_query(dns_map) | map('join', ' ') }}"
+  vars:
+    _loadbalancers: "{{ service_data | json_query(loadbalancer_filter) }}"
+    service_data: "{{ service_query | selectattr('spec.type', 'equalto', 'LoadBalancer') }}"
+    dns_filter: "[?((metadata.annotations.\"external-dns.alpha.kubernetes.io/hostname\" || '') != '')]"
+    dns_map: "[].to_array([status.loadBalancer.ingress[0].ip, metadata.annotations.\"external-dns.alpha.kubernetes.io/hostname\"])"
+    loadbalancer_filter: "[?(spec.type == 'LoadBalancer')]"
+    status_filter: "[?!not_null(status.loadBalancer)].metadata.name"
+    service_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Service',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
+- name: validate service status
+  ansible.builtin.fail:
+    msg: "the following loadlabancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
+  when: loadbalancer_failed | length > 0
+
+- name: write service hostfile
+  ansible.builtin.lineinfile:
+    path: "{{ k8s_verifier_path }}/hosts"
+    line: "{{ item }}"
+    create: true
+  loop: "{{ loadbalancer_dns }}"

@@ -1,5 +1,5 @@
 ---
-- name: record ingress metadata
+- name: query ingress metadata
   ansible.builtin.set_fact:
     ingress_failed: "{{ ingress_query | community.general.json_query(ingress_filter) | map(attribute='metadata.name') }}"
   vars:
@@ -42,6 +42,8 @@
   loop: "{{ ingress_data }}"
 
 - name: write ingress hostfile
-  ansible.builtin.copy:
-    content: "{{ ingress_hosts | join('\n') }}"
-    dest: "{{ k8s_verifier_path }}/hosts"
+  ansible.builtin.lineinfile:
+    path: "{{ k8s_verifier_path }}/hosts"
+    line: "{{ item }}"
+    create: true
+  loop: "{{ ingress_hosts }}"
