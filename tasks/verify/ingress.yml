@@ -39,6 +39,8 @@
   vars:
     ingress_hostentries: "{{ item[0] | product(item[1]) | map('join', ' ') }}"
     ingress_cmdentries: "{{ ['curl -fLD- https://'] | product(item[1]) | map('join', '') }}"
+  loop_control:
+    label: "{{ item | map('join', ' ') }}"
   loop: "{{ ingress_data }}"
 
 - name: write ingress hostfile

@@ -13,6 +13,19 @@
       )
     }}"
 
+- name: query argocd ingress metadata
+  ansible.builtin.set_fact:
+    ingress_argocd_ip: "{{ ingress_query[0].status.loadBalancer.ingress[0].ip }}"
+  vars:
+    ingress_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        kind='Ingress',
+        namespace=k8s_argocd_namespace,
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+
 - name: record argocd deployment env vars
   ansible.builtin.set_fact:
     argocd_env: "{{ _argocd_env }}"
@@ -66,7 +79,7 @@
 
 - name: auth against argocd api
   ansible.builtin.uri:
-    url: "https://172.19.1.1/api/v1/session"
+    url: "https://{{ ingress_argocd_ip }}/api/v1/session"
     method: POST
     body_format: json
     headers:
@@ -85,7 +98,7 @@
 
     - name: query argocd application status
       ansible.builtin.uri:
-        url: "https://172.19.1.1/api/v1/applications?refresh=true"
+        url: "https://{{ ingress_argocd_ip }}/api/v1/applications?refresh=true"
         headers:
           host: "{{ k8s_argocd_hostname }}"
           cookie: "argocd.token={{ argocd_admin_token }}"

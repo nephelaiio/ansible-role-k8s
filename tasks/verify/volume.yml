@@ -1,33 +1,37 @@
 ---
-- name: create test namespace
-  kubernetes.core.k8s:
-    namespace: longhorn-test
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition:
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: longhorn-test
+- block:
 
-- name: create test volume claim
-  kubernetes.core.k8s:
-    namespace: longhorn-test
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition:
-      apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        name: longhorn-test
+    - name: create test namespace
+      kubernetes.core.k8s:
         namespace: longhorn-test
-      spec:
-        storageClassName: longhorn
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 3Gi
+        state: present
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        resource_definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: longhorn-test
+
+    - name: create test volume claim
+      kubernetes.core.k8s:
+        namespace: longhorn-test
+        state: present
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: longhorn-test
+            namespace: longhorn-test
+          spec:
+            storageClassName: longhorn
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+
+  when: k8s_longhorn_deploy | bool
 
 - name: validate persistent volume status
   ansible.builtin.fail:
