@@ -24,3 +24,4 @@
           automated: {}
           syncOptions:
             - CreateNamespace=true
+  when: k8s_awxoperator_deploy | bool

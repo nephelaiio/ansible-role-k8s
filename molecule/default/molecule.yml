@@ -10,6 +10,12 @@ driver:
   name: delegated
 provisioner:
   name: ansible
+  playbooks:
+    prepare: ../common/prepare.yml
+    create: ../common/create.yml
+    converge: ../common/converge.yml
+    verify: ../common/verify.yml
+    destroy: ../common/destroy.yml
   config_options:
     defaults:
       callbacks_enabled: ansible.posix.profile_tasks
@@ -38,7 +44,7 @@ provisioner:
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_longhorn_deploy: false
-          k8s_awxoperator_deploy: true
+          k8s_awxoperator_deploy: false
           k8s_secrets:
             - namespace: secret-test
               name: molecule-secret
