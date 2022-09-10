@@ -1,0 +1,15 @@
+---
+- name: install strimzi chart
+  kubernetes.core.helm:
+    name: strimzi
+    chart_ref: "{{ k8s_strimzi_chart.name }}"
+    chart_repo_url: "{{ k8s_strimzi_chart.repo }}"
+    chart_version: "{{ k8s_strimzi_chart.release }}"
+    release_namespace: "{{ k8s_strimzi_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_strimzi_wait_timeout }}s"
+    values: "{{ k8s_strimzi_chart_values }}"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ k8s_helm_bin | default(omit) }}"

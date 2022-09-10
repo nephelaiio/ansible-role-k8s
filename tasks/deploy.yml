@@ -13,9 +13,13 @@
 
 - include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
 
-- include_tasks: "deploy/argocd.yml"
-
 - include_tasks: "deploy/olm.yml"
+
+- include_tasks: "deploy/argocd.yml"
+  when: k8s_argocd_deploy | bool
+
+- include_tasks: "deploy/strimzi.yml"
+  when: k8s_strimzi_deploy | bool
 
 - include_tasks: "deploy/longhorn.yml"
   when: k8s_longhorn_deploy | bool

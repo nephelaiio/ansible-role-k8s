@@ -2,4 +2,3 @@
 k8s_awxoperator_deploy: false
 k8s_awxoperator_release: 0.28.0
 k8s_awxoperator_namespace: awx
-k8s_awxoperator_hostname: "awx.{{ k8s_cluster_name  }}"

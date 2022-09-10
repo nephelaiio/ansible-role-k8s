@@ -48,11 +48,12 @@ Cluster wide parameters
 
 ArgoCD parameters
 
-| Parameter                |                   Default | Type   | Description                                                         | Required |
-|:-------------------------|--------------------------:|:-------|:--------------------------------------------------------------------|----------|
-| k8s_argocd_chart.release |                    4.10.9 | string | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
-| k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string | ArgoCD ingress hostname                                             | no       |
-| k8s_argocd_exec_timeout  |                        3m | string | ArgoCD git operation timeout fo                                     | no       |
+| Parameter                |                   Default | Type    | Description                                                         | Required |
+|:-------------------------|--------------------------:|:--------|:--------------------------------------------------------------------|----------|
+| k8s_argocd_deploy        |                      true | boolean | Toggle flag for ArgoCD deployment                                 | no       |
+| k8s_argocd_chart.release |                    4.10.9 | string  | From argo-cd tags at https://github.com/argoproj/argo-helm/releases | no       |
+| k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string  | ArgoCD ingress hostname                                             | no       |
+| k8s_argocd_exec_timeout  |                        3m | string  | ArgoCD git operation timeout fo                                     | no       |
 
 OLM paramters
 
@@ -83,6 +84,11 @@ Longhorn parameters:
 | k8s_longhorn_deploy        |     true | boolean    | Toggle flag for Longhorn deployment                                            | no       |
 | k8s_longhorn_chart.release |    1.3.1 | boolean    | From command `helm search repo longhorn`                                       | no       |
 | k8s_longhorn_chart.release | _object_ | dictionary | See https://github.com/longhorn/charts/blob/master/charts/longhorn/values.yaml | no       |
+
+Strimzi parameters:
+| Parameter          | Default | Type    | Description                        | Required |
+|:-------------------|--------:|:--------|:-----------------------------------|----------|
+| k8s_strimzi_deploy |    true | boolean | Toggle flag for Strimzi deployment | no       |
 
 Secret parameters:
 
