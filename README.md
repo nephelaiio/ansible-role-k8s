@@ -15,7 +15,6 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * Strimzi (TODO)
 * ExternalDNS (TODO)
 * Kyverno (TODO)
-* Hashicorp Vault (TODO)
 * Zalando Postgres Operator (TODO)
 
 Role includes a cluster verifier that can be activated by setting `k8s_verify: true` that performs the following checks:
@@ -85,11 +84,29 @@ Longhorn parameters:
 | k8s_longhorn_chart.release |    1.3.1 | boolean    | From command `helm search repo longhorn`                                       | no       |
 | k8s_longhorn_chart.release | _object_ | dictionary | See https://github.com/longhorn/charts/blob/master/charts/longhorn/values.yaml | no       |
 
+Secret parameters:
+
+| Parameter   | Default | Type     | Description          | Required |
+|:------------|--------:|:---------|:---------------------|----------|
+| k8s_secrets |      [] | [Secret] | [Secret] definitions | no       |
+
 Verifier parameters:
 
 | Parameter         |     Default | Type   | Description                     | Required |
 |:------------------|------------:|:-------|:--------------------------------|----------|
 | k8s_verifier_path | _undefined_ | string | Verification artifact directory | no       |
+
+## Data Types
+
+### Secret
+```
+{
+  "name": string,
+   "namespace": string 
+   "type": [string]
+   "data": hash
+}
+```
 
 ## Dependencies
 

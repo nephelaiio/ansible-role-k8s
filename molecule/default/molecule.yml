@@ -10,6 +10,9 @@ driver:
   name: delegated
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      callbacks_enabled: ansible.posix.profile_tasks
   inventory:
     hosts:
       all:
@@ -36,6 +39,12 @@ provisioner:
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_longhorn_deploy: true
           k8s_awxoperator_deploy: true
+          k8s_secrets:
+            - namespace: secret-test
+              name: molecule-secret
+              data:
+                username: "{{ 'molecule' | b64encode }}"
+                password: "{{ 'molecule' | b64encode }}"
 verifier:
   name: ansible
 scenario:

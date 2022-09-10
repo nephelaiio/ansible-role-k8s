@@ -5,6 +5,8 @@
 
 - include_tasks: "deploy/check.yml"
 
+- include_tasks: "deploy/secrets.yml"
+
 - include_tasks: "deploy/metallb.yml"
 
 - include_tasks: "deploy/certmanager.yml"

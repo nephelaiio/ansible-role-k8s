@@ -20,6 +20,9 @@
 
 - block:
 
+    - name: include secret checks
+      include_tasks: verify/secrets.yml
+
     - name: include helm checks
       include_tasks: verify/helm.yml
 
