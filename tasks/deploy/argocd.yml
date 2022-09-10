@@ -1,91 +1,92 @@
 ---
-- name: install argocd chart
-  kubernetes.core.helm:
-    name: argocd
-    chart_ref: "{{ k8s_argocd_chart.name }}"
-    chart_repo_url: "{{ k8s_argocd_chart.repo }}"
-    chart_version: "{{ k8s_argocd_chart.release }}"
-    release_namespace: "{{ k8s_argocd_namespace }}"
-    create_namespace: true
-    state: present
-    wait: true
-    wait_timeout: "{{ k8s_argocd_wait_timeout }}s"
-    values: "{{ k8s_argocd_chart_values }}"
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+- block:
 
-- name: query argocd-repo-server definition
-  ansible.builtin.set_fact:
-    _reposerver_def: "{{ _reposerver_query | first }}"
-  vars:
-    _reposerver_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Deployment',
-        namespace=k8s_argocd_namespace,
-        resource_name='argocd-repo-server',
-        kubeconfig=k8s_kubeconfig
-      )
-    }}"
+    - name: install argocd chart
+      kubernetes.core.helm:
+        name: argocd
+        chart_ref: "{{ k8s_argocd_chart.name }}"
+        chart_repo_url: "{{ k8s_argocd_chart.repo }}"
+        chart_version: "{{ k8s_argocd_chart.release }}"
+        release_namespace: "{{ k8s_argocd_namespace }}"
+        create_namespace: true
+        state: present
+        wait: true
+        wait_timeout: "{{ k8s_argocd_wait_timeout }}s"
+        values: "{{ k8s_argocd_chart_values }}"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        binary_path: "{{ k8s_helm_bin | default(omit) }}"
 
-- name: patch argocd reposerver deployment
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ _reposerver_patched }}"
-    namespace: "{{ k8s_argocd_namespace }}"
-    force: true
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-  vars:
-    _reposerver_container: "{{ _reposerver_def['spec']['template']['spec']['containers'][0] }}"
-    _reposerver_envnew:
-      name: ARGOCD_EXEC_TIMEOUT
-      value: "{{ k8s_argocd_exec_timeout }}"
-    _reposerver_envold: "{{ _reposerver_container['env'] | rejectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
-    _reposerver_envvars:
-      env: "{{ _reposerver_envold + [_reposerver_envnew] }}"
-    _reposerver_patch:
-      spec:
-        template:
+    - name: query argocd-repo-server definition
+      ansible.builtin.set_fact:
+        _reposerver_def: "{{ _reposerver_query | first }}"
+      vars:
+        _reposerver_query: "{{
+          query(
+            'kubernetes.core.k8s',
+            kind='Deployment',
+            namespace=k8s_argocd_namespace,
+            resource_name='argocd-repo-server',
+            kubeconfig=k8s_kubeconfig
+          )
+        }}"
+
+    - name: patch argocd reposerver deployment
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ _reposerver_patched }}"
+        namespace: "{{ k8s_argocd_namespace }}"
+        force: true
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+      vars:
+        _reposerver_container: "{{ _reposerver_def['spec']['template']['spec']['containers'][0] }}"
+        _reposerver_envnew:
+          name: ARGOCD_EXEC_TIMEOUT
+          value: "{{ k8s_argocd_exec_timeout }}"
+        _reposerver_envold: "{{ _reposerver_container['env'] | rejectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
+        _reposerver_envvars:
+          env: "{{ _reposerver_envold + [_reposerver_envnew] }}"
+        _reposerver_patch:
           spec:
-            containers:
-              - "{{ _reposerver_container | combine(_reposerver_envvars) }}"
-    _reposerver_patched: "{{ _reposerver_def | combine(_reposerver_patch, recursive=True) }}"
+            template:
+              spec:
+                containers:
+                  - "{{ _reposerver_container | combine(_reposerver_envvars) }}"
+        _reposerver_patched: "{{ _reposerver_def | combine(_reposerver_patch, recursive=True) }}"
 
-- name: deploy argocd ingress
-  kubernetes.core.k8s:
-    namespace: "{{ k8s_argocd_namespace }}"
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition:
-      apiVersion: networking.k8s.io/v1
-      kind: Ingress
-      metadata:
-        name: argocd-ingress
-        annotations:
-          nginx.ingress.kubernetes.io/affinity: "cookie"
-          nginx.ingress.kubernetes.io/affinity-mode: "persistent"
-          cert-manager.io/cluster-issuer: "{{ k8s_certmanager_issuer_name }}"
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-          nginx.ingress.kubernetes.io/configuration-snippet: |-
-            proxy_ssl_server_name on;
-            proxy_ssl_name $host;
-      spec:
-        ingressClassName: nginx-private
-        tls:
-          - hosts:
-              - "{{ k8s_argocd_hostname }}"
-            secretName: "{{ k8s_argocd_hostname }}"
-        rules:
-          - host: "{{ k8s_argocd_hostname }}"
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: argocd-server
-                      port:
-                        number: 443
+    - name: deploy argocd ingress
+      kubernetes.core.k8s:
+        namespace: "{{ k8s_argocd_namespace }}"
+        state: present
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        resource_definition:
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: argocd-ingress
+            annotations:
+              nginx.ingress.kubernetes.io/affinity: "cookie"
+              nginx.ingress.kubernetes.io/affinity-mode: "persistent"
+              cert-manager.io/cluster-issuer: "{{ k8s_certmanager_issuer_name }}"
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+              nginx.ingress.kubernetes.io/configuration-snippet: |-
+                proxy_ssl_server_name on;
+                proxy_ssl_name $host;
+          spec:
+            ingressClassName: nginx-private
+            tls:
+              - hosts:
+                  - "{{ k8s_argocd_hostname }}"
+                secretName: "{{ k8s_argocd_hostname }}"
+            rules:
+              - host: "{{ k8s_argocd_hostname }}"
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: argocd-server
+                          port:
+                            number: 443
 
-  tags:
-    - ingress
+  when: k8s_argocd_deploy | bool
