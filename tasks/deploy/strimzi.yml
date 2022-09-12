@@ -10,6 +10,5 @@
     state: present
     wait: true
     wait_timeout: "{{ k8s_strimzi_wait_timeout }}s"
-    values: "{{ k8s_strimzi_chart_values }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
