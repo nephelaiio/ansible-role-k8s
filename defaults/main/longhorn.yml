@@ -1,12 +1,12 @@
 ---
 k8s_longhorn_deploy: false
 k8s_longhorn_namespace: "longhorn-system"
-k8s_longhorn_chart_values:
-  persistence:
-    defaultClass: false
+k8s_longhorn_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_longhorn_chart:
   name: longhorn
   repo: "https://charts.longhorn.io"
   release: "1.3.1"
   last_checked: "2022-09-09T23:10:33-06:00"
-k8s_longhorn_wait_timeout: "{{ k8s_wait_timeout }}"
+k8s_longhorn_chart_values:
+  persistence:
+    defaultClass: false

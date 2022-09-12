@@ -3,7 +3,6 @@
 
     - name: create test namespace
       kubernetes.core.k8s:
-        namespace: longhorn-test
         state: present
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         resource_definition:
@@ -14,7 +13,6 @@
 
     - name: create test volume claim
       kubernetes.core.k8s:
-        namespace: longhorn-test
         state: present
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         resource_definition:

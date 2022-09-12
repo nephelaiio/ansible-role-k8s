@@ -3,26 +3,36 @@
   ansible.builtin.debug:
     msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
-- include_tasks: "deploy/check.yml"
+- name: include precondition checks
+  include_tasks: "deploy/check.yml"
 
-- include_tasks: "deploy/secrets.yml"
+- name: include secret management tasks
+  include_tasks: "deploy/secrets.yml"
 
-- include_tasks: "deploy/metallb.yml"
+- name: include metallb deployment tasks
+  include_tasks: "deploy/metallb.yml"
 
-- include_tasks: "deploy/certmanager.yml"
+- name: include certmanager deployment tasks
+  include_tasks: "deploy/certmanager.yml"
 
-- include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
+- name: include ingress deployment tasks
+  include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
 
-- include_tasks: "deploy/olm.yml"
+- name: include olm deployment tasks
+  include_tasks: "deploy/olm.yml"
 
-- include_tasks: "deploy/argocd.yml"
+- name: include argocd deployment tasks
+  include_tasks: "deploy/argocd.yml"
   when: k8s_argocd_deploy | bool
 
-- include_tasks: "deploy/strimzi.yml"
+- name: include strimzi deployment tasks
+  include_tasks: "deploy/strimzi.yml"
   when: k8s_strimzi_deploy | bool
 
-- include_tasks: "deploy/longhorn.yml"
+- name: include longhorn deployment tasks
+  include_tasks: "deploy/longhorn.yml"
   when: k8s_longhorn_deploy | bool
 
-- include_tasks: "deploy/awx-operator.yml"
+- name: include awx operator deployment tasks
+  include_tasks: "deploy/awx-operator.yml"
   when: k8s_awxoperator_deploy | bool

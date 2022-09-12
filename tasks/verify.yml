@@ -40,9 +40,14 @@
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml
+      when: k8s_argocd_deploy | bool
 
     - name: include volume checks
       ansible.builtin.include_tasks: verify/volume.yml
+
+    - name: include strimzi checks
+      ansible.builtin.include_tasks: verify/strimzi.yml
+      when: k8s_strimzi_deploy | bool
 
     - name: include command checks
       ansible.builtin.include_tasks: verify/cmds.yml
