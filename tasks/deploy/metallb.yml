@@ -16,11 +16,28 @@
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
 
-- name: deploy metallb manifest
+- name: create metallb pools
   kubernetes.core.k8s:
-    namespace: "{{ k8s_metallb_namespace }}"
     state: present
-    resource_definition: "{{ lookup('template', 'metallb.j2.yml') }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-  vars:
-    rke_metallb_pools: "{{ k8s_address_pools }}"
+    resource_definition:
+      apiVersion: metallb.io/v1beta1
+      kind: IPAddressPool
+      metadata:
+        name: "{{ item.name }}"
+        namespace: "{{ k8s_metallb_namespace }}"
+      spec:
+        addresses:
+          - "{{ item.pool }}"
+  loop: "{{ k8s_address_pools }}"
+
+- name: advertise metallb pools
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: metallb.io/v1beta1
+      kind: L2Advertisement
+      metadata:
+        name: metallb
+        namespace: "{{ k8s_metallb_namespace }}"
