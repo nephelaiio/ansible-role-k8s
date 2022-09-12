@@ -22,6 +22,7 @@
 
     - name: include secret checks
       include_tasks: verify/secrets.yml
+      when: k8s_secrets | length > 0
 
     - name: include helm checks
       include_tasks: verify/helm.yml
@@ -37,6 +38,9 @@
 
     - name: include ingress checks
       include_tasks: verify/ingress.yml
+
+    - name: include olm checks
+      ansible.builtin.include_tasks: verify/olm.yml
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml

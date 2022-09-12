@@ -18,6 +18,10 @@
 - name: include ingress deployment tasks
   include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
 
+- name: include longhorn deployment tasks
+  include_tasks: "deploy/longhorn.yml"
+  when: k8s_longhorn_deploy | bool
+
 - name: include olm deployment tasks
   include_tasks: "deploy/olm.yml"
 
@@ -29,9 +33,9 @@
   include_tasks: "deploy/strimzi.yml"
   when: k8s_strimzi_deploy | bool
 
-- name: include longhorn deployment tasks
-  include_tasks: "deploy/longhorn.yml"
-  when: k8s_longhorn_deploy | bool
+- name: include pgo deployment tasks
+  include_tasks: "deploy/pgo.yml"
+  when: k8s_pgo_deploy | bool
 
 - name: include awx operator deployment tasks
   include_tasks: "deploy/awx-operator.yml"

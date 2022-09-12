@@ -1,0 +1,18 @@
+---
+- name: validate olm operator status
+  ansible.builtin.fail:
+    msg: "the following operators are in failed status [{{ operator_failed | join(', ') }}]"
+  vars:
+    operator_failed: "{{ operator_query | rejectattr('status.phase', 'equalto', 'Succeeded') | map(attribute='metadata.name') }}"
+    operator_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        api_version='operators.coreos.com/v1alpha1',
+        kind='ClusterServiceVersion',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  retries: 3
+  delay: 30
+  until: operator_failed | length == 0
+  failed_when: operator_failed | length > 0

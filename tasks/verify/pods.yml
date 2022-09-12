@@ -4,7 +4,8 @@
     msg: "the following pods are in failed status [{{ pod_names | join(', ') }}]"
   vars:
     pod_names: "{{ pods_failed | map(attribute='metadata.name') }}"
-    pods_failed: "{{ pod_query | rejectattr('status.phase', 'equalto', 'Running') }}"
+    pods_completed: "{{ pod_query | rejectattr('status.phase', 'equalto', 'Running') }}"
+    pods_failed: "{{ pods_completed | rejectattr('status.phase', 'equalto', 'Succeeded') }}"
     pod_query: "{{
       query(
         'kubernetes.core.k8s',

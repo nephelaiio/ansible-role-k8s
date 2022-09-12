@@ -1,0 +1,3 @@
+---
+k8s_pgo_channel: v5
+k8s_pgo_deploy: true

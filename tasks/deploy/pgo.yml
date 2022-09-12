@@ -1,0 +1,16 @@
+---
+- name: deploy PGO operator subscription
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: Subscription
+      metadata:
+        name: pgo-operator
+        namespace: operators
+      spec:
+        channel: "{{ k8s_pgo_channel }}"
+        name: postgresql
+        source: operatorhubio-catalog
+        sourceNamespace: olm
