@@ -43,6 +43,7 @@ provisioner:
           k8s_address_pool_public_iprange: 172.19.2.0/24
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
+          k8s_strimzi_deploy: false
           k8s_argocd_deploy: true
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: true
