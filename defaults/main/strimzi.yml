@@ -1,11 +1,3 @@
 ---
+k8s_strimzi_channel: strimzi-0.31.x
 k8s_strimzi_deploy: true
-k8s_strimzi_namespace: "strimzi"
-k8s_strimzi_wait_timeout: "{{ k8s_wait_timeout }}"
-k8s_strimzi_exec_timeout: "3m"
-k8s_strimzi_chart:
-  name: "strimzi-kafka-operator"
-  repo: "https://strimzi.io/charts/"
-  release: "0.31.0"
-k8s_strimzi_chart_values:
-  watchAnyNamespace: true
