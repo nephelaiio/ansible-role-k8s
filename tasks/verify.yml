@@ -33,12 +33,6 @@
     - name: include cert checks
       include_tasks: verify/certs.yml
 
-    - name: include service checks
-      include_tasks: verify/service.yml
-
-    - name: include ingress checks
-      include_tasks: verify/ingress.yml
-
     - name: include olm checks
       ansible.builtin.include_tasks: verify/olm.yml
 
@@ -52,6 +46,16 @@
     - name: include strimzi checks
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_deploy | bool
+
+    - name: include zalando checks
+      ansible.builtin.include_tasks: verify/zalando.yml
+      when: k8s_zalando_deploy | bool
+
+    - name: include service checks
+      include_tasks: verify/service.yml
+
+    - name: include ingress checks
+      include_tasks: verify/ingress.yml
 
     - name: include command checks
       ansible.builtin.include_tasks: verify/cmds.yml

@@ -1,5 +1,5 @@
 ---
-- name: deploy metallb
+- name: deploy metallb chart
   kubernetes.core.helm:
     name: metallb
     chart_ref: "{{ k8s_metallb_chart.name }}"
@@ -29,6 +29,8 @@
       spec:
         addresses:
           - "{{ item.pool }}"
+  loop_control:
+    label: "{{ item.name }}"
   loop: "{{ k8s_address_pools }}"
 
 - name: advertise metallb pools

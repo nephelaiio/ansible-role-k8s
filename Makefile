@@ -9,6 +9,10 @@ KIND_IMAGE := $$(yq eval '.jobs.molecule.strategy.matrix.image | sort | reverse 
 ROLE_NAME := $$(pwd | xargs basename)
 SCENARIO_NAME := default
 EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(SCENARIO_NAME)"
+PG_DB := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_db' molecule/default/molecule.yml -r)
+PG_TEAM := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_team' molecule/default/molecule.yml -r)
+PG_USER := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_user' molecule/default/molecule.yml -r)
+PG_PASS := $$(make kubectl get secret $(PG_USER).$(PG_TEAM)-$(PG_DB) -- -n $(PG_NS) -o json)
 
 .PHONY: local aws poetry
 
@@ -22,7 +26,10 @@ helm:
 	KUBECONFIG=$(EPHEMERAL_DIR)/config helm $(filter-out $@,$(MAKECMDGOALS))
 
 kubectl:
-	KUBECONFIG=$(EPHEMERAL_DIR)/config kubectl $(filter-out $@,$(MAKECMDGOALS))
+	@KUBECONFIG=$(EPHEMERAL_DIR)/config kubectl $(filter-out $@,$(MAKECMDGOALS))
+
+postgresql:
+	echo $(PG_PASS)
 
 poetry:
 	@poetry install

@@ -1,0 +1,56 @@
+---
+- name: create zalando namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    api_version: v1
+    kind: Namespace
+    name: zalando-test
+
+- name: create test postgresql cluster
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition: "{{ _definition }}"
+  vars:
+    _definition: |
+      apiVersion: acid.zalan.do/v1
+      kind: postgresql
+      metadata:
+        name: {{ zalando_team }}-{{ zalando_db }}
+        namespace: {{ zalando_namespace }}
+      spec:
+        teamId: {{ zalando_team }}
+        volume:
+          size: 1Gi
+        numberOfInstances: 2
+        enableMasterLoadBalancer: true
+        serviceAnnotations:
+          metallb.universe.tf/address-pool: private
+        users:
+          zalando:
+            - superuser
+            - createdb
+          {{ zalando_user }}: []
+        databases:
+          {{ zalando_db }}: {{ zalando_user }}
+        postgresql:
+          version: "14"
+
+- name: validate postgresql cluster status
+  ansible.builtin.fail:
+    msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
+  vars:
+    cluster_failed: "{{ cluster_query | rejectattr('status.PostgresClusterStatus', 'equalto', 'Running') | map(attribute='metadata.name') }}"
+    cluster_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        api_version='acid.zalan.do/v1',
+        kind='postgresql',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  retries: 12
+  delay: 30
+  until: cluster_failed | length == 0
+  failed_when: cluster_failed | length > 0

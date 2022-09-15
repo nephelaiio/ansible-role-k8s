@@ -34,8 +34,8 @@
   when: k8s_strimzi_deploy | bool
 
 - name: include pgo deployment tasks
-  include_tasks: "deploy/pgo.yml"
-  when: k8s_pgo_deploy | bool
+  include_tasks: "deploy/zalando.yml"
+  when: k8s_zalando_deploy | bool
 
 - name: include awx operator deployment tasks
   include_tasks: "deploy/awx-operator.yml"
