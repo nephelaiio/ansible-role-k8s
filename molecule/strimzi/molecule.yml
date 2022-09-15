@@ -47,6 +47,7 @@ provisioner:
           k8s_argocd_deploy: false
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: false
+          k8s_zalando_deploy: false
           k8s_secrets:
             - namespace: secret-test
               name: molecule-secret
