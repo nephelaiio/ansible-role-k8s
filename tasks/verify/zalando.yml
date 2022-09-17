@@ -24,6 +24,8 @@
         volume:
           size: 1Gi
         numberOfInstances: 2
+        allowedSourceRanges:
+          - 0.0.0.0/0
         enableMasterLoadBalancer: true
         serviceAnnotations:
           metallb.universe.tf/address-pool: private

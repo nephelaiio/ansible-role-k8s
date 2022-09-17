@@ -40,8 +40,8 @@ provisioner:
 
           # zalando vardefs
           zalando_user: molecule
-          zalando_db: zalando
-          zalando_team: test
+          zalando_db: test
+          zalando_team: zalando
           zalando_namespace: zalando-test
 
           # role vardefs
