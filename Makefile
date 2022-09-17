@@ -30,7 +30,7 @@ helm:
 kubectl:
 	@KUBECONFIG=$(EPHEMERAL_DIR)/config kubectl $(filter-out $@,$(MAKECMDGOALS))
 
-postgresql:
+psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)
 
 poetry:
