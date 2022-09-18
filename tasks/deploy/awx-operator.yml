@@ -1,4 +1,19 @@
 ---
+- block:
+
+            - name: retrieve olm release
+              community.general.github_release:
+                user: ansible
+                repo: awx-operator
+                action: latest_release
+              register: awxoperator_release_query
+
+            - name: set olm release
+              set_fact:
+                k8s_awxoperator_release: "{{ awxoperator_release_query.tag }}"
+
+  when: k8s_awxoperator_release is not defined
+
 - name: deploy ArgoCD App for AWX Operator
   kubernetes.core.k8s:
     state: present
