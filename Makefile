@@ -18,7 +18,7 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 
 .PHONY: local aws poetry
 
-test create converge verify destroy: poetry
+test create converge verify destroy cleanup: poetry
 	KIND_RELEASE=$(KIND_RELEASE) KIND_IMAGE=$(KIND_IMAGE) poetry run molecule $@
 
 run:
