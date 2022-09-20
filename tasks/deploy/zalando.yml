@@ -14,6 +14,6 @@
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
     values:
       configKubernetes:
-        secret_name_template: "{username}.{cluster}.zalando"
+        secret_name_template: "{{ k8s_zalando_secret_template }}"
       configLoadBalancer:
         db_hosted_zone: "{{ k8s_zalando_basedomain }}"
