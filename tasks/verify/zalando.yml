@@ -5,7 +5,7 @@
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     api_version: v1
     kind: Namespace
-    name: zalando-test
+    name: "{{ zalando_namespace | default('molecule') }}"
 
 - name: create test postgresql cluster
   kubernetes.core.k8s:
@@ -18,7 +18,7 @@
       kind: postgresql
       metadata:
         name: {{ zalando_team | default('molecule') }}-{{ zalando_db | default('db') }}
-        namespace: {{ zalando_namespacel | default('molecule') }}
+        namespace: {{ zalando_namespace | default('molecule') }}
       spec:
         teamId: {{ zalando_team | default('molecule') }}
         volume:
