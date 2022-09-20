@@ -17,7 +17,7 @@
       apiVersion: acid.zalan.do/v1
       kind: postgresql
       metadata:
-        name: {{ zalando_team | default('molecule') }}-{{ zalando_db | default('db')}}
+        name: {{ zalando_team | default('molecule') }}-{{ zalando_db | default('db') }}
         namespace: {{ zalando_namespacel | default('molecule') }}
       spec:
         teamId: {{ zalando_team | default('molecule') }}
