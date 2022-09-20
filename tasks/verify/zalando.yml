@@ -17,10 +17,10 @@
       apiVersion: acid.zalan.do/v1
       kind: postgresql
       metadata:
-        name: {{ zalando_team }}-{{ zalando_db }}
-        namespace: {{ zalando_namespace }}
+        name: {{ zalando_team | default('molecule') }}-{{ zalando_db | default('db')}}
+        namespace: {{ zalando_namespacel | default('molecule') }}
       spec:
-        teamId: {{ zalando_team }}
+        teamId: {{ zalando_team | default('molecule') }}
         volume:
           size: 1Gi
         numberOfInstances: 2
@@ -33,9 +33,9 @@
           zalando:
             - superuser
             - createdb
-          {{ zalando_user }}: []
+          {{ zalando_user | default('molecule') }}: []
         databases:
-          {{ zalando_db }}: {{ zalando_user }}
+          {{ zalando_db | default('db') }}: {{ zalando_user | default('molecule') }}
         postgresql:
           version: "14"
 
