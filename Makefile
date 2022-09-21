@@ -19,7 +19,7 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 .PHONY: poetry run helm kubectl psql test create prepare converge verify destroy cleanup clean
 
 clean:
-	rm -rf /home/teddyphreak/.cache/ansible-compat/*
+	find /home/teddyphreak/.cache/ansible-compat/ -type l -wholename "*roles/*" | xargs -r rm -f
 
 test create prepare converge verify destroy cleanup: poetry clean
 	KIND_RELEASE=$(KIND_RELEASE) KIND_IMAGE=$(KIND_IMAGE) poetry run molecule $@
