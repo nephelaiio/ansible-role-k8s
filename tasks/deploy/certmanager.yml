@@ -61,7 +61,7 @@
                         name: cloudflare-api-token-secret
                         key: api-token
 
-  when: k8s_certmanager_issuer != 'local'
+  when: k8s_certmanager_issuer_name == 'letsencrypt'
 
 - name: deploy local cluster issuer
   block:
@@ -114,4 +114,4 @@
             ca:
               secretName: cluster-issuer-secret
 
-  when: k8s_certmanager_issuer == 'local'
+  when: k8s_certmanager_issuer_name == 'local'

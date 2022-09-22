@@ -63,3 +63,12 @@
   vars:
     chart_release_min: 'v1.6.1'
   when: (k8s_certmanager_chart.release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')
+
+- name: check certmanager name
+  ansible.builtin.fail:
+    msg: "k8s_certmanager_issuer_name must be one of [{{ valid_issuer_names | map('map_format', \"'%s'\") | join(', ') }}]"
+  vars:
+    valid_issuer_names:
+      - local
+      - letsencrypt
+  when: k8s_certmanager_issuer_name not in valid_issuer_names
