@@ -80,7 +80,7 @@
           spec:
             selfSigned: {}
 
-    - name: create ca certificate
+    - name: create self-signed ca certificate
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -101,7 +101,7 @@
               name: bootstrap-issuer
               kind: ClusterIssuer
 
-    - name: create cluster issuer
+    - name: create self-signed cluster issuer
       kubernetes.core.k8s:
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         state: present
