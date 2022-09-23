@@ -23,14 +23,19 @@
 
   post_tasks:
 
-    - name: list cluster nodes
-      command: "{{ kind_bin }} get nodes --name {{ kind_cluster_name }}"
-      register: kind_cluster_node_query
+    - name: deploy open-iscsi tools
+      block:
 
-    - name: update cache for cluster nodes
-      command: "docker exec {{ item }} apt-get update"
-      loop: "{{ kind_cluster_node_query.stdout_lines }}"
+        - name: list cluster nodes
+          command: "{{ kind_bin }} get nodes --name {{ kind_cluster_name }}"
+          register: kind_cluster_node_query
 
-    - name: install iscsi tools on cluster nodes
-      command: "docker exec {{ item }} apt-get install --yes open-iscsi"
-      loop: "{{ kind_cluster_node_query.stdout_lines }}"
+        - name: update cache for cluster nodes
+          command: "docker exec {{ item }} apt-get update"
+          loop: "{{ kind_cluster_node_query.stdout_lines }}"
+
+        - name: install iscsi tools on cluster nodes
+          command: "docker exec {{ item }} apt-get install --yes open-iscsi"
+          loop: "{{ kind_cluster_node_query.stdout_lines }}"
+
+      when: k8s_longhorn_deploy | bool
