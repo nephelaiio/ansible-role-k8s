@@ -17,6 +17,7 @@
 
 - name: include ingress deployment tasks
   include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
+  when: k8s_nginx_deploy | bool
 
 - name: include longhorn deployment tasks
   include_tasks: "deploy/longhorn.yml"

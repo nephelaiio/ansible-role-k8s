@@ -7,14 +7,36 @@
 
   vars:
 
-    kind_state: absent
-    kind_cluster_state: absent
-
   roles:
 
-    - nephelaiio.kind
+  tasks:
 
-  pre_tasks:
+    - name: destroy kind cluster
+      block:
+
+        - name: destroy kind cluster
+          ansible.builtin.include_role:
+            name: nephelaiio.kind
+          vars:
+            kind_state: absent
+            kind_cluster_state: absent
+
+      when: k8s_molecule_cluster_type == 'kind'
+
+    - name: destroy k3s cluster
+      block:
+
+        - name: stat mysql router state file
+          ansible.builtin.stat:
+            path: "/usr/local/bin/k3s-uninstall.sh"
+          register: k8s_uninstaller
+
+        - name: destroy k3s cluster
+          ansible.builtin.command: "{{ k8s_uninstaller.stat.path }}"
+          when: k8s_uninstaller.stat.exists
+          become: true
+
+      when: k8s_molecule_cluster_type == 'k3s'
 
     - name: delete certificate from edge truststore
       ansible.builtin.command: "certutil -d sql:$HOME/.pki/nssdb -D -n {{ k8s_cluster_name }}"

@@ -2,12 +2,12 @@
 - name: install bubblewrap
   ansible.builtin.package:
     name: bubblewrap
-  become: yes
+  become: true
 
 - name: install certutil
   ansible.builtin.package:
     name: libnss3-tools
-  become: yes
+  become: true
 
 - name: set cert metadata
   ansible.builtin.set_fact:

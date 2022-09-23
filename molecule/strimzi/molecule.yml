@@ -48,6 +48,8 @@ provisioner:
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: false
           k8s_zalando_deploy: false
+          k8s_nginx_deploy: true
+          k8s_molecule_cluster_type: "{{ 'k3s' if (k8s_longhorn_deploy | bool) else 'kind' }}"
           k8s_secrets:
             - namespace: secret-test
               name: molecule-secret

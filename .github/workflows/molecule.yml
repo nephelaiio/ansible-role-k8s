@@ -51,10 +51,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        release:
-          - v0.15.0
-        image:
-          - v1.24.4
+        scenario:
+          - default
+          - argocd
+          - awxoperator
+          - longhorn
+        include:
+          - release: v0.15.0
+            image: v1.24.4
+          - release: v0.15.0
+            image: v1.23.10
     steps:
       - name: check out the codebase.
         uses: actions/checkout@v2
@@ -73,8 +79,8 @@ jobs:
         run: poetry install
 
       - name: run molecule tests.
-        run: poetry run molecule test
+        run: poetry run molecule test -s ${{ matrix.scenario }}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          KIND_IMAGE: ${{ matrix.image }}
+          K8S_RELEASE: ${{ matrix.image }}
