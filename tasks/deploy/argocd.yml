@@ -29,27 +29,17 @@
     }}"
 
 - name: patch argocd reposerver deployment
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ _reposerver_patched }}"
+  kubernetes.core.k8s_json_patch:
+    kind: Deployment
+    name: argocd-repo-server
     namespace: "{{ k8s_argocd_namespace }}"
-    force: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-  vars:
-    _reposerver_container: "{{ _reposerver_def['spec']['template']['spec']['containers'][0] }}"
-    _reposerver_envnew:
-      name: ARGOCD_EXEC_TIMEOUT
-      value: "{{ k8s_argocd_exec_timeout }}"
-    _reposerver_envold: "{{ _reposerver_container['env'] | rejectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
-    _reposerver_envvars:
-      env: "{{ _reposerver_envold + [_reposerver_envnew] }}"
-    _reposerver_patch:
-      spec:
-        template:
-          spec:
-            containers:
-              - "{{ _reposerver_container | combine(_reposerver_envvars) }}"
-    _reposerver_patched: "{{ _reposerver_def | combine(_reposerver_patch, recursive=True) }}"
+    patch:
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: ARGOCD_EXEC_TIMEOUT
+          value: "{{ k8s_argocd_exec_timeout }}"
 
 - name: deploy argocd ingress
   kubernetes.core.k8s:
