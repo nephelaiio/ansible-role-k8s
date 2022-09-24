@@ -62,7 +62,7 @@
             remote_src: true
             owner: "{{ ansible_user }}"
             group: "{{ ansible_user }}"
-            mode: 0644
+            mode: 0600
           vars:
             ansible_user: "{{ lookup('env', 'USER') }}"
           become: true
