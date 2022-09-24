@@ -124,6 +124,6 @@
       retries: "{{ k8s_retry_num }}"
       delay: "{{ k8s_retry_delay }}"
       register: certmanager_issuer_create
-      until: issuer_cert_create is success
+      until: certmanager_cert_create is success
 
   when: k8s_certmanager_issuer_name == 'local'
