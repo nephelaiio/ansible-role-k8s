@@ -14,8 +14,8 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
-  retries: 3
-  delay: 60
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
   until: pods_failed | length == 0
   failed_when:
     - (pods_status | length) != (pods_query | length)

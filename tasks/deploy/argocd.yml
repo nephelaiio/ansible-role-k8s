@@ -92,3 +92,7 @@
                       name: argocd-server
                       port:
                         number: 443
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
+  register: argocd_ingress_create
+  until: argocd_ingress_create is success

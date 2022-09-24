@@ -18,6 +18,8 @@ k8s_address_pools_aws:
     name: private
   - scheme: 'internet-facing'
     name: public
+k8s_retry_delay: 30
+k8s_retry_num: 6
 
 k8s_address_pool_private_name: "private"
 k8s_address_pool_private_iprange: ""

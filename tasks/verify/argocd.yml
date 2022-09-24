@@ -103,8 +103,8 @@
           host: "{{ k8s_argocd_hostname }}"
           cookie: "argocd.token={{ argocd_admin_token }}"
         validate_certs: false
-      retries: 3
-      delay: 60
+      retries: "{{ k8s_retry_num }}"
+      delay: "{{ k8s_retry_delay }}"
       register: argocd_app_data
       failed_when: argocd_app_data.json['items'] | rejectattr('status.health.status', 'equalto', 'Healthy') | length > 0
 

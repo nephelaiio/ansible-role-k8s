@@ -44,8 +44,8 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
-  retries: 3
-  delay: 30
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
   until: pv_failed | length == 0
   failed_when: pv_failed | length > 0
 
@@ -62,7 +62,7 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
-  retries: 3
-  delay: 30
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
   until: pvc_failed | length == 0
   failed_when: pvc_failed | length > 0

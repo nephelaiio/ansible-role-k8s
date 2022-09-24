@@ -52,7 +52,7 @@
         kubeconfig=k8s_kubeconfig
       )
     }}"
-  retries: 12
-  delay: 30
+  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int)  }}"
+  delay: "{{ k8s_retry_delay }}"
   until: cluster_failed | length == 0
   failed_when: cluster_failed | length > 0

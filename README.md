@@ -48,6 +48,8 @@ Cluster wide parameters
 | k8s_address_pool_private_iprange |     _undefined_ | string  | LB private network address (in network/prefix format) | yes      |
 | k8s_address_pool_public_name     |          public | string  | LB public network name                                | no       |
 | k8s_address_pool_public_iprange  |     _undefined_ | string  | LB public network address (in network/prefix format)  | yes      |
+| k8s_retry_num                    |               3 | int     | Retries for cluster operations                        | no       |
+| k8s_retry_delay                  |              30 | int     | Retry delay for cluster operations                    | no       |
 
 ArgoCD parameters
 
