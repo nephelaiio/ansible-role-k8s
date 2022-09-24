@@ -52,7 +52,7 @@ provisioner:
           k8s_strimzi_deploy: true
           k8s_argocd_deploy: false
           k8s_longhorn_deploy: false
-          k8s_awxoperator_deploy: true
+          k8s_awxoperator_deploy: false
           k8s_zalando_deploy: true
           k8s_nginx_deploy: true
           k8s_molecule_cluster_type: "{{ 'k3s' if (k8s_longhorn_deploy | bool) else 'kind' }}"
