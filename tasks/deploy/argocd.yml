@@ -40,6 +40,7 @@
         value:
           name: ARGOCD_EXEC_TIMEOUT
           value: "{{ k8s_argocd_exec_timeout }}"
+  changed_when: false
 
 - name: deploy argocd ingress
   kubernetes.core.k8s:
