@@ -23,7 +23,7 @@
         teamId: {{ zalando_team | default('molecule') }}
         volume:
           size: 1Gi
-        numberOfInstances: 2
+        numberOfInstances: 1
         allowedSourceRanges:
           - 0.0.0.0/0
         enableMasterLoadBalancer: true
@@ -37,7 +37,7 @@
         databases:
           {{ zalando_db | default('db') }}: {{ zalando_user | default('molecule') }}
         postgresql:
-          version: "14"
+          version: "13"
 
 - name: validate postgresql cluster status
   ansible.builtin.fail:
