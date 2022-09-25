@@ -43,3 +43,4 @@
   delay: "{{ k8s_retry_delay }}"
   register: awx_app_create
   until: awx_app_create is success
+  changed_when: false
