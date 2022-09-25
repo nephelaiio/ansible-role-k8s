@@ -4,8 +4,8 @@
     msg: "the following operators are in failed status [{{ operator_failed | join(', ') }}]"
   vars:
     operator_failed: "{{ operator_status | rejectattr('status.phase', 'equalto', 'Succeeded') | map(attribute='metadata.name') }}"
-    operator_status: "{{ cluster_query | selectattr('status', 'defined') }}"
-    operator_phase: "{{ cluster_status | selectattr('status.phase', 'defined') }}"
+    operator_status: "{{ operator_query | selectattr('status', 'defined') }}"
+    operator_phase: "{{ operator_status | selectattr('status.phase', 'defined') }}"
     operator_query: "{{
       query(
         'kubernetes.core.k8s',
