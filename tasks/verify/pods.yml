@@ -7,7 +7,7 @@
     pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
     pods_completed: "{{ pods_phase | rejectattr('status.phase', 'equalto', 'Running') }}"
     pods_failed: "{{ pods_completed | rejectattr('status.phase', 'equalto', 'Succeeded') }}"
-    pod_query: "{{
+    pods_query: "{{
       query(
         'kubernetes.core.k8s',
         kind='Pod',
