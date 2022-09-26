@@ -1,5 +1,6 @@
 ---
 k8s_nginx_deploy: true
+k8s_nginx_verify: "{{ k8s_nginx_deploy }}"
 k8s_nginx_namespace: "nginx"
 k8s_nginx_chart:
   name: "ingress-nginx"

@@ -1,5 +1,6 @@
 ---
 k8s_longhorn_deploy: false
+k8s_longhorn_verify: "{{ k8s_longhorn_deploy }}"
 k8s_longhorn_namespace: "longhorn-system"
 k8s_longhorn_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_longhorn_chart:

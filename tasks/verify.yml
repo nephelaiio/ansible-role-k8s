@@ -38,24 +38,27 @@
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml
-      when: k8s_argocd_deploy | bool
+      when: k8s_argocd_verify | bool
 
     - name: include volume checks
       ansible.builtin.include_tasks: verify/volume.yml
+      when: k8s_volume_verify | bool
 
     - name: include strimzi checks
       ansible.builtin.include_tasks: verify/strimzi.yml
-      when: k8s_strimzi_deploy | bool
+      when: k8s_strimzi_verify | bool
 
     - name: include zalando checks
       ansible.builtin.include_tasks: verify/zalando.yml
-      when: k8s_zalando_deploy | bool
+      when: k8s_zalando_verify | bool
 
     - name: include service checks
       include_tasks: verify/service.yml
+      when: k8s_service_verify | bool
 
     - name: include ingress checks
       include_tasks: verify/ingress.yml
+      when: k8s_ingress_verify | bool
 
     - name: include command checks
       ansible.builtin.include_tasks: verify/cmds.yml

@@ -1,5 +1,6 @@
 ---
 k8s_argocd_deploy: true
+k8s_argocd_verify: "{{ k8s_argocd_deploy }}"
 k8s_argocd_namespace: "argocd"
 k8s_argocd_hostname: "argocd.{{ k8s_cluster_name }}"
 k8s_argocd_wait_timeout: "{{ k8s_wait_timeout }}"

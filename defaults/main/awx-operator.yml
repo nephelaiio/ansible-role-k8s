@@ -1,3 +1,4 @@
 ---
 k8s_awxoperator_deploy: false
+k8s_awxoperator_verify: "{{ k8s_awxoperator_deploy }}"
 k8s_awxoperator_namespace: awx
