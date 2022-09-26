@@ -24,9 +24,8 @@
         - name: deploy kind cluster
           ansible.builtin.include_role:
             name: nephelaiio.kind
-            apply:
-              environment:
-                KIND_IMAGE: "{{ lookup('env', 'K8S_RELEASE') }}"
+          vars:
+            kind_image_tag: "{{ lookup('env', 'K8S_RELEASE') }}"
 
       when: k8s_molecule_cluster_type == 'kind'
 
