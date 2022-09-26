@@ -5,6 +5,7 @@ k8s_zalando_basedomain: "{{ k8s_cluster_name }}"
 k8s_zalando_namespace: "zalando"
 k8s_zalando_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_zalando_secret_template: "{username}-{cluster}"
+k8s_zalando_storage_class: zalando
 k8s_zalando_chart:
   name: "postgres-operator"
   repo: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
