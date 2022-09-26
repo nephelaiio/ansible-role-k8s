@@ -5,6 +5,7 @@ k8s_deploy: true
 k8s_verify: false
 k8s_ingress_verify: true
 k8s_service_verify: true
+k8s_volume_verify: true
 
 k8s_kubeconfig: "~/.kube/config"
 k8s_wait_timeout: 600

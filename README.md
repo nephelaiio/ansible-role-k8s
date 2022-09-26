@@ -41,6 +41,7 @@ Cluster wide parameters
 | k8s_verify                       |           false | boolean | Toggle flag for cluster verification | no       |
 | k8s_service_verify               |            true | boolean | Toggle flag for service verification | no       |
 | k8s_ingress_verify               |            true | boolean | Toggle flag for ingress verification | no       |
+| k8s_volume_verify                |            true | boolean | Toggle flag for volume verification  | no       |
 | k8s_cluster_type                 |           local | string  | One of ['local', 'aws']              | no       |
 | k8s_kubeconfig                   |  ~/.kube/config | string  | Kubeconfig deploy bin file path      | no       |
 | k8s_helm_bin                     |    _autodetect_ | string  | Helm deploy bin file path            | no       |
