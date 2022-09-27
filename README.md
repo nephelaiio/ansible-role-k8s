@@ -122,7 +122,6 @@ Zalando parameters:
 | k8s_zalando_verify        |               true | boolean | Toggle flag for Zalando verification | no       |
 | k8s_zalando_chart.release |              1.8.2 | string  | Zalando helm chart release           | no       |
 | k8s_zalando_basedomain    | _k8s_cluster_name_ | string  | Domain for postgresql load balancers | no       |
-| k8s_zalando_storage_class |            zalando | string  | Storage class for zalando volumes    | yes      |
 
 ## Data Types
 
