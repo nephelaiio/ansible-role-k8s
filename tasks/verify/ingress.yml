@@ -49,3 +49,12 @@
     line: "{{ item }}"
     create: true
   loop: "{{ ingress_hosts }}"
+
+- name: execute ingress checks
+  ansible.builtin.command: "{{ _cmd }}"
+  vars:
+    _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""
+  loop_control:
+    label: "{{ _cmd }}"
+  loop: "{{ ingress_cmds }}"
+  changed_when: false

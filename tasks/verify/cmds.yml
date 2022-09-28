@@ -5,5 +5,5 @@
     _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""
   loop_control:
     label: "{{ _cmd }}"
-  loop: "{{ k8s_verify_cmds | default(ingress_cmds) }}"
+  loop: "{{ k8s_verify_cmds | default([]) }}"
   changed_when: false
