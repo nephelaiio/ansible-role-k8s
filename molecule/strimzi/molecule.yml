@@ -26,21 +26,23 @@ provisioner:
           # test-only vardefs
           ansible_connection: local
           ansible_python_interpreter: python
-          docker_net_addr: 172.19.0.0/16
           k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
           k8s_helm_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/helm
           k8s_certmanager_issuer_name: local
           k8s_cluster_name: molecule.nephelai.io
 
           # kind vardefs
+          kind_network_addr: 172.19.0.0/16
           kind_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/kind
-          kind_net_addr: 172.19.0.0/24
           kind_cluster_name: molecule-k8s
           kind_kubeconfig: "{{ k8s_kubeconfig }}"
+          kind_registry_deploy: false
+          kind_proxy_deploy: true
+          kind_proxy_cleanup: false
 
           # role vardefs
-          k8s_address_pool_private_iprange: 172.19.1.0/24
-          k8s_address_pool_public_iprange: 172.19.2.0/24
+          k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
+          k8s_address_pool_public_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 3) }}"
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_strimzi_deploy: true

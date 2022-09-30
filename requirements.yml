@@ -4,3 +4,4 @@ roles:
   - nephelaiio.kind
 collections:
   - community.general
+  - ansible.utils

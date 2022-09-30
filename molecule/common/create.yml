@@ -12,15 +12,6 @@
     - name: deploy kind cluster
       block:
 
-        - name: manage docker kind network
-          community.docker.docker_network:
-            name: "kind"
-            enable_ipv6: false
-            ipam_config:
-              - subnet: "{{ docker_net_addr }}"
-                gateway: "{{ docker_net_addr | ipaddr(1) | ipaddr('address') }}"
-                iprange: "{{ kind_net_addr }}"
-
         - name: deploy kind cluster
           ansible.builtin.include_role:
             name: nephelaiio.kind
