@@ -101,7 +101,7 @@ Strimzi parameters:
 | k8s_strimzi_deploy   |           true | boolean | Toggle flag for Strimzi deployment      | no       |
 | k8s_strimzi_verify   |           true | boolean | Toggle flag for Strimzi verification    | no       |
 | k8s_strimzi_channel  | strimzi-0.31.x | string  | OLM deploy channel for Strimzi operator | no       |
-| k8s_strimzi_approval |         Manual | Manual  | Automatic                               | no       |
+| k8s_strimzi_approval |      Automatic | Manual  | Automatic                               | no       |
 
 Quay parameters:
 | Parameter         |    Default | Type    | Description                          | Required |
@@ -109,7 +109,7 @@ Quay parameters:
 | k8s_quay_deploy   |       true | boolean | Toggle flag for quay deployment      | no       |
 | k8s_quay_verify   |       true | boolean | Toggle flag for quay verification    | no       |
 | k8s_quay_channel  | stable-3.7 | string  | OLM deploy channel for quay operator | no       |
-| k8s_quay_approval |     Manual | Manual  | Automatic                            | no       |
+| k8s_quay_approval |  Automatic | Manual  | Automatic                            | no       |
 
 Secret parameters:
 

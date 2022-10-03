@@ -2,4 +2,4 @@
 k8s_strimzi_deploy: true
 k8s_strimzi_verify: "{{ k8s_strimzi_deploy }}"
 k8s_strimzi_channel: strimzi-0.31.x
-k8s_strimzi_approval: Manual
+k8s_strimzi_approval: Automatic
