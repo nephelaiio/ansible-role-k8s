@@ -1,0 +1,47 @@
+---
+- name: create quay namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    api_version: v1
+    kind: Namespace
+    name: quay-test
+  register: quay_namespace_create
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
+  until: quay_namespace_create is success
+
+- name: create test quay cluster
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: quay.redhat.com/v1
+      kind: QuayRegistry
+      metadata:
+        name: example-registry
+        namespace: quay-test
+      spec:
+        components:
+          - kind: clair
+            managed: true
+          - kind: postgres
+            managed: true
+          - kind: objectstorage
+            managed: true
+          - kind: redis
+            managed: true
+          - kind: horizontalpodautoscaler
+            managed: true
+          - kind: route
+            managed: true
+          - kind: mirror
+            managed: true
+          - kind: monitoring
+            managed: true
+          - kind: tls
+            managed: true
+          - kind: quay
+            managed: true
+          - kind: clairpostgres
+            managed: true
