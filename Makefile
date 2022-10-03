@@ -19,7 +19,7 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 .PHONY: poetry run helm kubectl psql molecule
 
 clean:
-	find /home/teddyphreak/.cache/ansible-compat/ -mindepth 2 -maxdepth 2 -type d -name "roles/" | xargs -r rm -f
+	find /home/teddyphreak/.cache/ansible-compat/ -mindepth 2 -maxdepth 2 -type d -name "roles" | xargs -r rm -f
 
 molecule: poetry clean
 	KIND_RELEASE=$(KIND_RELEASE) K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $(filter-out $@,$(MAKECMDGOALS)) -s $(SCENARIO)
