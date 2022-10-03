@@ -34,6 +34,10 @@
   include_tasks: "deploy/strimzi.yml"
   when: k8s_strimzi_deploy | bool
 
+- name: include quay deployment tasks
+  include_tasks: "deploy/quay.yml"
+  when: k8s_quay_deploy | bool
+
 - name: include zalando deployment tasks
   include_tasks: "deploy/zalando.yml"
   when: k8s_zalando_deploy | bool

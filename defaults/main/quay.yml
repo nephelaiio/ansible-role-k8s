@@ -1,0 +1,5 @@
+---
+k8s_quay_deploy: true
+k8s_quay_verify: "{{ k8s_quay_deploy }}"
+k8s_quay_channel: stable-3.7
+k8s_quay_approval: Manual
