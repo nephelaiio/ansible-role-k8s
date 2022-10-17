@@ -57,4 +57,5 @@
   loop_control:
     label: "{{ _cmd }}"
   loop: "{{ ingress_cmds }}"
+  when: k8s_ingress_verify | bool
   changed_when: false
