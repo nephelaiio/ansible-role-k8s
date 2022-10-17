@@ -62,7 +62,6 @@
 
     - name: include ingress checks
       include_tasks: verify/ingress.yml
-      when: k8s_ingress_verify | bool
 
     - name: include command checks
       ansible.builtin.include_tasks: verify/cmds.yml

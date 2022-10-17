@@ -6,5 +6,5 @@ k8s_nginx_chart:
   name: "ingress-nginx"
   repo: "https://kubernetes.github.io/ingress-nginx"
   release: "4.3.0"
-  last_checked: "2022-10-06T00:24:23+00:00"
+  last_checked: "2022-10-14T21:21:42-06:00"
 k8s_nginx_wait_timeout: "{{ k8s_wait_timeout }}"
