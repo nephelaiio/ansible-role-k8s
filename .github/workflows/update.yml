@@ -18,4 +18,4 @@ jobs:
         uses: devops-infra/action-commit-push@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: "Updated Helm charts"
+          commit_message: "Update Helm charts"
