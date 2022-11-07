@@ -1,6 +1,8 @@
 # nephelaiio.k8s
 
-[![Build Status](https://github.com/nephelaiio/ansible-role-k8s/workflows/Molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
+[![Test](https://github.com/nephelaiio/ansible-role-k8s/workflows/molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
+[![Release](https://github.com/nephelaiio/ansible-role-k8s/workflows/release/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
+[![Update](https://github.com/nephelaiio/ansible-role-k8s/workflows/update/badge.svg)](https://github.com/nephelaiio/ansible-role-k8s/actions)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to bootstrap K8s cluster deployments with the following components:
