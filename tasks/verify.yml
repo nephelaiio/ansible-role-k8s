@@ -56,6 +56,10 @@
       ansible.builtin.include_tasks: verify/zalando.yml
       when: k8s_zalando_verify | bool
 
+    - name: include mysql checks
+      ansible.builtin.include_tasks: verify/mysql.yml
+      when: k8s_mysql_verify | bool
+
     - name: include service checks
       include_tasks: verify/service.yml
       when: k8s_service_verify | bool
