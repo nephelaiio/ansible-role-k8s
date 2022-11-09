@@ -56,6 +56,8 @@ jobs:
           - argocd
           - awxoperator
           - longhorn
+          - mysql
+          - zalando
         include:
           - release: v0.15.0
             image: v1.24.4

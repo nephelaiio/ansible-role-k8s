@@ -47,6 +47,12 @@ provisioner:
           zalando_team: zalando
           zalando_namespace: zalando-test
 
+          # mysql vardefs
+          mysql_cluster_name: mysql-test
+          mysql_cluster_secret: mysql-secret
+          mysql_namespace: mysql-test
+          mysql_password: password
+
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
           k8s_address_pool_public_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 3) }}"
@@ -57,8 +63,8 @@ provisioner:
           k8s_argocd_deploy: false
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: false
-          k8s_zalando_deploy: true
-          k8s_mysql_deploy: false
+          k8s_zalando_deploy: false
+          k8s_mysql_deploy: true
           k8s_nginx_deploy: false
           k8s_molecule_cluster_type: k3s
 verifier:

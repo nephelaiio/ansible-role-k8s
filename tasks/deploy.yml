@@ -45,3 +45,7 @@
 - name: include awx operator deployment tasks
   include_tasks: "deploy/awx-operator.yml"
   when: k8s_awxoperator_deploy | bool
+
+- name: include mysql operator deployment tasks
+  include_tasks: "deploy/mysql.yml"
+  when: k8s_mysql_deploy | bool

@@ -39,6 +39,7 @@ provisioner:
           kind_registry_deploy: false
           kind_proxy_deploy: true
           kind_proxy_cleanup: false
+          kind_nodes: 1
 
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
@@ -51,6 +52,7 @@ provisioner:
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: true
           k8s_zalando_deploy: false
+          k8s_mysql_deploy: false
           k8s_nginx_deploy: true
           k8s_molecule_cluster_type: kind
 verifier:
