@@ -1,0 +1,55 @@
+---
+- name: create mysql namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    api_version: v1
+    kind: Namespace
+    name: "{{ mysql_namespace | default('mysql-test') }}"
+
+- name: create test mysql secret
+  kubernetes.core.k8s:
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: "{{ mysql_cluster_secret }}"
+        namespace: "{{ mysql_namespace }}"
+      type: Opaque
+      data:
+        rootPassword: "{{ mysql_password | b64encode }}"
+
+- name: create test mysql cluster
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition: "{{ _definition }}"
+  vars:
+    _definition: |
+      apiVersion: mysql.oracle.com/v2
+      kind: InnoDBCluster
+      metadata:
+        name: {{ mysql_cluster_name }}
+        namespace: {{ mysql_namespace }}
+      spec:
+        secretName: {{ mysql_cluster_secret }}
+        tlsUseSelfSigned: true
+
+- name: validate mysql cluster status
+  ansible.builtin.fail:
+    msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
+  vars:
+    cluster_failed: "{{ cluster_query | rejectattr('status.cluster.status', 'equalto', 'ONLINE') | map(attribute='metadata.name') }}"
+    cluster_query: "{{
+      query(
+        'kubernetes.core.k8s',
+        api_version='mysql.oracle.com/v2',
+        kind='InnoDBCluster',
+        kubeconfig=k8s_kubeconfig
+      )
+    }}"
+  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int)  }}"
+  delay: "{{ k8s_retry_delay }}"
+  until: cluster_failed | length == 0
+  failed_when: cluster_failed | length > 0

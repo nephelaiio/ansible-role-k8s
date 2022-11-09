@@ -52,11 +52,12 @@ provisioner:
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_quay_deploy: true
-          k8s_strimzi_deploy: true
+          k8s_strimzi_deploy: false
           k8s_argocd_deploy: false
           k8s_longhorn_deploy: false
           k8s_awxoperator_deploy: false
           k8s_zalando_deploy: false
+          k8s_mysql_deploy: false
           k8s_nginx_deploy: true
           k8s_molecule_cluster_type: kind
           k8s_secrets:
