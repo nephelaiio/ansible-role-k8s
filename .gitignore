@@ -5,3 +5,4 @@ __pycache__/
 Gemfile.lock
 **/.ropeproject
 playbook.retry
+.tool-versions
