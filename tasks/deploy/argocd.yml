@@ -12,7 +12,7 @@
     wait_timeout: "{{ k8s_argocd_wait_timeout }}s"
     values: "{{ k8s_argocd_chart_values }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+    binary_path: "{{ lookup('env', 'HELM_BIN, default=k8s_helm_bin) }}"
 
 - name: query argocd-repo-server definition
   ansible.builtin.set_fact:

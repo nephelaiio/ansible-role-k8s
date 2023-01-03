@@ -78,6 +78,7 @@ jobs:
         with:
           version: 'latest'
           token: ${{ secrets.GITHUB_TOKEN }}
+        id: helm
 
       - name: install poetry
         run: pip3 install poetry
@@ -91,3 +92,4 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           K8S_RELEASE: ${{ matrix.image }}
+          HELM_BIN: ${{ steps.helm.outputs.helm-path }}
