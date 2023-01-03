@@ -5,6 +5,10 @@
 
   gather_facts: false
 
+  vars:
+
+    helm_release: "{{ lookup('env', 'HELM_RELEASE', default=Undefined) }}"
+
   tasks:
 
     - name: set helm release metadata

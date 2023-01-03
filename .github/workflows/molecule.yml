@@ -81,8 +81,9 @@ jobs:
         run: poetry install
 
       - name: run molecule tests.
-        run: poetry run -- molecule test -s ${{ matrix.scenario }} -e helm_release ${{ matrix.helm }}
+        run: poetry run -- molecule test -s ${{ matrix.scenario }}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           K8S_RELEASE: ${{ matrix.image }}
+          HELM_RELEASE: ${{ matrix.helm }}
