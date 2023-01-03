@@ -3,28 +3,28 @@
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
-    _reposerver_query: "{{
-      query(
+    _reposerver_query: "{{ query(
         'kubernetes.core.k8s',
         kind='Deployment',
         namespace=k8s_argocd_namespace,
         resource_name='argocd-repo-server',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: query argocd ingress metadata
   ansible.builtin.set_fact:
     ingress_argocd_ip: "{{ ingress_query[0].status.loadBalancer.ingress[0].ip }}"
   vars:
-    ingress_query: "{{
-      query(
+    ingress_query: "{{ query(
         'kubernetes.core.k8s',
         kind='Ingress',
         namespace=k8s_argocd_namespace,
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
+  register: ingress_facts
+  retries: 4
+  delay: 30
+  until: ingress_facts is succeeded
 
 - name: record argocd deployment env vars
   ansible.builtin.set_fact:
@@ -51,15 +51,13 @@
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
   vars:
     _argocd_secret_data: "{{ _argocd_secret_query | first }}"
-    _argocd_secret_query: "{{
-      query(
+    _argocd_secret_query: "{{ query(
         'kubernetes.core.k8s',
         kind='Secret',
         namespace=k8s_argocd_namespace,
         resource_name='argocd-initial-admin-secret',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: record argocd auth credentials
   ansible.builtin.set_fact:
@@ -67,15 +65,13 @@
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
   vars:
     _argocd_secret_data: "{{ _argocd_secret_query | first }}"
-    _argocd_secret_query: "{{
-      query(
+    _argocd_secret_query: "{{ query(
         'kubernetes.core.k8s',
         kind='Secret',
         namespace=k8s_argocd_namespace,
         resource_name='argocd-initial-admin-secret',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: auth against argocd api
   ansible.builtin.uri:
@@ -94,7 +90,8 @@
   ansible.builtin.set_fact:
     argocd_admin_token: "{{ argocd_auth_data.json.token }}"
 
-- block:
+- name: verify argocd application status
+  block:
 
     - name: query argocd application status
       ansible.builtin.uri:
