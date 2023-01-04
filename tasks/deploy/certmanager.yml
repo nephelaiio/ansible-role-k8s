@@ -11,7 +11,7 @@
     wait: true
     wait_timeout: "{{ k8s_certmanager_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ k8s_helm_bin | default(omit) }}"
+    binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"
     values:
       installCRDs: true
       podDnsConfig:
