@@ -8,7 +8,7 @@
   tasks:
 
     - name: check local helm binary
-      ansible.builtin.shell: "which {{ lookup('env', 'HELM_BIN', default('helm')) }}"
+      ansible.builtin.shell: "which {{ lookup('env', 'HELM_BIN', default='helm') }}"
       register: helm_bin_query
       changed_when: false
 
