@@ -201,7 +201,7 @@ The below Ansible collections  are needed on the host that executes this module:
 Please make sure your environment has [docker](https://www.docker.com) installed; then test the role from the project root using the following commands
 
 * ` poetry instasll`
-* ` poetry run molecule test `
+* ` make molecule test `
 
 ## License
 
