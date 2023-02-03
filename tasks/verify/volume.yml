@@ -42,8 +42,7 @@
         'kubernetes.core.k8s',
         kind='PersistentVolume',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pv_failed | length == 0
@@ -60,8 +59,7 @@
         'kubernetes.core.k8s',
         kind='PersistentVolumeClaim',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pvc_failed | length == 0

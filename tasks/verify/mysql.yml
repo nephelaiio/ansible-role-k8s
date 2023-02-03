@@ -40,16 +40,18 @@
   ansible.builtin.fail:
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:
-    cluster_failed: "{{ cluster_query | rejectattr('status.cluster.status', 'equalto', 'ONLINE') | map(attribute='metadata.name') }}"
+    cluster_status: "{{ cluster_query | selectattr('status', 'defined') }}"
+    cluster_failed: "{{ cluster_status | rejectattr('status.cluster.status', 'equalto', 'ONLINE') | map(attribute='metadata.name') }}"
     cluster_query: "{{
       query(
         'kubernetes.core.k8s',
         api_version='mysql.oracle.com/v2',
         kind='InnoDBCluster',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
-  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int)  }}"
+      ) }}"
+  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int) }}"
   delay: "{{ k8s_retry_delay }}"
-  until: cluster_failed | length == 0
-  failed_when: cluster_failed | length > 0
+  until:
+    - cluster_status | length > 0
+    - cluster_failed | length == 0
+  failed_when: (cluster_status | length == 0) or (cluster_failed | length > 0)

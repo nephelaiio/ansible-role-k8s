@@ -12,8 +12,7 @@
         api_version='operators.coreos.com/v1alpha1',
         kind='ClusterServiceVersion',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until:

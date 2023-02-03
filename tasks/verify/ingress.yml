@@ -10,8 +10,7 @@
         'kubernetes.core.k8s',
         kind='Ingress',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: ingress_failed | length == 0
@@ -29,8 +28,7 @@
         'kubernetes.core.k8s',
         kind='Ingress',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: set ingress data
   ansible.builtin.set_fact:

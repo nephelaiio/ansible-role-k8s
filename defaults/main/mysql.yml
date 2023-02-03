@@ -6,4 +6,4 @@ k8s_mysql_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_mysql_chart:
   name: "mysql-operator"
   repo: "https://mysql.github.io/mysql-operator"
-  release: "2.0.7"
+  release: "2.0.8"
