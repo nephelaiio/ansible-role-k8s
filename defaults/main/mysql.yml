@@ -1,0 +1,10 @@
+---
+k8s_mysql_deploy: true
+k8s_mysql_verify: "{{ k8s_mysql_deploy }}"
+k8s_mysql_namespace: "mysql-operator"
+k8s_mysql_wait_timeout: "{{ k8s_wait_timeout }}"
+k8s_mysql_chart:
+  name: "mysql-operator"
+  repo: "https://mysql.github.io/mysql-operator"
+  release: "2.0.8"
+  last_checked: "2023-02-03T22:14:28-06:00"

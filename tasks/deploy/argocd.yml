@@ -25,8 +25,7 @@
         namespace=k8s_argocd_namespace,
         resource_name='argocd-repo-server',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: patch argocd reposerver deployment
   kubernetes.core.k8s_json_patch:
@@ -53,8 +52,7 @@
         namespace=k8s_argocd_namespace,
         resource_name='argocd-repo-server',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   changed_when: false
 
 - name: deploy argocd ingress

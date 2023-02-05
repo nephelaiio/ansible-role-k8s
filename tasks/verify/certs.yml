@@ -9,8 +9,7 @@
         'kubernetes.core.k8s',
         kind='Certificate',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
 
 - name: validate cert status
   ansible.builtin.fail:

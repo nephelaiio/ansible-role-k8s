@@ -12,8 +12,7 @@
         'kubernetes.core.k8s',
         kind='Pod',
         kubeconfig=k8s_kubeconfig
-      )
-    }}"
+      ) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pods_failed | length == 0

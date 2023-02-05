@@ -56,11 +56,11 @@ jobs:
           - argocd
           - awxoperator
           - longhorn
+          - mysql
+          - zalando
         include:
-          - release: v0.15.0
-            image: v1.24.4
-          - release: v0.15.0
-            image: v1.23.10
+          - image: v1.24.4
+          - image: v1.23.10
     steps:
 
       - name: check out the codebase.

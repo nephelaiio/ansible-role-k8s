@@ -6,19 +6,20 @@
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.k8s-blue.svg)](https://galaxy.ansible.com/nephelaiio/k8s/)
 
 An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to bootstrap K8s cluster deployments with the following components:
-* MetalLB (Regular Helm deployment)
-* Cert-Manager (Regular Helm deployment)
-* NGINX ingress controllers (Helm deployment)
-* ArgoCD (Regular Helm deployment)
-* OLM (Manifest deployment)
-* LongHorn (Regular Helm deployment)
-* AWX Operator (ArgoCD Helm deployment)
-* Strimzi (OLM deployment)
-* Quay registry (OLM deployment)
-* Zalando Postgres Operator (Helm deployment)
-* Grafana (TODO)
-* ExternalDNS (TODO)
-* Kyverno (TODO)
+* [MetalLB](https://metallb.universe.tf/installation/#installation-with-helm) (Helm deployment)
+* [Cert-Manager](https://cert-manager.io/docs/installation/helm/) (Helm deployment)
+* [NGINX ingress](https://github.com/kubernetes/ingress-nginx) controllers (Helm deployment)
+* [ArgoCD](https://github.com/argoproj/argo-cd) (Helm deployment)
+* [OLM](https://github.com/operator-framework/operator-lifecycle-manager) (Manifest deployment)
+* [LongHorn](https://github.com/longhorn/charts) (Helm deployment)
+* [AWX Operator](https://github.com/ansible/awx-operator) (ArgoCD Helm deployment)
+* [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (OLM deployment)
+* [Quay registry](https://operatorhub.io/operator/project-quay) (OLM deployment)
+* [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
+* [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
+* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) (TODO)
+* [Grafana](https://github.com/grafana/grafana) (TODO)
+* [Kyverno](https://github.com/kyverno/kyverno) (TODO)
 
 Role includes a cluster verifier that can be activated by setting `k8s_verify: true` that performs the following checks:
 * All pods are successful
@@ -31,6 +32,7 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 * All ArgoCD applications are successful
 * All OLM operator deployments are successful
 * All Zalando instances are deployed
+* All MySQL InnoDB clusters are deployed
 
 ## Role Variables
 
@@ -201,7 +203,7 @@ The below Ansible collections  are needed on the host that executes this module:
 Please make sure your environment has [docker](https://www.docker.com) installed; then test the role from the project root using the following commands
 
 * ` poetry instasll`
-* ` poetry run molecule test `
+* ` SCENARIO=default make molecule test `
 
 ## License
 

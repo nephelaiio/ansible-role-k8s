@@ -23,3 +23,7 @@
         namespace: quay-test
       spec:
         components: []
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
+  until: quay_deploy is succeeded
+  register: quay_deploy

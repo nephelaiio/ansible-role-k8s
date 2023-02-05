@@ -7,7 +7,7 @@ k8s_longhorn_chart:
   name: longhorn
   repo: "https://charts.longhorn.io"
   release: "1.4.0"
-  last_checked: "2023-01-06T00:15:59+00:00"
+  last_checked: "2023-02-03T22:14:23-06:00"
 k8s_longhorn_chart_values:
   persistence:
     defaultClass: false
