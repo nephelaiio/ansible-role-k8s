@@ -3,9 +3,10 @@
 
     - name: retrieve olm release
       community.general.github_release:
-        user: ansible
         repo: awx-operator
         action: latest_release
+        user: "{{ lookup('env', 'GH_USER', default=Undefined) | default(omit) }}"
+        token: "{{ lookup('env', 'GH_TOKEN', default=Undefined) | default(omit) }}"
       register: awxoperator_release_query
 
     - name: set olm release
