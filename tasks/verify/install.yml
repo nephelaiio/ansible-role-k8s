@@ -2,11 +2,19 @@
 - name: install bubblewrap
   ansible.builtin.package:
     name: bubblewrap
+  retries: 3
+  delay: 10
+  register: package_install
+  until: package_install is succeeded
   become: true
 
 - name: install certutil
   ansible.builtin.package:
     name: libnss3-tools
+  retries: 3
+  delay: 10
+  register: package_install
+  until: package_install is succeeded
   become: true
 
 - name: set cert metadata

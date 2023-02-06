@@ -46,6 +46,10 @@
         - name: install iscsi tools
           ansible.builtin.package:
             name: open-iscsi
+          retries: 3
+          delay: 10
+          register: package_install
+          until: package_install is succeeded
           become: yes
 
         - name: copy k3s kubeconfig
