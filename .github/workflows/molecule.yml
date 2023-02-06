@@ -99,5 +99,4 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
           K8S_RELEASE: ${{ matrix.image }}
           HELM_BIN: ${{ steps.helm.outputs.helm-path }}
-          GH_USER: ${{ secrets.GH_USER }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
