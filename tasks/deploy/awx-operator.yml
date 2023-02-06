@@ -6,6 +6,7 @@
         user: ansible
         repo: awx-operator
         action: latest_release
+        token: "{{ lookup('env', 'GH_TOKEN', default=Undefined) | default(omit) }}"
       register: awxoperator_release_query
 
     - name: set olm release
