@@ -8,8 +8,8 @@ k8s_argocd_exec_timeout: "3m"
 k8s_argocd_chart:
   name: "argo-cd"
   repo: "https://argoproj.github.io/argo-helm"
-  release: "5.24.1"
-  last_checked: "2023-03-06T00:17:42+00:00"
+  release: "5.28.0"
+  last_checked: "2023-04-06T00:14:26+00:00"
 k8s_argocd_chart_values:
   redis-ha:
     enabled: false
