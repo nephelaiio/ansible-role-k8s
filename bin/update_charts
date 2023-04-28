@@ -2,18 +2,20 @@
 
 release_files=$(grep -Rl "k8s_.*_release:" defaults/)
 for file in $release_files; do
-    ref_versions=$(grep --no-filename "k8s_.*_release:" $file | cut -d':' -f 1)
+    ref_versions=$(grep --no-filename "k8s_.*_release:" "$file" | cut -d':' -f 1)
     for ref_version in $ref_versions; do
-        ref_base=$(echo $ref_version | sed -e 's/^\(k8s_[^_]*\)_.*/\1/')
-        repo=$(yq ".${ref_base}_repo_name" < "$file")
-        org=$(yq ".${ref_base}_repo_org" < "$file")
+        # shellcheck disable=2001
+        ref_base=$(echo "$ref_version" | sed -e "s/^\(k8s_[^_]*\)_.*/\1/")
+        repo=$(yq ".${ref_base}_repo_name" <"$file")
+        org=$(yq ".${ref_base}_repo_org" <"$file")
         if [[ "$repo" != "null" && "$org" != "null" ]]; then
             latest=$(curl -s "https://api.github.com/repos/$org/$repo/releases/latest" | jq '.tag_name' -r)
             tmp="$(mktemp)"
+            # shellcheck disable=SC2016
             yq eval-all '. as $item ireduce ({}; . * $item)' \
                 "$file" \
                 <(printf '%s: "%s"\n' "$ref_version" "$latest") \
-                > "$tmp"
+                >"$tmp"
             mv "$tmp" "$file"
         fi
     done
@@ -23,18 +25,19 @@ chart_files=$(grep -Rl "chart:" defaults/)
 for file in $chart_files; do
     ref_versions=$(grep --no-filename "chart:" $file | cut -d':' -f 1)
     for vardef in $ref_versions; do
-        repo=$(yq ".$vardef.repo" < "$file")
-        chart=$(yq ".$vardef.name" < "$file")
+        repo=$(yq ".$vardef.repo" <"$file")
+        chart=$(yq ".$vardef.name" <"$file")
         if [[ "$repo" != "null" && "$chart" != "null" ]]; then
-            helm repo add "$chart" "$repo"  >/dev/null 2>&1
+            helm repo add "$chart" "$repo" >/dev/null 2>&1
             helm repo update >/dev/null 2>&1
             version=$(helm search repo "$chart/$chart" -o json | jq '.[0].version' -r)
             tmp="$(mktemp)"
             timestamp=$(date --iso-8601=seconds)
+            # shellcheck disable=SC2016
             yq eval-all '. as $item ireduce ({}; . * $item)' \
                 "$file" \
                 <(printf '%s:\n  release: "%s"\n  last_checked: "%s"' "$vardef" "$version" "$timestamp") \
-                > "$tmp"
+                >"$tmp"
             mv "$tmp" "$file"
         fi
     done
