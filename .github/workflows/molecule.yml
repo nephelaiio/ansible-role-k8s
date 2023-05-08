@@ -59,6 +59,7 @@ jobs:
           - mysql
           - zalando
         include:
+          - image: v1.26.3
           - image: v1.25.8
           - image: v1.24.12
     steps:
