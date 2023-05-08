@@ -24,12 +24,12 @@ jobs:
     steps:
 
       - name: check out the codebase
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: 'nephelaiio.k8s'
 
       - name: set up python 3
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
@@ -59,17 +59,18 @@ jobs:
           - mysql
           - zalando
         include:
-          - image: v1.24.4
-          - image: v1.23.10
+          - image: v1.26.3
+          - image: v1.25.8
+          - image: v1.24.12
     steps:
 
       - name: check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: 'nephelaiio.k8s'
 
       - name: set up python 3
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
