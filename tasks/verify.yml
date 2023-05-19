@@ -35,6 +35,7 @@
 
     - name: include olm checks
       ansible.builtin.include_tasks: verify/olm.yml
+      when: k8s_olm_verify | bool
 
     - name: include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml
@@ -47,10 +48,6 @@
     - name: include strimzi checks
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_verify | bool
-
-    - name: include quay checks
-      ansible.builtin.include_tasks: verify/quay.yml
-      when: k8s_quay_verify | bool
 
     - name: include zalando checks
       ansible.builtin.include_tasks: verify/zalando.yml
