@@ -1,4 +1,6 @@
 ---
+k8s_olm_deploy: false
+k8s_olm_verify: "{{ k8s_olm_deploy }}"
 k8s_olm_release: "v0.24.0"
 k8s_olm_repo_org: operator-framework
 k8s_olm_repo_name: operator-lifecycle-manager

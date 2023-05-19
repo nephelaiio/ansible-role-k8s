@@ -25,6 +25,7 @@
 
 - name: include olm deployment tasks
   include_tasks: "deploy/olm.yml"
+  when: k8s_olm_deploy | bool
 
 - name: include argocd deployment tasks
   include_tasks: "deploy/argocd.yml"
@@ -33,10 +34,6 @@
 - name: include strimzi deployment tasks
   include_tasks: "deploy/strimzi.yml"
   when: k8s_strimzi_deploy | bool
-
-- name: include quay deployment tasks
-  include_tasks: "deploy/quay.yml"
-  when: k8s_quay_deploy | bool
 
 - name: include zalando deployment tasks
   include_tasks: "deploy/zalando.yml"

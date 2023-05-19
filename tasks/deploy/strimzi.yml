@@ -1,17 +1,14 @@
 ---
-- name: deploy strimzi operator subscription
-  kubernetes.core.k8s:
+- name: deploy strimzi chart
+  kubernetes.core.helm:
+    name: strimzi
+    chart_ref: "{{ k8s_strimzi_chart.name }}"
+    chart_repo_url: "{{ k8s_strimzi_chart.repo }}"
+    chart_version: "{{ k8s_strimzi_chart.release }}"
+    release_namespace: "{{ k8s_strimzi_namespace }}"
+    create_namespace: true
     state: present
+    wait: true
+    wait_timeout: "{{ k8s_strimzi_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition:
-      apiVersion: operators.coreos.com/v1alpha1
-      kind: Subscription
-      metadata:
-        name: strimzi-operator
-        namespace: operators
-      spec:
-        channel: "{{ k8s_strimzi_channel }}"
-        name: strimzi-kafka-operator
-        source: operatorhubio-catalog
-        sourceNamespace: olm
-        installPlanApproval: "{{ k8s_strimzi_approval }}"
+    binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"

@@ -14,7 +14,6 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [LongHorn](https://github.com/longhorn/charts) (Helm deployment)
 * [AWX Operator](https://github.com/ansible/awx-operator) (ArgoCD Helm deployment)
 * [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (OLM deployment)
-* [Quay registry](https://operatorhub.io/operator/project-quay) (OLM deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
 * [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
 * [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) (TODO)
@@ -71,9 +70,10 @@ ArgoCD parameters
 
 OLM paramters
 
-| Parameter       | Default | Type   | Description                                                                    | Required |
-|:----------------|--------:|:-------|:-------------------------------------------------------------------------------|----------|
-| k8s_olm_release | v0.22.0 | string | From https://github.com/operator-framework/operator-lifecycle-manager/releases | no       |
+| Parameter       | Default | Type    | Description                                 | Required |
+|:----------------|--------:|:--------|:--------------------------------------------|----------|
+| k8s_olm_release | v0.22.0 | string  | From OLM [releases](https://bit.ly/41VF9kp) | no       |
+| k8s_olm_deploy  |   false | boolean | Toggle flag for OLM deployment              | no       |
 
 MetalLB parameters:
 
@@ -106,14 +106,6 @@ Strimzi parameters:
 | k8s_strimzi_verify   |           true | boolean | Toggle flag for Strimzi verification    | no       |
 | k8s_strimzi_channel  | strimzi-0.31.x | string  | OLM deploy channel for Strimzi operator | no       |
 | k8s_strimzi_approval |      Automatic | Manual  | Automatic                               | no       |
-
-Quay parameters:
-| Parameter         |    Default | Type    | Description                          | Required |
-|:------------------|-----------:|:--------|:-------------------------------------|----------|
-| k8s_quay_deploy   |       true | boolean | Toggle flag for quay deployment      | no       |
-| k8s_quay_verify   |       true | boolean | Toggle flag for quay verification    | no       |
-| k8s_quay_channel  | stable-3.7 | string  | OLM deploy channel for quay operator | no       |
-| k8s_quay_approval |  Automatic | Manual  | Automatic                            | no       |
 
 Secret parameters:
 

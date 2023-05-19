@@ -46,7 +46,6 @@ provisioner:
           k8s_address_pool_public_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 3) }}"
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
-          k8s_quay_deploy: false
           k8s_strimzi_deploy: true
           k8s_argocd_deploy: false
           k8s_longhorn_deploy: false
