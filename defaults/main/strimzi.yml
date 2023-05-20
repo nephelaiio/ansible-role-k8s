@@ -6,4 +6,5 @@ k8s_strimzi_chart:
   repo: "https://strimzi.io/charts/"
   release: "0.35.0"
   last_checked: "2023-05-06T00:13:59+00:00"
+k8s_strimzi_namespace: strimzi
 k8s_srimzi_wait_timeout: "{{ k8s_wait_timeout }}"
