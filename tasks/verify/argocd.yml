@@ -13,8 +13,12 @@
 
 - name: query argocd ingress metadata
   ansible.builtin.set_fact:
-    ingress_argocd_ip: "{{ ingress_query[0].status.loadBalancer.ingress[0].ip }}"
+    ingress_argocd_ip: "{{ ingress_query[0][_status][_lb][_ingress][0][_ip] }}"
   vars:
+    _status: status
+    _lb: loadBalancer
+    _ingress: ingress
+    _ip: ip
     ingress_query: "{{ query(
         'kubernetes.core.k8s',
         kind='Ingress',
@@ -24,7 +28,14 @@
   register: ingress_facts
   retries: 4
   delay: 30
-  until: ingress_facts is succeeded
+  until:
+    - ingress_facts is succeeded
+    - ingress_query | length > 0
+    - _status in ingress_query[0]
+    - _lb in ingress_query[0][_status]
+    - _ingress in ingress_query[0][_status][_lb]
+    - ingress_query[0][_status][_lb][_ingress] | length > 0
+    - _ip in ingress_query[0][_status][_lb][_ingress][0]
 
 - name: record argocd deployment env vars
   ansible.builtin.set_fact:

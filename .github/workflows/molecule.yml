@@ -54,10 +54,10 @@ jobs:
         scenario:
           - default
           - argocd
-          - awxoperator
           - longhorn
           - mysql
           - zalando
+          - strimzi
         include:
           - image: v1.26.3
           - image: v1.25.8
