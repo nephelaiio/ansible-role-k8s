@@ -17,7 +17,7 @@
           apiVersion: v1
           kind: Namespace
           metadata:
-            name: "{{ volume_test_namespace }}"
+            name: "{{ _volume_test_namespace }}"
 
     - name: create test volume claim
       kubernetes.core.k8s:
@@ -51,7 +51,7 @@
             volumes:
               - persistentVolumeClaim:
                   claimName: "{{ _volume_test_name }}"
-                name: "{{ volume_test_mount }}"
+                name: "{{ _volume_test_mount }}"
             containers:
               - name: longhorn-test-container
                 image: nginx
@@ -60,7 +60,7 @@
                     name: "http-server"
                 volumeMounts:
                   - mountPath: "/usr/share/nginx/html"
-                    name: "{{ volume_test_mount }}"
+                    name: "{{ _volume_test_mount }}"
 
 - name: validate persistent claim status
   ansible.builtin.fail:
