@@ -54,7 +54,6 @@ jobs:
         scenario:
           - default
           - argocd
-          - awxoperator
           - longhorn
           - mysql
           - zalando
