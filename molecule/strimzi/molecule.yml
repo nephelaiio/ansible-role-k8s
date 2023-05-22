@@ -39,7 +39,7 @@ provisioner:
           kind_registry_deploy: false
           kind_proxy_deploy: true
           kind_proxy_cleanup: false
-          kind_nodes: 1
+          kind_nodes: 4
 
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
