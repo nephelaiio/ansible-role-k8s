@@ -49,8 +49,8 @@
           template:
             topicOperatorContainer:
               env:
-              - name: STRIMZI_USE_ZOOKEEPER_TOPIC_STORE
-                value: "true"
+                - name: STRIMZI_USE_ZOOKEEPER_TOPIC_STORE
+                  value: "true"
     wait: true
     wait_condition:
       type: Ready
