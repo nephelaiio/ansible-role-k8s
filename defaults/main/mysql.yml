@@ -7,4 +7,4 @@ k8s_mysql_chart:
   name: "mysql-operator"
   repo: "https://mysql.github.io/mysql-operator"
   release: "2.0.10"
-  last_checked: "2023-05-19T19:43:18-06:00"
+  last_checked: "2023-06-06T00:17:11+00:00"
