@@ -12,7 +12,6 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [ArgoCD](https://github.com/argoproj/argo-cd) (Helm deployment)
 * [OLM](https://github.com/operator-framework/operator-lifecycle-manager) (Manifest deployment)
 * [LongHorn](https://github.com/longhorn/charts) (Helm deployment)
-* [AWX Operator](https://github.com/ansible/awx-operator) (ArgoCD Helm deployment)
 * [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (OLM deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
 * [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
