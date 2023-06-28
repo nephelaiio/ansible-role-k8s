@@ -15,7 +15,6 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (OLM deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
 * [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
-* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) (TODO)
 * [Grafana](https://github.com/grafana/grafana) (TODO)
 * [Kyverno](https://github.com/kyverno/kyverno) (TODO)
 
