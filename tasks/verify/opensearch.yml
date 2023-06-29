@@ -24,11 +24,11 @@
       apiVersion: opensearch.opster.io/v1
       kind: OpenSearchCluster
       metadata:
-        name: "{{ opensesarch_test_name }}"
+        name: "{{ _opensearch_test_name }}"
         namespace: "{{ _opensearch_test_namespace }}"
       spec:
         general:
-          serviceName: "{{ opensesarch_test_name }}"
+          serviceName: "{{ _opensearch_test_name }}"
           version: 2.3.0
           setVMMaxMapCount: true
         dashboards:
