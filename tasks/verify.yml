@@ -49,6 +49,10 @@
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_verify | bool
 
+    - name: include opensearch checks
+      ansible.builtin.include_tasks: verify/opensearch.yml
+      when: k8s_opensearch_verify | bool
+
     - name: include zalando checks
       ansible.builtin.include_tasks: verify/zalando.yml
       when: k8s_zalando_verify | bool

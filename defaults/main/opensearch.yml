@@ -1,0 +1,9 @@
+---
+k8s_opensearch_deploy: false
+k8s_opensearch_verify: "{{ k8s_strimzi_deploy }}"
+k8s_opensearch_chart:
+  name: "opensearch-operator"
+  repo: "https://opster.github.io/opensearch-k8s-operator/"
+  release: "2.3.1"
+k8s_opensearch_namespace: opensearch
+k8s_opensearch_wait_timeout: "{{ k8s_wait_timeout }}"
