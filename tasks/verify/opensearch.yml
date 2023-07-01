@@ -49,11 +49,11 @@
             jvm: -Xmx1024M -Xms1024M
             resources:
               requests:
-                  memory: "2Gi"
-                  cpu: "500m"
+                memory: "2Gi"
+                cpu: "500m"
               limits:
-                  memory: "2Gi"
-                  cpu: "500m"
+                memory: "2Gi"
+                cpu: "500m"
             roles:
               - "cluster_manager"
               - "data"
