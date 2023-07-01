@@ -5,6 +5,6 @@ k8s_strimzi_chart:
   name: "strimzi-kafka-operator"
   repo: "https://strimzi.io/charts/"
   release: "0.35.1"
-  last_checked: "2023-05-19T19:42:59-06:00"
+  last_checked: "2023-06-28T23:09:23-06:00"
 k8s_strimzi_namespace: strimzi
 k8s_strimzi_wait_timeout: "{{ k8s_wait_timeout }}"

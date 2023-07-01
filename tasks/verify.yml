@@ -27,12 +27,6 @@
     - name: include helm checks
       include_tasks: verify/helm.yml
 
-    - name: include pod checks
-      include_tasks: verify/pods.yml
-
-    - name: include cert checks
-      include_tasks: verify/certs.yml
-
     - name: include olm checks
       ansible.builtin.include_tasks: verify/olm.yml
       when: k8s_olm_verify | bool
@@ -49,6 +43,10 @@
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_verify | bool
 
+    - name: include opensearch checks
+      ansible.builtin.include_tasks: verify/opensearch.yml
+      when: k8s_opensearch_verify | bool
+
     - name: include zalando checks
       ansible.builtin.include_tasks: verify/zalando.yml
       when: k8s_zalando_verify | bool
@@ -57,12 +55,18 @@
       ansible.builtin.include_tasks: verify/mysql.yml
       when: k8s_mysql_verify | bool
 
+    - name: include ingress checks
+      include_tasks: verify/ingress.yml
+
+    - name: include cert checks
+      include_tasks: verify/certs.yml
+
     - name: include service checks
       include_tasks: verify/service.yml
       when: k8s_service_verify | bool
 
-    - name: include ingress checks
-      include_tasks: verify/ingress.yml
+    - name: include pod checks
+      include_tasks: verify/pods.yml
 
     - name: include command checks
       ansible.builtin.include_tasks: verify/cmds.yml

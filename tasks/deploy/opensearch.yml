@@ -1,0 +1,14 @@
+---
+- name: deploy opensearch operator
+  kubernetes.core.helm:
+    name: opensearch
+    chart_ref: "{{ k8s_opensearch_chart.name }}"
+    chart_repo_url: "{{ k8s_opensearch_chart.repo }}"
+    chart_version: "{{ k8s_opensearch_chart.release }}"
+    release_namespace: "{{ k8s_opensearch_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_opensearch_wait_timeout }}s"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"

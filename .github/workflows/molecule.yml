@@ -58,6 +58,7 @@ jobs:
           - mysql
           - zalando
           - strimzi
+          - opensearch
         include:
           - image: v1.26.3
           - image: v1.25.8

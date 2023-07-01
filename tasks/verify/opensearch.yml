@@ -1,0 +1,62 @@
+---
+- name: set test facts
+  ansible.builtin.set_fact:
+    _opensearch_test_namespace: opensearch-test
+    _opensearch_test_name: opensearch-cluster
+
+- name: create opensearch namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    api_version: v1
+    kind: Namespace
+    name: "{{ _opensearch_test_namespace }}"
+  register: opensearch_namespace_create
+  retries: "{{ k8s_retry_num }}"
+  delay: "{{ k8s_retry_delay }}"
+  until: opensearch_namespace_create is success
+
+- name: create test opensearch cluster
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    resource_definition:
+      apiVersion: opensearch.opster.io/v1
+      kind: OpenSearchCluster
+      metadata:
+        name: "{{ _opensearch_test_name }}"
+        namespace: "{{ _opensearch_test_namespace }}"
+      spec:
+        general:
+          serviceName: "{{ _opensearch_test_name }}"
+          version: 2.3.0
+          setVMMaxMapCount: true
+        dashboards:
+          enable: true
+          version: 2.3.0
+          replicas: 1
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+        nodePools:
+          - component: nodes
+            replicas: 3
+            diskSize: "5Gi"
+            jvm: -Xmx1024M -Xms1024M
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "500m"
+              limits:
+                memory: "2Gi"
+                cpu: "500m"
+            roles:
+              - "cluster_manager"
+              - "data"
+            persistence:
+              pvc:
+                storageClass: standard
