@@ -1,3 +1,5 @@
 fileignoreconfig:
-    - filename: defaults/main/mysql.yml
-      ignore_detectors: [ filename ]
+  - filename: defaults/main/mysql.yml
+    ignore_detectors: [ filename ]
+  - filename: poetry.lock
+    ignore_detectors: [ filecontent ]
