@@ -31,6 +31,13 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 * All Zalando instances are deployed
 * All MySQL InnoDB clusters are deployed
 
+## Roadmap
+
+* Add statefulset status tests
+* Add deployment status tests
+* Add service status tests
+* Move loadbalancer tests to dedicated file
+
 ## Role Variables
 
 The following is the list of parameters intended for end-user manipulation: 

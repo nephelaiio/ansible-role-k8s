@@ -6,8 +6,8 @@ k8s_longhorn_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_longhorn_chart:
   name: longhorn
   repo: "https://charts.longhorn.io"
-  release: "1.4.2"
-  last_checked: "2023-06-28T23:09:39-06:00"
+  release: "1.5.1"
+  last_checked: "2023-08-11T21:44:17-06:00"
 k8s_longhorn_chart_values:
   persistence:
     defaultClass: false
