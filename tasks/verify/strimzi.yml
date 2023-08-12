@@ -27,7 +27,7 @@
         namespace: "{{ _strimzi_test_namespace }}"
       spec:
         kafka:
-          version: 3.3.2
+          version: 3.5.0
           replicas: 1
           brokers: 1
           storage:
