@@ -67,3 +67,7 @@ provisioner:
                 password: "{{ 'molecule' | b64encode }}"
 verifier:
   name: ansible
+lint: |
+  set -e
+  poetry run yamllint .
+  poetry run ansible-lint .
