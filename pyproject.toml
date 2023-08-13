@@ -5,7 +5,7 @@ description = ""
 authors = ["nephelaiio"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 kubernetes = "^24.2.0"
 openshift = "^0.13.1"
 jmespath = "^1.0.1"
