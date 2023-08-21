@@ -54,6 +54,27 @@ provisioner:
           k8s_mysql_deploy: false
           k8s_nginx_deploy: true
           k8s_molecule_cluster_type: kind
+          k8s_argocd_apps_chart_values:
+            applications:
+              - name: guestbook
+                namespace: argocd
+                finalizers:
+                  - resources-finalizer.argocd.argoproj.io
+                project: default
+                sources:
+                  - repoURL: https://github.com/argoproj/argocd-example-apps.git
+                    path: guestbook
+                    targetRevision: HEAD
+                destination:
+                  server: https://kubernetes.default.svc
+                  namespace: guestbook
+                syncPolicy:
+                  automated:
+                    prune: true
+                    selfHeal: true
+                    allowEmpty: false
+                  syncOptions:
+                    - CreateNamespace=true
 verifier:
   name: ansible
 scenario:

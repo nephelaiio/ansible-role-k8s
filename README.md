@@ -72,6 +72,7 @@ ArgoCD parameters
 | k8s_argocd_chart.release |                    4.10.9 | string  | ArgoCD helm chart release           | no       |
 | k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string  | ArgoCD ingress hostname             | no       |
 | k8s_argocd_exec_timeout  |                        3m | string  | ArgoCD git operation timeout        | no       |
+| k8s_argocd_apps_chart.release |                    1.4.1 | string  | ArgoCD Apss helm chart release    | no       |
 
 OLM paramters
 
