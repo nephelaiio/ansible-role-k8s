@@ -29,23 +29,6 @@ k8s_argocd_apps_chart:
   release: "1.4.1"
   last_checked: "2023-08-11T21:44:20-06:00"
 k8s_argocd_apps_chart_values:
-  applications:
-    - name: guestbook
-      namespace: argocd
-      finalizers:
-        - resources-finalizer.argocd.argoproj.io
-      project: default
-      sources:
-        - repoURL: https://github.com/argoproj/argocd-example-apps.git
-          path: guestbook
-          targetRevision: HEAD
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: guestbook
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-          allowEmpty: false
-        syncOptions:
-          - CreateNamespace=true
+  applications: []
+  applicationsets: []
+  itemTemplates: []
