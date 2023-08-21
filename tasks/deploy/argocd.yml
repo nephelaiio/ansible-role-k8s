@@ -90,3 +90,18 @@
   delay: "{{ k8s_retry_delay }}"
   register: argocd_ingress_create
   until: argocd_ingress_create is success
+
+- name: install argocd-apps chart
+  kubernetes.core.helm:
+    name: argocd-apps
+    chart_ref: "{{ k8s_argocd_apps_chart.name }}"
+    chart_repo_url: "{{ k8s_argocd_apps_chart.repo }}"
+    chart_version: "{{ k8s_argocd_apps_chart.release }}"
+    release_namespace: "{{ k8s_argocd_apps_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_argocd_apps_wait_timeout }}s"
+    values: "{{ k8s_argocd_apps_chart_values }}"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"

@@ -118,7 +118,7 @@
 
   rescue:
 
-    - name: debug faled applications
+    - name: debug failed applications
       ansible.builtin.fail:
         msg: "the following argocd applications are in failed status [{{ app_names | join(', ') }}]"
       vars:
