@@ -1,5 +1,5 @@
 ---
-- name: deploy metallb chart
+- name: Deploy metallb chart
   kubernetes.core.helm:
     name: metallb
     chart_ref: "{{ k8s_metallb_chart.name }}"
@@ -16,7 +16,7 @@
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"
 
-- name: create metallb pools
+- name: Create metallb pools
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -37,7 +37,7 @@
   register: metallb_pool_create
   until: metallb_pool_create is success
 
-- name: advertise metallb pools
+- name: Advertise metallb pools
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"

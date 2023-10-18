@@ -1,5 +1,5 @@
 ---
-- name: validate olm operator status
+- name: Validate olm operator status
   ansible.builtin.fail:
     msg: "the following operators are in failed status [{{ operator_failed | join(', ') }}]"
   vars:

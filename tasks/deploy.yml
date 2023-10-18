@@ -1,48 +1,48 @@
 ---
-- name: print debug information
+- name: Print debug information
   ansible.builtin.debug:
     msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
-- name: include precondition checks
-  include_tasks: "deploy/check.yml"
+- name: Include precondition checks
+  ansible.builtin.include_tasks: "deploy/check.yml"
 
-- name: include secret management tasks
-  include_tasks: "deploy/secrets.yml"
+- name: Include secret management tasks
+  ansible.builtin.include_tasks: "deploy/secrets.yml"
 
-- name: include metallb deployment tasks
-  include_tasks: "deploy/metallb.yml"
+- name: Include metallb deployment tasks
+  ansible.builtin.include_tasks: "deploy/metallb.yml"
 
-- name: include certmanager deployment tasks
-  include_tasks: "deploy/certmanager.yml"
+- name: Include certmanager deployment tasks
+  ansible.builtin.include_tasks: "deploy/certmanager.yml"
 
-- name: include ingress deployment tasks
-  include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
+- name: Include ingress deployment tasks
+  ansible.builtin.include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
   when: k8s_nginx_deploy | bool
 
-- name: include longhorn deployment tasks
-  include_tasks: "deploy/longhorn.yml"
+- name: Include longhorn deployment tasks
+  ansible.builtin.include_tasks: "deploy/longhorn.yml"
   when: k8s_longhorn_deploy | bool
 
-- name: include olm deployment tasks
-  include_tasks: "deploy/olm.yml"
+- name: Include olm deployment tasks
+  ansible.builtin.include_tasks: "deploy/olm.yml"
   when: k8s_olm_deploy | bool
 
-- name: include argocd deployment tasks
-  include_tasks: "deploy/argocd.yml"
+- name: Include argocd deployment tasks
+  ansible.builtin.include_tasks: "deploy/argocd.yml"
   when: k8s_argocd_deploy | bool
 
-- name: include strimzi deployment tasks
-  include_tasks: "deploy/strimzi.yml"
+- name: Include strimzi deployment tasks
+  ansible.builtin.include_tasks: "deploy/strimzi.yml"
   when: k8s_strimzi_deploy | bool
 
-- name: include zalando deployment tasks
-  include_tasks: "deploy/zalando.yml"
+- name: Include zalando deployment tasks
+  ansible.builtin.include_tasks: "deploy/zalando.yml"
   when: k8s_zalando_deploy | bool
 
-- name: include opensearch operator deployment tasks
-  include_tasks: "deploy/opensearch.yml"
+- name: Include opensearch operator deployment tasks
+  ansible.builtin.include_tasks: "deploy/opensearch.yml"
   when: k8s_opensearch_deploy | bool
 
-- name: include mysql operator deployment tasks
-  include_tasks: "deploy/mysql.yml"
+- name: Include mysql operator deployment tasks
+  ansible.builtin.include_tasks: "deploy/mysql.yml"
   when: k8s_mysql_deploy | bool

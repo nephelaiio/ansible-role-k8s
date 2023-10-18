@@ -1,5 +1,5 @@
 ---
-- name: destroy
+- name: Destroy
 
   hosts: localhost
 

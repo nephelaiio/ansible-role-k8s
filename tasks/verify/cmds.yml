@@ -1,5 +1,5 @@
 ---
-- name: execute check commands
+- name: Execute check commands
   ansible.builtin.command: "{{ _cmd }}"
   vars:
     _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""

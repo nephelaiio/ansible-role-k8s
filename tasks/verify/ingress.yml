@@ -1,5 +1,5 @@
 ---
-- name: validate ingress status
+- name: Validate ingress status
   ansible.builtin.fail:
     msg: "the following ingress are in failed status [{{ ingress_failed | join(', ') }}]"
   vars:
@@ -16,7 +16,7 @@
   until: ingress_failed | length == 0
   when: ingress_failed | length > 0
 
-- name: set ingress metadata
+- name: Set ingress metadata
   ansible.builtin.set_fact:
     ingress_data: "{{ ingress_query | community.general.json_query(ingress_filter) }}"
     ingress_hosts: []
@@ -30,7 +30,7 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: set ingress data
+- name: Set ingress data
   ansible.builtin.set_fact:
     ingress_hosts: "{{ ingress_hosts + (ingress_hostentries | flatten) }}"
     ingress_cmds: "{{ ingress_cmds + (ingress_cmdentries | flatten) }}"
@@ -41,14 +41,14 @@
     label: "{{ item | map('join', ' ') }}"
   loop: "{{ ingress_data }}"
 
-- name: write ingress hostfile
+- name: Write ingress hostfile
   ansible.builtin.lineinfile:
     path: "{{ k8s_verifier_path }}/hosts"
     line: "{{ item }}"
     create: true
   loop: "{{ ingress_hosts }}"
 
-- name: execute ingress checks
+- name: Execute ingress checks
   ansible.builtin.command: "{{ _cmd }}"
   vars:
     _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""

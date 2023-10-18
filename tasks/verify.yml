@@ -1,79 +1,80 @@
 ---
-- name: print debug information
+- name: Print debug information
   ansible.builtin.debug:
     msg: "using kubeconfig at '{{ k8s_kubeconfig }}'"
 
-- name: install verifier dependencies
-  include_tasks: verify/install.yml
+- name: Install verifier dependencies
+  ansible.builtin.include_tasks: verify/install.yml
 
-- name: create temporary directory
+- name: Create temporary directory
   ansible.builtin.tempfile:
     state: directory
     prefix: kind
   register: _tmpdir
   when: k8s_verifier_path is not defined
 
-- name: set verification directory default
+- name: Set verification directory default
   ansible.builtin.set_fact:
     k8s_verifier_path: "{{ _tmpdir.path }}"
   when: _tmpdir is not skipped
 
-- block:
+- name: Include verification checks
+  block:
 
-    - name: include secret checks
-      include_tasks: verify/secrets.yml
+    - name: Include secret checks
+      ansible.builtin.include_tasks: verify/secrets.yml
       when: k8s_secrets | length > 0
 
-    - name: include helm checks
-      include_tasks: verify/helm.yml
+    - name: Include helm checks
+      ansible.builtin.include_tasks: verify/helm.yml
 
-    - name: include olm checks
+    - name: Include olm checks
       ansible.builtin.include_tasks: verify/olm.yml
       when: k8s_olm_verify | bool
 
-    - name: include argocd checks
+    - name: Include argocd checks
       ansible.builtin.include_tasks: verify/argocd.yml
       when: k8s_argocd_verify | bool
 
-    - name: include volume checks
+    - name: Include volume checks
       ansible.builtin.include_tasks: verify/volume.yml
       when: k8s_volume_verify | bool
 
-    - name: include strimzi checks
+    - name: Include strimzi checks
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_verify | bool
 
-    - name: include opensearch checks
+    - name: Include opensearch checks
       ansible.builtin.include_tasks: verify/opensearch.yml
       when: k8s_opensearch_verify | bool
 
-    - name: include zalando checks
+    - name: Include zalando checks
       ansible.builtin.include_tasks: verify/zalando.yml
       when: k8s_zalando_verify | bool
 
-    - name: include mysql checks
+    - name: Include mysql checks
       ansible.builtin.include_tasks: verify/mysql.yml
       when: k8s_mysql_verify | bool
 
-    - name: include ingress checks
-      include_tasks: verify/ingress.yml
+    - name: Include ingress checks
+      ansible.builtin.include_tasks: verify/ingress.yml
 
-    - name: include cert checks
-      include_tasks: verify/certs.yml
+    - name: Include cert checks
+      ansible.builtin.include_tasks: verify/certs.yml
 
-    - name: include service checks
-      include_tasks: verify/service.yml
+    - name: Include service checks
+      ansible.builtin.include_tasks: verify/service.yml
       when: k8s_service_verify | bool
 
-    - name: include pod checks
-      include_tasks: verify/pods.yml
+    - name: Include pod checks
+      ansible.builtin.include_tasks: verify/pods.yml
 
-    - name: include command checks
+    - name: Include command checks
       ansible.builtin.include_tasks: verify/cmds.yml
 
   always:
 
-    - name: cleanup temp files
+    - name: Cleanup temp files
       ansible.builtin.file:
         state: absent
         path: "{{ _tmpdir.path }}"

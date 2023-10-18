@@ -1,15 +1,15 @@
 ---
-- name: set test facts
+- name: Set test facts
   ansible.builtin.set_fact:
     _volume_test_namespace: longhorn-test
     _volume_test_name: longhorn-test
     _volume_test_mount: longhorn-test
 
-- name: create test volume
+- name: Create test volume
   when: k8s_longhorn_deploy | bool
   block:
 
-    - name: create test namespace
+    - name: Create test namespace
       kubernetes.core.k8s:
         state: present
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -19,7 +19,7 @@
           metadata:
             name: "{{ _volume_test_namespace }}"
 
-    - name: create test volume claim
+    - name: Create test volume claim
       kubernetes.core.k8s:
         state: present
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -37,7 +37,7 @@
               requests:
                 storage: 3Gi
 
-    - name: create volume consumer
+    - name: Create volume consumer
       kubernetes.core.k8s:
         state: present
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -62,7 +62,7 @@
                   - mountPath: "/usr/share/nginx/html"
                     name: "{{ _volume_test_mount }}"
 
-- name: validate persistent claim status
+- name: Validate persistent claim status
   ansible.builtin.fail:
     msg: "the following pvcs are in failed status [{{ pvc_names | join(', ') }}]"
   vars:

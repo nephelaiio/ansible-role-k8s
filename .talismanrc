@@ -3,3 +3,9 @@ fileignoreconfig:
     ignore_detectors: [ filename ]
   - filename: poetry.lock
     ignore_detectors: [ filecontent ]
+  - filename: tasks/deploy/mysql.yml
+    ignore_detectors: [ filename ]
+  - filename: tasks/verify/mysql.yml
+    ignore_detectors: [ filename ]
+  - filename: .github/workflows/release.yml
+    ignore_detectors: [ filecontent ]

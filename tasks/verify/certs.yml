@@ -1,5 +1,5 @@
 ---
-- name: record cert metadata
+- name: Record cert metadata
   ansible.builtin.set_fact:
     cert_failed: "{{ cert_query | community.general.json_query(cert_filter) }}"
   vars:
@@ -11,7 +11,7 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: validate cert status
+- name: Validate cert status
   ansible.builtin.fail:
     msg: "the following certificates are in failed status [{{ cert_failed | join(', ') }}]"
   when: cert_failed | length > 0

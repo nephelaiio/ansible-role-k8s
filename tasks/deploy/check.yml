@@ -1,5 +1,5 @@
 ---
-- name: check cluster type input
+- name: Check cluster type input
   ansible.builtin.fail:
     msg: 'k8s_cluster_type must be one of [{{ valid_cluster_types | map(''map_format'', "''%s''") | join('', '') }}]'
   vars:
@@ -8,47 +8,45 @@
       - aws
   when: k8s_cluster_type not in valid_cluster_types
 
-- name: check local cluster settings
+- name: Check local cluster settings
+  when:
+    - k8s_cluster_type == 'local'
+    - k8s_address_pools is undefined
   block:
-    - name: check private address pool range
+    - name: Check private address pool range
       ansible.builtin.fail:
         msg: "private address pool range must be set"
       when: k8s_address_pool_private_iprange | length == 0
 
-    - name: check public address pool name
+    - name: Check public address pool name
       ansible.builtin.fail:
         msg: "public address pool name must be set"
       when: k8s_address_pool_public_name | length == 0
 
-    - name: check public address pool range
+    - name: Check public address pool range
       ansible.builtin.fail:
         msg: "public address pool range must be set as subnet/prefix"
       when: k8s_address_pool_public_iprange | length == 0 or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
 
-    - name: set k8s_address_pool metadata
+    - name: Set k8s_address_pool metadata
       ansible.builtin.set_fact:
         k8s_address_pools: "{{ k8s_address_pools_local }}"
 
-  when:
-    - k8s_cluster_type == 'local'
-    - k8s_address_pools is undefined
-
-- name: check aws cluster settings
-  block:
-    - name: set k8s_address_pool metadata
-      ansible.builtin.set_fact:
-        k8s_address_pools: "{{ k8s_address_pools_aws }}"
-
+- name: Check aws cluster settings
   when:
     - k8s_cluster_type == 'aws'
     - k8s_address_pools is undefined
+  block:
+    - name: Set k8s_address_pool metadata
+      ansible.builtin.set_fact:
+        k8s_address_pools: "{{ k8s_address_pools_aws }}"
 
-- name: check metallb speaker secret is set
+- name: Check metallb speaker secret is set
   ansible.builtin.fail:
     msg: "k8s_metallb_speaker_secret must be set"
   when: k8s_metallb_speaker_secret is not defined or k8s_metallb_speaker_secret | length == 0
 
-- name: check nginx ingress controller release
+- name: Check nginx ingress controller release
   ansible.builtin.fail:
     msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
   vars:
@@ -57,14 +55,14 @@
     chart_release_min_normalized: "{{ chart_release_min | regex_replace('^v', '') }}"
   when: (chart_release_req_normalized) is version(chart_release_min_normalized, operator='lt')
 
-- name: check certmanager release
+- name: Check certmanager release
   ansible.builtin.fail:
     msg: "k8s_certmanager_chart.release must be at least '{{ chart_release_min }}'"
   vars:
     chart_release_min: "v1.6.1"
   when: (k8s_certmanager_chart.release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')
 
-- name: check certmanager name
+- name: Check certmanager name
   ansible.builtin.fail:
     msg: >
       'k8s_certmanager_issuer_name must be one of

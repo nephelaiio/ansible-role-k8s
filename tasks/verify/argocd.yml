@@ -1,5 +1,5 @@
 ---
-- name: query argocd-repo-server definition
+- name: Query argocd-repo-server definition
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
@@ -11,7 +11,7 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: query argocd ingress metadata
+- name: Query argocd ingress metadata
   ansible.builtin.set_fact:
     ingress_argocd_ip: "{{ ingress_query[0][_status][_lb][_ingress][0][_ip] }}"
   vars:
@@ -37,26 +37,26 @@
     - ingress_query[0][_status][_lb][_ingress] | length > 0
     - _ip in ingress_query[0][_status][_lb][_ingress][0]
 
-- name: record argocd deployment env vars
+- name: Record argocd deployment env vars
   ansible.builtin.set_fact:
     argocd_env: "{{ _argocd_env }}"
     argocd_env_exec_item: "{{ _argocd_env | selectattr('name', 'equalto', 'ARGOCD_EXEC_TIMEOUT') }}"
   vars:
     _argocd_env: "{{ _reposerver_def.spec.template.spec.containers[0].env }}"
 
-- name: fail argocd exec timeout presence check
+- name: Fail argocd exec timeout presence check
   ansible.builtin.fail:
     msg: "env var ARGOCD_EXEC_TIMEOUT is not set"
   when: argocd_env_exec_item | length == 0
 
-- name: fail argocd exec timeout value check
+- name: Fail argocd exec timeout value check
   ansible.builtin.fail:
     msg: "env var ARGOCD_EXEC_TIMEOUT is not set correctly ({{ argocd_env_exec_value }})"
   vars:
     argocd_env_exec_value: "{{ argocd_env_exec_item[0].value }}"
   when: argocd_env_exec_value != k8s_argocd_exec_timeout
 
-- name: query argocd access info
+- name: Query argocd access info
   ansible.builtin.set_fact:
     argocd_admin_username: admin
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
@@ -70,7 +70,7 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: record argocd auth credentials
+- name: Record argocd auth credentials
   ansible.builtin.set_fact:
     argocd_admin_username: "admin"
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
@@ -84,7 +84,7 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: auth against argocd api
+- name: Auth against argocd api
   ansible.builtin.uri:
     url: "https://{{ ingress_argocd_ip }}/api/v1/session"
     method: POST
@@ -97,14 +97,14 @@
     validate_certs: false
   register: argocd_auth_data
 
-- name: record argocd auth token
+- name: Record argocd auth token
   ansible.builtin.set_fact:
     argocd_admin_token: "{{ argocd_auth_data.json.token }}"
 
-- name: verify argocd application status
+- name: Verify argocd application status
   block:
 
-    - name: query argocd application status
+    - name: Query argocd application status
       ansible.builtin.uri:
         url: "https://{{ ingress_argocd_ip }}/api/v1/applications?refresh=true"
         headers:
@@ -118,7 +118,7 @@
 
   rescue:
 
-    - name: debug failed applications
+    - name: Debug failed applications
       ansible.builtin.fail:
         msg: "the following argocd applications are in failed status [{{ app_names | join(', ') }}]"
       vars:

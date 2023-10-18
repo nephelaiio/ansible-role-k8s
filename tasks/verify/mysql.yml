@@ -1,5 +1,5 @@
 ---
-- name: create mysql namespace
+- name: Create mysql namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -7,7 +7,7 @@
     kind: Namespace
     name: "{{ mysql_namespace | default('mysql-test') }}"
 
-- name: create test mysql secret
+- name: Create test mysql secret
   kubernetes.core.k8s:
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     definition:
@@ -20,7 +20,7 @@
       data:
         rootPassword: "{{ mysql_password | b64encode }}"
 
-- name: create test mysql cluster
+- name: Create test mysql cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -36,7 +36,7 @@
         secretName: {{ mysql_cluster_secret }}
         tlsUseSelfSigned: true
 
-- name: validate mysql cluster status
+- name: Validate mysql cluster status
   ansible.builtin.fail:
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:

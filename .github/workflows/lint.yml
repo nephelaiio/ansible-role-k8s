@@ -1,17 +1,18 @@
 ---
-name: release
+name: lint
+
 on:
-  push:
-    tags:
-      - "*"
+  pull_request:
+    branches:
+      - master
 
 defaults:
   run:
     working-directory: 'nephelaiio.k8s'
 
 jobs:
-  release:
-    name: Release
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase
@@ -19,7 +20,7 @@ jobs:
         with:
           path: 'nephelaiio.k8s'
 
-      - name: Set up Python 3
+      - name: Set up python 3
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -30,11 +31,5 @@ jobs:
       - name: Install make
         run: sudo apt-get install -y make
 
-      - name: Install dependencies
-        run: make install
-
-      - name: Trigger a new import on galaxy
-        run: make publish
-        env:
-          GALAXY_API_KEY: "${{ secrets.GALAXY_API_KEY }}"
-          GITHUB_REPOSITORY: "${{ github.repository }}"
+      - name: Lint code
+        run: make lint
