@@ -1,9 +1,9 @@
 ---
-- name: set test facts
+- name: Set test facts
   ansible.builtin.set_fact:
     _strimzi_test_namespace: strimzi-test
 
-- name: create strimzi namespace
+- name: Create strimzi namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -15,7 +15,7 @@
   delay: "{{ k8s_retry_delay }}"
   until: strimzi_namespace_create is success
 
-- name: create test strimzi cluster
+- name: Create test strimzi cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"

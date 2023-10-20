@@ -1,8 +1,8 @@
 ---
-- name: include deployment tasks
-  include_tasks: "deploy.yml"
+- name: Include deployment tasks
+  ansible.builtin.include_tasks: "deploy.yml"
   when: k8s_deploy | bool
 
-- name: include verification tasks
-  include_tasks: "verify.yml"
+- name: Include verification tasks
+  ansible.builtin.include_tasks: "verify.yml"
   when: k8s_verify | bool

@@ -1,5 +1,5 @@
 ---
-- name: create zalando namespace
+- name: Create zalando namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -7,7 +7,7 @@
     kind: Namespace
     name: "{{ zalando_namespace | default('zalando-test') }}"
 
-- name: create test postgresql cluster
+- name: Create test postgresql cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -39,7 +39,7 @@
         postgresql:
           version: "13"
 
-- name: validate postgresql cluster status
+- name: Validate postgresql cluster status
   ansible.builtin.fail:
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:
@@ -51,7 +51,7 @@
         kind='postgresql',
         kubeconfig=k8s_kubeconfig
       ) }}"
-  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int)  }}"
+  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int) }}"
   delay: "{{ k8s_retry_delay }}"
   until: cluster_failed | length == 0
   failed_when: cluster_failed | length > 0

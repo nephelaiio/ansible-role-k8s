@@ -1,5 +1,5 @@
 ---
-- name: install argocd chart
+- name: Install argocd chart
   kubernetes.core.helm:
     name: argocd
     chart_ref: "{{ k8s_argocd_chart.name }}"
@@ -14,7 +14,7 @@
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"
 
-- name: query argocd-repo-server definition
+- name: Query argocd-repo-server definition
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
@@ -25,7 +25,7 @@
       resource_name='argocd-repo-server',
       kubeconfig=k8s_kubeconfig) }}"
 
-- name: patch argocd reposerver deployment
+- name: Patch argocd reposerver deployment
   kubernetes.core.k8s_json_patch:
     kind: Deployment
     name: argocd-repo-server
@@ -51,7 +51,7 @@
       kubeconfig=k8s_kubeconfig) }}"
   changed_when: false
 
-- name: deploy argocd ingress
+- name: Deploy argocd ingress
   kubernetes.core.k8s:
     namespace: "{{ k8s_argocd_namespace }}"
     state: present
@@ -91,7 +91,7 @@
   register: argocd_ingress_create
   until: argocd_ingress_create is success
 
-- name: install argocd-apps chart
+- name: Install argocd-apps chart
   kubernetes.core.helm:
     name: argocd-apps
     chart_ref: "{{ k8s_argocd_apps_chart.name }}"

@@ -1,5 +1,5 @@
 ---
-- name: set service metadata
+- name: Set service metadata
   ansible.builtin.set_fact:
     loadbalancer_data: "{{ _loadbalancers }}"
     loadbalancer_failed: "{{ _loadbalancers | json_query(status_filter) }}"
@@ -18,12 +18,12 @@
         kubeconfig=k8s_kubeconfig
       ) }}"
 
-- name: validate service status
+- name: Validate service status
   ansible.builtin.fail:
     msg: "the following loadlabancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
   when: loadbalancer_failed | length > 0
 
-- name: write service hostfile
+- name: Write service hostfile
   ansible.builtin.lineinfile:
     path: "{{ k8s_verifier_path }}/hosts"
     line: "{{ item }}"

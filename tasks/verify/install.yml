@@ -1,5 +1,5 @@
 ---
-- name: install bubblewrap
+- name: Install bubblewrap
   ansible.builtin.package:
     name: bubblewrap
   retries: 3
@@ -8,7 +8,7 @@
   until: package_install is succeeded
   become: true
 
-- name: install certutil
+- name: Install certutil
   ansible.builtin.package:
     name: libnss3-tools
   retries: 3
@@ -17,21 +17,21 @@
   until: package_install is succeeded
   become: true
 
-- name: set cert metadata
+- name: Set cert metadata
   ansible.builtin.set_fact:
     k8s_cacert_path: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
 
-- name: create ca cert dir
+- name: Create ca cert dir
   ansible.builtin.file:
     state: directory
     path: "{{ k8s_verifier_path }}/ca-certificates"
 
-- name: create ssl cert dir
+- name: Create ssl cert dir
   ansible.builtin.file:
     state: directory
     path: "{{ k8s_verifier_path }}/certs"
 
-- name: write ca certificate file
+- name: Write ca certificate file
   ansible.builtin.copy:
     content: "{{ _cacert }}"
     dest: "{{ k8s_cacert_path }}"
@@ -48,21 +48,21 @@
       )
     }}"
 
-- name: detect edge truststore
+- name: Detect edge truststore
   ansible.builtin.stat:
     path: "{{ _home }}/.pki/nssdb"
   vars:
     _home: "{{ lookup('env', 'HOME')  }}"
   register: truststore_file
 
-- name: install certificate in edge truststore
+- name: Install certificate in edge truststore
   ansible.builtin.command: "certutil -d sql:{{ _home }}/.pki/nssdb -A -t C,, -n {{ k8s_cluster_name }} -i {{ k8s_cacert_path }}"
   vars:
     _home: "{{ lookup('env', 'HOME')  }}"
   changed_when: false
   when: truststore_file.stat.exists
 
-- name: add cluster ca certificate to wrapped env
+- name: Add cluster ca certificate to wrapped env
   ansible.builtin.command: "bwrap {{ _bind_dev }} {{ _bind_ca }} {{ _bind_certs }} {{ _cmd }}"
   vars:
     _bind_dev: "--dev-bind / /"
@@ -71,8 +71,8 @@
     _cmd: "sh -c 'update-ca-certificates'"
   changed_when: false
 
-- name: create wrapper command
-  copy:
+- name: Create wrapper command
+  ansible.builtin.copy:
     content: |
       #!/usr/bin/env bash
 

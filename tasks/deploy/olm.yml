@@ -1,5 +1,5 @@
 ---
-- name: deploy olm crds
+- name: Deploy olm crds
   kubernetes.core.k8s:
     resource_definition: "{{ lookup('url', k8s_olm_manifest_crds, split_lines=False) }}"
     wait: true
@@ -9,7 +9,7 @@
       type: Established
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
 
-- name: deploy olm operator
+- name: Deploy olm operator
   kubernetes.core.k8s:
     resource_definition: "{{ lookup('url', k8s_olm_manifest_olm, split_lines=False) }}"
     wait: true

@@ -16,28 +16,48 @@ PG_USER := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_user' molec
 PG_PASS := $$(make --no-print-directory kubectl get secret $(PG_USER)-$(PG_TEAM)-$(PG_DB) -- -n $(PG_NS) -o json | jq '.data.password' -r | base64 -d )
 PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o json | jq ".items | map(select(.metadata.name == \"$(PG_TEAM)-$(PG_DB)\"))[0] | .status.loadBalancer.ingress[0].ip" -r)
 
-.PHONY: poetry run helm kubectl psql molecule
+.PHONY: all ${MAKECMDGOALS}
 
-clean:
-	find ${HOME}/.cache/ansible-compat/ -mindepth 2 -maxdepth 2 -type d -name "roles" | xargs -r rm -rf
+install:
+	@type poetry >/dev/null || pip3 install poetry
+	@poetry install
 
-molecule: poetry clean
-	KIND_RELEASE=$(KIND_RELEASE) K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $(filter-out $@,$(MAKECMDGOALS)) -s $(SCENARIO)
+lint: install
+	poetry run yamllint .
+	poetry run ansible-lint .
+	poetry run molecule syntax
+
+dependency create prepare converge idempotence side-effect verify destroy login reset:
+	MOLECULE_DOCKER_IMAGE=${MOLECULE_DOCKER_IMAGE} poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+
+rebuild: destroy prepare create
+
+ignore:
+	poetry run ansible-lint --generate-ignore
+
+clean: destroy reset
+	poetry env remove $$(which python)
+
+publish:
+	@echo publishing repository ${GITHUB_REPOSITORY}
+	@echo GITHUB_ORGANIZATION=${GITHUB_ORG}
+	@echo GITHUB_REPOSITORY=${GITHUB_REPO}
+	@poetry run ansible-galaxy role import \
+		--api-key ${GALAXY_API_KEY} ${GITHUB_ORG} ${GITHUB_REPO}
+
+version:
+	@poetry run molecule --version
 
 run:
 	$(EPHEMERAL_DIR)/bwrap $(filter-out $@,$(MAKECMDGOALS))
 
-helm:
-	KUBECONFIG=$(EPHEMERAL_DIR)/config helm $(filter-out $@,$(MAKECMDGOALS))
-
-kubectl:
-	@KUBECONFIG=$(EPHEMERAL_DIR)/config kubectl $(filter-out $@,$(MAKECMDGOALS))
+helm kubectl:
+	KUBECONFIG=$(EPHEMERAL_DIR)/config $@ $(filter-out $@,$(MAKECMDGOALS))
 
 psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)
 
-poetry:
-	@poetry install
+poetry: install
 
 %:
 	@:

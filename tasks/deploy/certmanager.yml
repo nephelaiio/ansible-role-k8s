@@ -1,5 +1,5 @@
 ---
-- name: manage cert-manager helm chart
+- name: Manage cert-manager helm chart
   kubernetes.core.helm:
     name: cert-manager
     chart_ref: "{{ k8s_certmanager_chart.name }}"
@@ -20,9 +20,10 @@
           - 1.1.1.1
           - 8.8.8.8
 
-- name: deploy cloudflare cluster issuer
+- name: Deploy cloudflare cluster issuer
+  when: k8s_certmanager_issuer_name == 'letsencrypt'
   block:
-    - name: create certmanager secret
+    - name: Create certmanager secret
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -37,7 +38,7 @@
           data:
             api-token: "{{ k8s_certmanager_secret | b64encode }}"
 
-    - name: create letsencrypt issuer
+    - name: Create letsencrypt issuer
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -61,11 +62,10 @@
                         name: cloudflare-api-token-secret
                         key: api-token
 
-  when: k8s_certmanager_issuer_name == 'letsencrypt'
-
-- name: deploy local cluster issuer
+- name: Deploy local cluster issuer
+  when: k8s_certmanager_issuer_name == 'local'
   block:
-    - name: create bootstrap issuer
+    - name: Create bootstrap issuer
       kubernetes.core.k8s:
         name: bootstrap-issuer
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -83,7 +83,7 @@
       register: certmanager_issuer_create
       until: certmanager_issuer_create is success
 
-    - name: create self-signed ca certificate
+    - name: Create self-signed ca certificate
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -108,7 +108,7 @@
       register: certmanager_cert_create
       until: certmanager_cert_create is success
 
-    - name: create self-signed cluster issuer
+    - name: Create self-signed cluster issuer
       kubernetes.core.k8s:
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         state: present
@@ -124,5 +124,3 @@
       delay: "{{ k8s_retry_delay }}"
       register: certmanager_issuer_create
       until: certmanager_cert_create is success
-
-  when: k8s_certmanager_issuer_name == 'local'

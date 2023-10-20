@@ -1,10 +1,10 @@
 ---
-- name: set test facts
+- name: Set test facts
   ansible.builtin.set_fact:
     _opensearch_test_namespace: opensearch-test
     _opensearch_test_name: opensearch-cluster
 
-- name: create opensearch namespace
+- name: Create opensearch namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -16,7 +16,7 @@
   delay: "{{ k8s_retry_delay }}"
   until: opensearch_namespace_create is success
 
-- name: create test opensearch cluster
+- name: Create test opensearch cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"

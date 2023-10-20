@@ -1,5 +1,5 @@
 ---
-- name: deploy longhorn
+- name: Deploy longhorn
   kubernetes.core.helm:
     name: longhorn
     chart_ref: "{{ k8s_longhorn_chart.name }}"
