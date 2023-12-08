@@ -42,9 +42,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Make
-        run: sudo apt-get install -y make
-
       - name: Install Helm
         uses: azure/setup-helm@v3
         with:
@@ -57,6 +54,15 @@ jobs:
         with:
           version: "v0.18.0"
           skipClusterCreation: true
+
+      - name: Install Make
+        run: sudo apt-get install -y make
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Debug test environment
+        run: make debug
 
       - name: run molecule tests.
         run: make test
