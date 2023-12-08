@@ -4,11 +4,13 @@
 # @file
 # @version 0.0.1
 
+.PHONY: all ${MAKECMDGOALS}
+
 KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
-SCENARIO ?= default
-EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(SCENARIO)"
+MOLECULE_SCENARIO ?= default
+MOLECULE_EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(MOLECULE_SCENARIO)"
 PG_DB := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_db' molecule/default/molecule.yml -r)
 PG_NS := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_namespace' molecule/default/molecule.yml -r)
 PG_TEAM := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_team' molecule/default/molecule.yml -r)
@@ -18,27 +20,27 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 GITHUB_ORG = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 1)
 GITHUB_REPO = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 2)
 
-.PHONY: all ${MAKECMDGOALS}
-
 install:
 	@type poetry >/dev/null || pip3 install poetry
-	@poetry install
+	@type yq || sudo apt-get install -y yq
+	@poetry install --no-root
 
 lint: install
 	poetry run yamllint .
 	poetry run ansible-lint .
 	poetry run molecule syntax
 
-dependency create prepare converge idempotence side-effect verify destroy login reset:
-	MOLECULE_DOCKER_IMAGE=${MOLECULE_DOCKER_IMAGE} poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+dependency create prepare converge idempotence side-effect verify destroy login reset list:
+	KIND_RELEASE=$(KIND_RELEASE) K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 rebuild: destroy prepare create
 
 ignore:
 	poetry run ansible-lint --generate-ignore
 
-clean: destroy reset
-	poetry env remove $$(which python)
+clean:
+	@find ${HOME}/.cache/ansible-compat/ -mindepth 2 -maxdepth 2 -type d -name "roles" | xargs -r rm -rf
+	@poetry env remove $$(which python) >/dev/null 2>&1 || exit 0
 
 publish:
 	@echo publishing repository ${GITHUB_REPOSITORY}
@@ -51,10 +53,10 @@ version:
 	@poetry run molecule --version
 
 run:
-	$(EPHEMERAL_DIR)/bwrap $(filter-out $@,$(MAKECMDGOALS))
+	$(MOLECULE_EPHEMERAL_DIR)/bwrap $(filter-out $@,$(MAKECMDGOALS))
 
 helm kubectl:
-	KUBECONFIG=$(EPHEMERAL_DIR)/config $@ $(filter-out $@,$(MAKECMDGOALS))
+	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ $(filter-out $@,$(MAKECMDGOALS))
 
 psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)

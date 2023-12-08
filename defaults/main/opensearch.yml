@@ -3,8 +3,8 @@ k8s_opensearch_deploy: false
 k8s_opensearch_verify: "{{ k8s_opensearch_deploy }}"
 k8s_opensearch_chart:
   name: "opensearch-operator"
-  repo: "https://opster.github.io/opensearch-k8s-operator/"
+  repo: "https://opensearch-project.github.io/opensearch-k8s-operator"
   release: "2.4.0"
-  last_checked: "2023-10-31T21:30:42-06:00"
+  last_checked: "2023-12-08T15:43:58-06:00"
 k8s_opensearch_namespace: opensearch
 k8s_opensearch_wait_timeout: "{{ k8s_wait_timeout }}"
