@@ -30,7 +30,7 @@ lint: install
 	poetry run ansible-lint .
 	poetry run molecule syntax
 
-dependency create prepare converge idempotence side-effect verify destroy login reset list:
+test dependency create prepare converge idempotence side-effect verify destroy login reset list:
 	KIND_RELEASE=$(KIND_RELEASE) K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 rebuild: destroy prepare create
