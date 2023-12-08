@@ -34,6 +34,8 @@ jobs:
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v4
+        with:
+          path: 'nephelaiio.k8s'
 
       - name: Set up python 3
         uses: actions/setup-python@v4
