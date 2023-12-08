@@ -2,22 +2,19 @@
 name: molecule
 
 on:
-
   pull_request:
+  push:
     branches:
       - master
   schedule:
     - cron: "0 5 * * 5"
 
 defaults:
-
   run:
     working-directory: 'nephelaiio.k8s'
 
 jobs:
-
   molecule:
-
     name: molecule
     runs-on: ubuntu-latest
     strategy:
@@ -35,38 +32,36 @@ jobs:
           - image: v1.25.8
           - image: v1.24.12
     steps:
-
-      - name: Check out the codebase.
-        uses: actions/checkout@v3
-        with:
-          path: 'nephelaiio.k8s'
+      - name: Check out the codebase
+        uses: actions/checkout@v4
 
       - name: Set up python 3
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: make install
+      - name: Install Make
+        run: sudo apt-get install -y make
 
-      - name: Install helm
+      - name: Install Helm
         uses: azure/setup-helm@v3
         with:
           version: 'latest'
           token: ${{ secrets.GITHUB_TOKEN }}
         id: helm
 
-      - name: Install kind
+      - name: Install Kind
         uses: engineerd/setup-kind@v0.5.0
         with:
           version: "v0.18.0"
           skipClusterCreation: true
 
-      - name: Run molecule tests.
-        run: poetry run -- molecule test -s ${{ matrix.scenario }}
+      - name: run molecule tests.
+        run: make test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           K8S_RELEASE: ${{ matrix.image }}
           HELM_BIN: ${{ steps.helm.outputs.helm-path }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          MOLECULE_SCENARIO: ${{ matrix.scenario }}

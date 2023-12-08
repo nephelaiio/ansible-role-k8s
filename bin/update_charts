@@ -23,7 +23,7 @@ done
 
 chart_files=$(grep -Rl "chart:" defaults/)
 for file in $chart_files; do
-    ref_versions=$(grep --no-filename "chart:" $file | cut -d':' -f 1)
+    ref_versions=$(grep --no-filename "chart:" "$file" | cut -d':' -f 1)
     for vardef in $ref_versions; do
         repo=$(yq ".$vardef.repo" <"$file")
         chart=$(yq ".$vardef.name" <"$file")
