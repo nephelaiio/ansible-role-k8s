@@ -28,9 +28,9 @@ jobs:
           - strimzi
           - opensearch
         include:
-          - image: v1.26.11
-          - image: v1.25.16
-          - image: v1.24.17
+          - image: v1.26.6
+          - image: v1.25.11
+          - image: v1.24.15
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v4
