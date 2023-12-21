@@ -52,13 +52,13 @@
   ansible.builtin.stat:
     path: "{{ _home }}/.pki/nssdb"
   vars:
-    _home: "{{ lookup('ansible.bulitin.env', 'HOME')  }}"
+    _home: "{{ lookup('ansible.builtin.env', 'HOME')  }}"
   register: truststore_file
 
 - name: Install certificate in edge truststore
   ansible.builtin.command: "certutil -d sql:{{ _home }}/.pki/nssdb -A -t C,, -n {{ k8s_cluster_name }} -i {{ k8s_cacert_path }}"
   vars:
-    _home: "{{ lookup('ansible.bulitin.env', 'HOME')  }}"
+    _home: "{{ lookup('ansible.builtin.env', 'HOME')  }}"
   changed_when: false
   when: truststore_file.stat.exists
 

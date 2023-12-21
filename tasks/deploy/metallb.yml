@@ -14,7 +14,7 @@
       speaker:
         secretValue: "{{ k8s_metallb_speaker_secret }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ lookup('ansible.bulitin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
+    binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
 
 - name: Create metallb pools
   kubernetes.core.k8s:

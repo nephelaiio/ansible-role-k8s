@@ -16,7 +16,7 @@
           ansible.builtin.include_role:
             name: nephelaiio.kind
           vars:
-            kind_image_tag: "{{ lookup('ansible.bulitin.env', 'K8S_RELEASE') | default('v1.24.4') }}"
+            kind_image_tag: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') | default('v1.24.4') }}"
 
       when: k8s_molecule_cluster_type == 'kind'
 
@@ -38,7 +38,7 @@
         - name: deploy k3s cluster
           ansible.builtin.command: "{{ tempdir.path }}/k3s --disable=traefik"
           vars:
-            k3s_version: "{{ lookup('ansible.bulitin.env', 'K8S_RELEASE') }}+k3s1"
+            k3s_version: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') }}+k3s1"
           environment:
             INSTALL_K3S_VERSION: "{{ k3s_version }}"
           become: true
@@ -61,7 +61,7 @@
             group: "{{ ansible_user }}"
             mode: 0600
           vars:
-            ansible_user: "{{ lookup('ansible.bulitin.env', 'USER') }}"
+            ansible_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
           become: true
 
         - name: remove k3s tempdir
