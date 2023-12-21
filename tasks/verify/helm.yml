@@ -8,7 +8,7 @@
 
 - name: Record helm deployment metadata
   ansible.builtin.set_fact:
-    helm_failed: "{{ helm_errors | map('map_join', ['namespace', 'name', 'app_version'], '.') }}"
+    helm_failed: "{{ helm_errors | map('nephelaiio.plugins.map_join', ['namespace', 'name', 'app_version'], '.') }}"
   vars:
     helm_deployments: "{{ helm_query.stdout | from_json }}"
     helm_errors: "{{ helm_deployments | rejectattr('status', 'equalto', 'deployed') }}"

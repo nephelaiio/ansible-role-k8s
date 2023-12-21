@@ -18,5 +18,4 @@ galaxy_info:
         - all
   galaxy_tags: ['k8s']
 
-dependencies:
-  - nephelaiio.plugins
+dependencies: []
