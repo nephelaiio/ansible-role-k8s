@@ -1,4 +1,9 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Validate pod status
   ansible.builtin.fail:
     msg: "the following pods are in failed status [{{ pods_failed | map(attribute='metadata.name') | join(', ') }}]"
@@ -7,12 +12,7 @@
     pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
     pods_completed: "{{ pods_phase | rejectattr('status.phase', 'equalto', 'Running') }}"
     pods_failed: "{{ pods_completed | rejectattr('status.phase', 'equalto', 'Succeeded') }}"
-    pods_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Pod',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    pods_query: "{{ query(_query, kind='Pod', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pods_failed | length == 0

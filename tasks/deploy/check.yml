@@ -51,7 +51,7 @@
     msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
   vars:
     chart_release_min: "4.0.15"
-    chart_release_req_normalized: "{{ k8s_nginx_chart.release | regex_replace('^v' ,'') }}"
+    chart_release_req_normalized: "{{ k8s_nginx_chart.release | regex_replace('^v', '') }}"
     chart_release_min_normalized: "{{ chart_release_min | regex_replace('^v', '') }}"
   when: (chart_release_req_normalized) is version(chart_release_min_normalized, operator='lt')
 

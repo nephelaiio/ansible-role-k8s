@@ -1,15 +1,16 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _ns: "{{ k8s_argocd_namespace }}"
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Query argocd-repo-server definition
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
-    _reposerver_query: "{{ query(
-        'kubernetes.core.k8s',
-        kind='Deployment',
-        namespace=k8s_argocd_namespace,
-        resource_name='argocd-repo-server',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    _resource: 'argocd-repo-server'
+    _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
 
 - name: Query argocd ingress metadata
   ansible.builtin.set_fact:
@@ -19,12 +20,7 @@
     _lb: loadBalancer
     _ingress: ingress
     _ip: ip
-    ingress_query: "{{ query(
-        'kubernetes.core.k8s',
-        kind='Ingress',
-        namespace=k8s_argocd_namespace,
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    ingress_query: "{{ query(_query, kind='Ingress', namespace=_ns, kubeconfig=_config) }}"
   register: ingress_facts
   retries: 4
   delay: 30
@@ -62,13 +58,8 @@
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
   vars:
     _argocd_secret_data: "{{ _argocd_secret_query | first }}"
-    _argocd_secret_query: "{{ query(
-        'kubernetes.core.k8s',
-        kind='Secret',
-        namespace=k8s_argocd_namespace,
-        resource_name='argocd-initial-admin-secret',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    _resource: 'argocd-initial-admin-secret'
+    _argocd_secret_query: "{{ query(_query, kind='Secret', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
 
 - name: Record argocd auth credentials
   ansible.builtin.set_fact:
@@ -76,13 +67,8 @@
     argocd_admin_password: "{{ _argocd_secret_data.data.password | b64decode }}"
   vars:
     _argocd_secret_data: "{{ _argocd_secret_query | first }}"
-    _argocd_secret_query: "{{ query(
-        'kubernetes.core.k8s',
-        kind='Secret',
-        namespace=k8s_argocd_namespace,
-        resource_name='argocd-initial-admin-secret',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    _resource: 'argocd-initial-admin-secret'
+    _argocd_secret_query: "{{ query(_query, kind='Secret', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
 
 - name: Auth against argocd api
   ansible.builtin.uri:

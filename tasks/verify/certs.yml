@@ -1,15 +1,15 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Record cert metadata
   ansible.builtin.set_fact:
     cert_failed: "{{ cert_query | community.general.json_query(cert_filter) }}"
   vars:
     cert_filter: "[?status.conditions[?status == 'False' && type == 'Ready']].metadata.name"
-    cert_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Certificate',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    cert_query: "{{ query(_query, kind='Certificate', kubeconfig=_config) }}"
 
 - name: Validate cert status
   ansible.builtin.fail:

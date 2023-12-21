@@ -7,5 +7,11 @@ fileignoreconfig:
     ignore_detectors: [ filename ]
   - filename: tasks/verify/mysql.yml
     ignore_detectors: [ filename ]
+  - filename: tasks/verify/argocd.yml
+    ignore_detectors: [ filecontent ]
+  - filename: tasks/verify/install.yml
+    ignore_detectors: [ filecontent ]
+  - filename: tasks/verify/secrets.yml
+    ignore_detectors: [ filecontent ]
   - filename: .github/workflows/release.yml
     ignore_detectors: [ filecontent ]
