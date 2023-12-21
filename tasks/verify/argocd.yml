@@ -55,6 +55,8 @@
 - name: Query argocd access info
   ansible.builtin.set_fact:
     _argocd_secret_query: "{{ query(_query, kind='Secret', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
+  vars:
+    _resource: 'argocd-initial-admin-secret'
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: _argocd_secret_query | length > 0
