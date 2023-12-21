@@ -148,11 +148,9 @@ Zalando parameters:
 
 ## Dependencies
 
-The below python roles are needed on the host that executes this module:
-* nephelaiio.plugins
-
-The below python collections are needed on the host that executes this module:
+The below Ansible collections are needed on the host that executes this module:
 * ansible.utils
+* nephelaiio.plugins
 
 ### System
 

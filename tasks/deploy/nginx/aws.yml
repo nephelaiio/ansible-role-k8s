@@ -11,7 +11,7 @@
     wait_timeout: "{{ k8s_nginx_wait_timeout }}"
     create_namespace: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ lookup('env', 'HELM_BIN', default=k8s_helm_bin) }}"
+    binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
     values:
       controller:
         allowSnippetAnnotations: true

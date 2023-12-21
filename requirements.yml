@@ -1,7 +1,7 @@
 ---
 roles:
-  - nephelaiio.plugins
   - nephelaiio.kind
 collections:
+  - nephelaiio.plugins
   - community.general
   - ansible.utils
