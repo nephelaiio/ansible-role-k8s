@@ -114,6 +114,5 @@ scenario:
     - converge
     - verify
     - side_effect
-    - verify
     - cleanup
     - destroy

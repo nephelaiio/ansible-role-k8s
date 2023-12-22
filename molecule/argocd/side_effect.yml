@@ -10,4 +10,4 @@
         name: nephelaiio.k8s
       vars:
         k8s_deploy: true
-        k8s_verify: false
+        k8s_verify: true
