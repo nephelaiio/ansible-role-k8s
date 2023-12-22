@@ -9,8 +9,7 @@
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
-    _resource: 'argocd-repo-server'
-    _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
+    _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name='argocd-repo-server', kubeconfig=_config) }}"
 
 - name: Query argocd ingress metadata
   ansible.builtin.set_fact:
@@ -56,8 +55,7 @@
   ansible.builtin.set_fact:
     _argocd_secret_query: "{{ _secrets }}"
   vars:
-    _resource: 'argocd-initial-admin-secret'
-    _secrets: "{{ query(_query, kind='Secret', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
+    _secrets: "{{ query(_query, kind='Secret', namespace=_ns, resource_name='argocd-initial-admin-secret', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: _secrets | length > 0
