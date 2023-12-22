@@ -1,4 +1,10 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _api: 'acid.zalan.do/v1'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Create zalando namespace
   kubernetes.core.k8s:
     state: present
@@ -44,13 +50,7 @@
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:
     cluster_failed: "{{ cluster_query | rejectattr('status.PostgresClusterStatus', 'equalto', 'Running') | map(attribute='metadata.name') }}"
-    cluster_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        api_version='acid.zalan.do/v1',
-        kind='postgresql',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    cluster_query: "{{ query(_query, api_version=_api, kind='postgresql', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int) }}"
   delay: "{{ k8s_retry_delay }}"
   until: cluster_failed | length == 0

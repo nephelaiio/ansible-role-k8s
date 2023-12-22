@@ -1,4 +1,9 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Set service metadata
   ansible.builtin.set_fact:
     loadbalancer_data: "{{ _loadbalancers }}"
@@ -11,12 +16,7 @@
     dns_map: "[].to_array([status.loadBalancer.ingress[0].ip, metadata.annotations.\"external-dns.alpha.kubernetes.io/hostname\"])"
     loadbalancer_filter: "[?(spec.type == 'LoadBalancer')]"
     status_filter: "[?!not_null(status.loadBalancer)].metadata.name"
-    service_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Service',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    service_query: "{{ query(_query, kind='Service', kubeconfig=_config) }}"
 
 - name: Validate service status
   ansible.builtin.fail:

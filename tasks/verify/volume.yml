@@ -1,4 +1,9 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Set test facts
   ansible.builtin.set_fact:
     _volume_test_namespace: longhorn-test
@@ -8,7 +13,6 @@
 - name: Create test volume
   when: k8s_longhorn_deploy | bool
   block:
-
     - name: Create test namespace
       kubernetes.core.k8s:
         state: present
@@ -68,12 +72,7 @@
   vars:
     pvc_names: "{{ pvc_failed | map(attribute='metadata.name') }}"
     pvc_failed: "{{ pvc_query | rejectattr('status.phase', 'equalto', 'Bound') }}"
-    pvc_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='PersistentVolumeClaim',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    pvc_query: "{{ query(_query, kind='PersistentVolumeClaim', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pvc_failed | length == 0

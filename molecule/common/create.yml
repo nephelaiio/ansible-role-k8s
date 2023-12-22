@@ -1,41 +1,34 @@
 ---
 - name: Create
-
   hosts: localhost
-
   roles:
-
     - nephelaiio.plugins
-
   tasks:
-
-    - name: deploy kind cluster
+    - name: Deploy kind cluster
+      when: k8s_molecule_cluster_type == 'kind'
       block:
-
-        - name: deploy kind cluster
+        - name: Deploy kind cluster
           ansible.builtin.include_role:
             name: nephelaiio.kind
           vars:
             kind_image_tag: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') | default('v1.24.4') }}"
 
-      when: k8s_molecule_cluster_type == 'kind'
-
-    - name: deploy k3s cluster
+    - name: Deploy k3s cluster
+      when: k8s_molecule_cluster_type == 'k3s'
       block:
-
-        - name: create k3s tempdir
+        - name: Create k3s tempdir
           ansible.builtin.tempfile:
             state: directory
             prefix: "k3s_"
           register: tempdir
 
-        - name: retrieve k3s installer
+        - name: Retrieve k3s installer
           ansible.builtin.get_url:
             url: https://get.k3s.io
             dest: "{{ tempdir.path }}/k3s"
             mode: 0755
 
-        - name: deploy k3s cluster
+        - name: Deploy k3s cluster
           ansible.builtin.command: "{{ tempdir.path }}/k3s --disable=traefik"
           vars:
             k3s_version: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') }}+k3s1"
@@ -43,7 +36,7 @@
             INSTALL_K3S_VERSION: "{{ k3s_version }}"
           become: true
 
-        - name: install iscsi tools
+        - name: Install iscsi tools
           ansible.builtin.package:
             name: open-iscsi
           retries: 3
@@ -52,7 +45,7 @@
           until: package_install is succeeded
           become: yes
 
-        - name: copy k3s kubeconfig
+        - name: Copy k3s kubeconfig
           ansible.builtin.copy:
             src: "/etc/rancher/k3s/k3s.yaml"
             dest: "{{ k8s_kubeconfig }}"
@@ -64,9 +57,7 @@
             ansible_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
           become: true
 
-        - name: remove k3s tempdir
+        - name: Remove k3s tempdir
           ansible.builtin.file:
             path: "{{ tempdir.path }}"
             state: absent
-
-      when: k8s_molecule_cluster_type == 'k3s'

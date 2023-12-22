@@ -1,22 +1,12 @@
 ---
 - name: Verify
-
   hosts: all
-
   gather_facts: false
-
   vars:
-
     k8s_argocd_exec_timeout: 2m
-
-  roles:
-
-    - nephelaiio.plugins
-
   tasks:
-
-    - name: mutate and verify cluster
-      include_role:
+    - name: Mutate and verify cluster
+      ansible.builtin.include_role:
         name: nephelaiio.k8s
       vars:
         k8s_deploy: true

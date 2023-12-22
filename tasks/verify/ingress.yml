@@ -1,16 +1,16 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Validate ingress status
   ansible.builtin.fail:
     msg: "the following ingress are in failed status [{{ ingress_failed | join(', ') }}]"
   vars:
     ingress_failed: "{{ ingress_query | community.general.json_query(ingress_filter) | map(attribute='metadata.name') }}"
     ingress_filter: "[?!not_null(status.loadBalancer)]"
-    ingress_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Ingress',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    ingress_query: "{{ query(_query, kind='Ingress', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: ingress_failed | length == 0
@@ -23,12 +23,7 @@
     ingress_cmds: []
   vars:
     ingress_filter: "[].to_array([status.loadBalancer.ingress[].ip, spec.tls[0].hosts[]])"
-    ingress_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        kind='Ingress',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    ingress_query: "{{ query(_query, kind='Ingress', kubeconfig=_config) }}"
 
 - name: Set ingress data
   ansible.builtin.set_fact:

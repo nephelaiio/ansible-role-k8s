@@ -1,4 +1,10 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _api: 'mysql.oracle.com/v2'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Create mysql namespace
   kubernetes.core.k8s:
     state: present
@@ -42,13 +48,7 @@
   vars:
     cluster_status: "{{ cluster_query | selectattr('status', 'defined') }}"
     cluster_failed: "{{ cluster_status | rejectattr('status.cluster.status', 'equalto', 'ONLINE') | map(attribute='metadata.name') }}"
-    cluster_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        api_version='mysql.oracle.com/v2',
-        kind='InnoDBCluster',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    cluster_query: "{{ query(_query, api_version=_api, kind='InnoDBCluster', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int) }}"
   delay: "{{ k8s_retry_delay }}"
   until:

@@ -1,4 +1,11 @@
 ---
+- name: Set deployment facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _ns: "{{ k8s_argocd_namespace }}"
+    _config: "{{ k8s_kubeconfig }}"
+    _resource: 'argocd-repo-server'
+
 - name: Install argocd chart
   kubernetes.core.helm:
     name: argocd
@@ -18,12 +25,7 @@
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
-    _reposerver_query: "{{ query(
-      'kubernetes.core.k8s',
-      kind='Deployment',
-      namespace=k8s_argocd_namespace,
-      resource_name='argocd-repo-server',
-      kubeconfig=k8s_kubeconfig) }}"
+    _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
 
 - name: Patch argocd reposerver deployment
   kubernetes.core.k8s_json_patch:
@@ -43,12 +45,7 @@
     _reposerver_env_pre: "{{ _reposerver_env_def | rejectattr('name', 'equalto', _reposerver_env_timeout.name) }}"
     _reposerver_env_new: "{{ _reposerver_env_pre + [_reposerver_env_timeout] }}"
     _reposerver_def: "{{ _reposerver_query | first }}"
-    _reposerver_query: "{{ query(
-      'kubernetes.core.k8s',
-      kind='Deployment',
-      namespace=k8s_argocd_namespace,
-      resource_name='argocd-repo-server',
-      kubeconfig=k8s_kubeconfig) }}"
+    _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
   changed_when: false
 
 - name: Deploy argocd ingress

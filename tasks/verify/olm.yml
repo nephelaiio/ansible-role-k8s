@@ -1,4 +1,10 @@
 ---
+- name: Set verification facts
+  ansible.builtin.set_fact:
+    _query: 'kubernetes.core.k8s'
+    _api: 'operators.coreos.com/v1alpha1'
+    _config: "{{ k8s_kubeconfig }}"
+
 - name: Validate olm operator status
   ansible.builtin.fail:
     msg: "the following operators are in failed status [{{ operator_failed | join(', ') }}]"
@@ -6,13 +12,7 @@
     operator_failed: "{{ operator_status | rejectattr('status.phase', 'equalto', 'Succeeded') | map(attribute='metadata.name') }}"
     operator_status: "{{ operator_query | selectattr('status', 'defined') }}"
     operator_phase: "{{ operator_status | selectattr('status.phase', 'defined') }}"
-    operator_query: "{{
-      query(
-        'kubernetes.core.k8s',
-        api_version='operators.coreos.com/v1alpha1',
-        kind='ClusterServiceVersion',
-        kubeconfig=k8s_kubeconfig
-      ) }}"
+    operator_query: "{{ query(_query, api_version=_api, kind='ClusterServiceVersion', kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until:

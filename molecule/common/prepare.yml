@@ -1,48 +1,42 @@
 ---
 - name: Prepare
-
   hosts: localhost
-
   gather_facts: false
-
   tasks:
-
-    - name: check local helm binary
+    - name: Check local helm binary
       ansible.builtin.shell: "which {{ lookup('ansible.builtin.env', 'HELM_BIN', default='helm') }}"
       register: helm_bin_query
       changed_when: false
 
-    - name: copy helm binary
+    - name: Copy helm binary
       ansible.builtin.copy:
         src: "{{ helm_bin_query.stdout }}"
         dest: "{{ k8s_helm_bin }}"
         mode: '0755'
       when: helm_bin_query is succeeded
 
-    - name: download helm binary
+    - name: Download helm binary
       when: helm_bin_query is not succeeded
       block:
-
-        - name: query helm releases
+        - name: Query helm releases
           ansible.builtin.uri:
             url: https://api.github.com/repos/helm/helm/releases/latest
           register: helm_release_query
 
-        - name: set kind release target
+        - name: Set kind release target
           ansible.builtin.set_fact:
             helm_release: "{{ helm_release_query.json.tag_name }}"
 
-        - name: create temporary directory
+        - name: Create temporary directory
           ansible.builtin.tempfile:
             state: directory
             prefix: kind
           register: _tmpdir
           changed_when: false
 
-        - name: install helm binary
+        - name: Install helm binary
           block:
-
-            - name: download helm release package
+            - name: Download helm release package
               ansible.builtin.unarchive:
                 src: "https://get.helm.sh/helm-{{ helm_release }}-linux-amd64.tar.gz"
                 dest: "{{ _tmpdir.path }}"
@@ -53,7 +47,7 @@
               until: helm_dl_op is success
               changed_when: false
 
-            - name: find helm executable
+            - name: Find helm executable
               ansible.builtin.find:
                 paths: "{{ _tmpdir.path }}"
                 file_type: file
@@ -63,15 +57,14 @@
                   - '^helm$'
               register: helm_bin
 
-            - name: copy helm copy helm binary
+            - name: Copy helm copy helm binary
               ansible.builtin.copy:
                 src: "{{ helm_bin.files[0].path }}"
                 dest: "{{ k8s_helm_bin }}"
                 mode: '0755'
 
           always:
-
-            - name: cleanup temp files
+            - name: Cleanup temp files
               ansible.builtin.file:
                 state: absent
                 path: "{{ _tmpdir.path }}"
