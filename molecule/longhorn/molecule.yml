@@ -34,7 +34,7 @@ provisioner:
           # kind vardefs
           kind_network_addr: 172.19.0.0/16
           kind_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/kind
-          kind_cluster_name: molecule-k8s
+          kind_cluster_name: molecule-k8s-${MOLECULE_SCENARIO_NAME}
           kind_kubeconfig: "{{ k8s_kubeconfig }}"
           kind_registry_deploy: false
           kind_proxy_deploy: true
