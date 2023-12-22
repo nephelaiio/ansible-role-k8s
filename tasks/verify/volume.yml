@@ -13,7 +13,6 @@
 - name: Create test volume
   when: k8s_longhorn_deploy | bool
   block:
-
     - name: Create test namespace
       kubernetes.core.k8s:
         state: present

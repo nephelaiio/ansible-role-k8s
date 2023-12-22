@@ -1,9 +1,3 @@
-##
-# nephelaiio.k8s Ansible role
-#
-# @file
-# @version 0.0.1
-
 .PHONY: all ${MAKECMDGOALS}
 
 KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
@@ -65,5 +59,3 @@ poetry: install
 
 %:
 	@:
-
-# end

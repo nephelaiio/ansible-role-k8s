@@ -20,7 +20,6 @@
 
 - name: Include verification checks
   block:
-
     - name: Include secret checks
       ansible.builtin.include_tasks: verify/secrets.yml
       when: k8s_secrets | length > 0
@@ -73,7 +72,6 @@
       ansible.builtin.include_tasks: verify/cmds.yml
 
   always:
-
     - name: Cleanup temp files
       ansible.builtin.file:
         state: absent
