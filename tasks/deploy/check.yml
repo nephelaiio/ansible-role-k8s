@@ -14,23 +14,28 @@
     - k8s_address_pools is undefined
   block:
     - name: Check private address pool range
-      ansible.builtin.fail:
-        msg: "private address pool range must be set"
-      when: k8s_address_pool_private_iprange | length == 0
+      ansible.builtin.assert:
+        fail_msg: "private address pool range must be set as subnet/prefix"
+        that:
+          - k8s_address_pool_private_iprange is defined
+          - k8s_address_pool_private_iprange | ansible.utils.ipaddr('network/prefix')
 
-    - name: Check public address pool name
-      ansible.builtin.fail:
-        msg: "public address pool name must be set"
-      when: k8s_address_pool_public_name | length == 0
-
-    - name: Check public address pool range
-      ansible.builtin.fail:
-        msg: "public address pool range must be set as subnet/prefix"
-      when: k8s_address_pool_public_iprange | length == 0 or not (k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix'))
-
-    - name: Set k8s_address_pool metadata
+    - name: Initialize address pool metadata
       ansible.builtin.set_fact:
-        k8s_address_pools: "{{ k8s_address_pools_local }}"
+        k8s_address_pools: "{{ [k8s_address_pools_local_private] }}"
+
+    - name: Extend adress pool metadata
+      when: k8s_address_pool_public_iprange is defined
+      block:
+        - name: Check public address pool range
+          ansible.builtin.assert:
+            fail_msg: "public address pool range must be set as subnet/prefix"
+            that:
+              - k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix')
+
+        - name: Extend k8s_address_pool metadata
+          ansible.builtin.set_fact:
+            k8s_address_pools: "{{ k8s_address_pools + [k8s_address_pools_local_public] }}"
 
 - name: Check aws cluster settings
   when:
