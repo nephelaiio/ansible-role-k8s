@@ -1,12 +1,13 @@
 ---
 - name: Check cluster type input
-  ansible.builtin.fail:
-    msg: "k8s_cluster_type must be one of [{{ valid_cluster_types | join(', ') }}]"
+  ansible.builtin.assert:
+    fail_msg: "k8s_cluster_type must be one of [{{ valid_cluster_types | join(', ') }}]"
+    that:
+      - k8s_cluster_type in valid_cluster_types
   vars:
     valid_cluster_types:
       - local
       - aws
-  when: k8s_cluster_type not in valid_cluster_types
 
 - name: Check local cluster settings
   when:
@@ -37,7 +38,7 @@
           ansible.builtin.set_fact:
             k8s_address_pools: "{{ k8s_address_pools + [k8s_address_pools_local_public] }}"
 
-- name: Check aws cluster settings
+- name: Check AWS cluster settings
   when:
     - k8s_cluster_type == 'aws'
     - k8s_address_pools is undefined
@@ -46,33 +47,56 @@
       ansible.builtin.set_fact:
         k8s_address_pools: "{{ k8s_address_pools_aws }}"
 
-- name: Check metallb speaker secret is set
-  ansible.builtin.fail:
-    msg: "k8s_metallb_speaker_secret must be set"
-  when: k8s_metallb_speaker_secret is not defined or k8s_metallb_speaker_secret | length == 0
+- name: Check MetalLB pool definitions
+  ansible.builtin.assert:
+    fail_msg: "k8s_address_pools must not be empty"
+    that:
+      - k8s_address_pools | length > 0
+
+- name: Debug MetalLB pool configuration
+  ansible.builtin.debug:
+    var: k8s_address_pools
+
+- name: Check MetalLB speaker secret is set
+  ansible.builtin.assert:
+    fai_msg: "k8s_metallb_speaker_secret must be set"
+    that:
+      - k8s_metallb_speaker_secret is defined
+      - k8s_metallb_speaker_secret | length > 0
 
 - name: Check nginx ingress controller release
-  ansible.builtin.fail:
-    msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
+  ansible.builtin.assert:
+    fail_msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
+    that:
+      - chart_release_req_normalized is version(chart_release_min_normalized, operator='lt')
   vars:
     chart_release_min: "4.0.15"
     chart_release_req_normalized: "{{ k8s_nginx_chart.release | regex_replace('^v', '') }}"
     chart_release_min_normalized: "{{ chart_release_min | regex_replace('^v', '') }}"
-  when: (chart_release_req_normalized) is version(chart_release_min_normalized, operator='lt')
 
 - name: Check certmanager release
-  ansible.builtin.fail:
-    msg: "k8s_certmanager_chart.release must be at least '{{ chart_release_min }}'"
+  ansible.builtin.assert:
+    fail_msg: "k8s_certmanager_chart.release must be at least '{{ chart_release_min }}'"
+    that:
+      - _release_string is version(_release_min, operator='le' )
   vars:
-    chart_release_min: "v1.6.1"
-  when: (k8s_certmanager_chart.release | regex_replace('^v', '')) is version(chart_release_min | regex_replace('^v', '' ), operator='le')
+    _release_string: "{{ (k8s_certmanager_chart.release | regex_replace('^v', '')) }}"
+    _release_min: "{{ 'v1.6.1' | regex_replace('^v', '' ) }}"
 
 - name: Check certmanager name
-  ansible.builtin.fail:
-    msg: >
+  ansible.builtin.assert:
+    fail_msg: >
       k8s_certmanager_issuer_name must be one of [{{ valid_issuer_names | join(', ') }}]
+    that:
+      - k8s_certmanager_issuer_name in valid_issuer_names
   vars:
     valid_issuer_names:
       - local
       - letsencrypt
-  when: k8s_certmanager_issuer_name not in valid_issuer_names
+
+- name: Check certmanager secret
+  ansible.builtin.assert:
+    fail_msg: k8s_certmanager_secret must be set for letsenrypt issuer
+    that:
+      - k8s_certmanager_secret is defined
+    when: k8s_certmanager_issuer == 'letsencrypt'
