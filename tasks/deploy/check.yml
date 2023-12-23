@@ -59,7 +59,7 @@
 
 - name: Check MetalLB speaker secret is set
   ansible.builtin.assert:
-    fai_msg: "k8s_metallb_speaker_secret must be set"
+    fail_msg: "k8s_metallb_speaker_secret must be set"
     that:
       - k8s_metallb_speaker_secret is defined
       - k8s_metallb_speaker_secret | length > 0
