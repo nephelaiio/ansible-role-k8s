@@ -68,7 +68,7 @@
   ansible.builtin.assert:
     fail_msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
     that:
-      - chart_release_req_normalized is version(chart_release_min_normalized, operator='lt')
+      - chart_release_req_normalized is version(chart_release_min_normalized, operator='ge')
   vars:
     chart_release_min: "4.0.15"
     chart_release_req_normalized: "{{ k8s_nginx_chart.release | regex_replace('^v', '') }}"
@@ -78,7 +78,7 @@
   ansible.builtin.assert:
     fail_msg: "k8s_certmanager_chart.release must be at least '{{ chart_release_min }}'"
     that:
-      - _release_string is version(_release_min, operator='le' )
+      - _release_string is version(_release_min, operator='ge' )
   vars:
     _release_string: "{{ (k8s_certmanager_chart.release | regex_replace('^v', '')) }}"
     _release_min: "{{ 'v1.6.1' | regex_replace('^v', '' ) }}"
