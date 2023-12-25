@@ -99,4 +99,4 @@
     fail_msg: k8s_certmanager_secret must be set for letsenrypt issuer
     that:
       - k8s_certmanager_secret is defined
-  when: k8s_certmanager_issuer == 'letsencrypt'
+  when: k8s_certmanager_issuer_name == 'letsencrypt'
