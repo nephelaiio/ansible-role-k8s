@@ -43,7 +43,6 @@ provisioner:
 
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
-          k8s_address_pool_public_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 3) }}"
           k8s_metallb_speaker_secret: secret
           k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
           k8s_opensearch_deploy: false
