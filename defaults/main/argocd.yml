@@ -9,7 +9,7 @@ k8s_argocd_chart:
   name: "argo-cd"
   repo: "https://argoproj.github.io/argo-helm"
   release: "5.53.6"
-  last_checked: "2024-01-22T15:01:39-06:00"
+  last_checked: "2024-01-22T16:18:49-06:00"
 k8s_argocd_chart_values:
   redis-ha:
     enabled: false
@@ -27,7 +27,7 @@ k8s_argocd_apps_chart:
   name: "argocd-apps"
   repo: "https://argoproj.github.io/argo-helm"
   release: "1.4.1"
-  last_checked: "2024-01-22T15:01:45-06:00"
+  last_checked: "2024-01-22T16:18:59-06:00"
 k8s_argocd_apps_chart_values:
   applications: []
   applicationsets: []

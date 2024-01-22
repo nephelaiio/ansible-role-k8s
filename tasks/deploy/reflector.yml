@@ -1,0 +1,14 @@
+---
+- name: Manage reflector helm chart
+  kubernetes.core.helm:
+    name: reflector
+    chart_ref: "{{ k8s_reflector_chart.name }}"
+    chart_repo_url: "{{ k8s_reflector_chart.repo }}"
+    chart_version: "{{ k8s_reflector_chart.release }}"
+    release_namespace: "{{ k8s_reflector_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_reflector_wait_timeout }}s"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
