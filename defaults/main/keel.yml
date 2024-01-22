@@ -2,8 +2,8 @@
 k8s_keel_deploy: true
 k8s_keel_namespace: "keel-system"
 k8s_keel_chart:
-  name: "cert-manager"
+  name: "keel"
   repo: "https://charts.keel.sh "
-  release: "v1.13.3"
+  release: "1.0.3"
   last_checked: "2024-01-22T15:01:25-06:00"
 k8s_keel_wait_timeout: "{{ k8s_wait_timeout }}"
