@@ -1,19 +1,19 @@
 ---
-- name: Query helm deployments
+- name: Query Helm deployments
   ansible.builtin.command: "{{ k8s_helm_bin }} list -A -o json"
   environment:
     KUBECONFIG: "{{ k8s_kubeconfig }}"
   register: helm_query
   changed_when: false
 
-- name: Record helm deployment metadata
+- name: Record Helm deployment metadata
   ansible.builtin.set_fact:
     helm_failed: "{{ helm_errors | map('nephelaiio.plugins.map_join', ['namespace', 'name', 'app_version'], '.') }}"
   vars:
     helm_deployments: "{{ helm_query.stdout | from_json }}"
     helm_errors: "{{ helm_deployments | rejectattr('status', 'equalto', 'deployed') }}"
 
-- name: Validate helm deployments
+- name: Validate Helm deployments
   ansible.builtin.fail:
     msg: "the following helm deployments failed [{{ helm_failed | join(', ') }}]"
   when: helm_failed | length > 0
