@@ -24,7 +24,7 @@
       ansible.builtin.include_tasks: verify/secrets.yml
       when: k8s_secrets | length > 0
 
-    - name: Include helm checks
+    - name: Include Helm checks
       ansible.builtin.include_tasks: verify/helm.yml
 
     - name: Include olm checks
