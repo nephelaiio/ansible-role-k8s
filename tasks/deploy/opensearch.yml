@@ -1,7 +1,7 @@
 ---
 - name: Deploy opensearch operator
   kubernetes.core.helm:
-    name: os
+    name: opensearch-operator
     chart_ref: "{{ k8s_opensearch_chart.name }}"
     chart_repo_url: "{{ k8s_opensearch_chart.repo }}"
     chart_version: "{{ k8s_opensearch_chart.release }}"
