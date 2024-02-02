@@ -39,23 +39,24 @@
   vars:
     _argocd_env: "{{ _reposerver_def.spec.template.spec.containers[0].env }}"
 
-- name: Fail argocd exec timeout presence check
-  ansible.builtin.fail:
-    msg: "env var ARGOCD_EXEC_TIMEOUT is not set"
-  when: argocd_env_exec_item | length == 0
+- name: Check argocd exec timeout parameter
+  ansible.builtin.assert:
+    that: argocd_env_exec_item | length > 0
+    fail_msg: "env var ARGOCD_EXEC_TIMEOUT is not set"
 
-- name: Fail argocd exec timeout value check
-  ansible.builtin.fail:
-    msg: "env var ARGOCD_EXEC_TIMEOUT is not set correctly ({{ argocd_env_exec_value }})"
+- name: Check argocd exec timeout value
+  ansible.builtin.assert:
+    that: argocd_env_exec_value == k8s_argocd_exec_timeout
+    fail_msg: "env var ARGOCD_EXEC_TIMEOUT is not set correctly ({{ argocd_env_exec_value }})"
   vars:
     argocd_env_exec_value: "{{ argocd_env_exec_item[0].value }}"
-  when: argocd_env_exec_value != k8s_argocd_exec_timeout
 
 - name: Query argocd access info
   ansible.builtin.set_fact:
     _argocd_secret_query: "{{ _secrets }}"
   vars:
-    _secrets: "{{ query(_query, kind='Secret', namespace=_ns, resource_name='argocd-initial-admin-secret', kubeconfig=_config) }}"
+    _name: "argocd-initial-admin-secret"
+    _secrets: "{{ query(_query, kind='Secret', namespace=_ns, resource_name=_name, kubeconfig=_config) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: _secrets | length > 0
