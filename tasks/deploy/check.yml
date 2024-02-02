@@ -81,7 +81,7 @@
       - _release_string is version(_release_min, operator='ge' )
   vars:
     _release_string: "{{ (k8s_certmanager_chart.release | regex_replace('^v', '')) }}"
-    _release_min: "{{ 'v1.6.1' | regex_replace('^v', '' ) }}"
+    _release_min: "{{ 'v1.6.1' | regex_replace('^v', '') }}"
 
 - name: Check certmanager name
   ansible.builtin.assert:
