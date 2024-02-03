@@ -1,17 +1,13 @@
 fileignoreconfig:
   - filename: defaults/main/mysql.yml
     ignore_detectors: [ filename ]
+  - filename: defaults/main/sealedsecrets.yml
+    ignore_detectors: [ filecontent ]
   - filename: poetry.lock
     ignore_detectors: [ filecontent ]
   - filename: tasks/deploy/mysql.yml
     ignore_detectors: [ filename ]
-  - filename: tasks/verify/mysql.yml
-    ignore_detectors: [ filename ]
-  - filename: tasks/verify/argocd.yml
-    ignore_detectors: [ filecontent ]
-  - filename: tasks/verify/install.yml
-    ignore_detectors: [ filecontent ]
-  - filename: tasks/verify/secrets.yml
-    ignore_detectors: [ filecontent ]
+  - filename: tasks/verify/*.yml
+    ignore_detectors: [ filename, filecontent ]
   - filename: .github/workflows/release.yml
     ignore_detectors: [ filecontent ]

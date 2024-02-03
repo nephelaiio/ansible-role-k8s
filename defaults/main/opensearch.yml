@@ -5,6 +5,6 @@ k8s_opensearch_chart:
   name: "opensearch-operator"
   repo: "https://opensearch-project.github.io/opensearch-k8s-operator"
   release: "2.4.0"
-  last_checked: "2024-01-22T16:19:41-06:00"
+  last_checked: "2024-02-02T22:35:57-06:00"
 k8s_opensearch_namespace: opensearch
 k8s_opensearch_wait_timeout: "{{ k8s_wait_timeout }}"
