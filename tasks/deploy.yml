@@ -54,3 +54,7 @@
 - name: Include reflector deployment tasks
   ansible.builtin.include_tasks: "deploy/reflector.yml"
   when: k8s_reflector_deploy | bool
+
+- name: Include sealedsecrets deployment tasks
+  ansible.builtin.include_tasks: "deploy/sealedsecrets.yml"
+  when: k8s_sealedsecrets_deploy | bool
