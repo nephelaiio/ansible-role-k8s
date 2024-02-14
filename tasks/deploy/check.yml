@@ -6,7 +6,7 @@
 
 - name: Set version certmanager release facts
   ansible.builtin.set_fact:
-    k8s_nginx_chart.release: "{{ k8s_nginx_chart.release }}"
+    k8s_nginx_chart_release: "{{ k8s_nginx_chart.release }}"
   when: k8s_nginx_chart_release is not defined
 
 - name: Check cluster name parameter
