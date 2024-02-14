@@ -1,9 +1,23 @@
 ---
-- name: Check cluster type input
+- name: Set version certmanager release facts
+  ansible.builtin.set_fact:
+    k8s_certmanager_chart_release: "{{ k8s_certmanager_chart.release }}"
+  when: k8s_certmanager_chart_release is not defined
+
+- name: Set version certmanager release facts
+  ansible.builtin.set_fact:
+    k8s_nginx_chart.release: "{{ k8s_nginx_chart.release }}"
+  when: k8s_nginx_chart_release is not defined
+
+- name: Check cluster name parameter
+  ansible.builtin.assert:
+    fail_msg: "k8s_cluster_name must be defined"
+    that: k8s_cluster_name is defined
+
+- name: Check cluster type parameter
   ansible.builtin.assert:
     fail_msg: "k8s_cluster_type must be one of [{{ valid_cluster_types | join(', ') }}]"
-    that:
-      - k8s_cluster_type in valid_cluster_types
+    that: k8s_cluster_type in valid_cluster_types
   vars:
     valid_cluster_types:
       - local
@@ -31,8 +45,7 @@
         - name: Check public address pool range
           ansible.builtin.assert:
             fail_msg: "public address pool range must be set as subnet/prefix"
-            that:
-              - k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix')
+            that: k8s_address_pool_public_iprange | ansible.utils.ipaddr('network/prefix')
 
         - name: Extend k8s_address_pool metadata
           ansible.builtin.set_fact:
@@ -50,8 +63,7 @@
 - name: Check MetalLB pool definitions
   ansible.builtin.assert:
     fail_msg: "k8s_address_pools must not be empty"
-    that:
-      - k8s_address_pools | length > 0
+    that: k8s_address_pools | length > 0
 
 - name: Debug MetalLB pool configuration
   ansible.builtin.debug:
@@ -67,28 +79,25 @@
 - name: Check nginx ingress controller release
   ansible.builtin.assert:
     fail_msg: "k8s_nginx_chart_release must be at least '{{ chart_release_min }}'"
-    that:
-      - chart_release_req_normalized is version(chart_release_min_normalized, operator='ge')
+    that: chart_release_req_normalized is version(chart_release_min_normalized, operator='ge')
   vars:
     chart_release_min: "4.0.15"
-    chart_release_req_normalized: "{{ k8s_nginx_chart.release | regex_replace('^v', '') }}"
+    chart_release_req_normalized: "{{ k8s_nginx_chart_release | regex_replace('^v', '') }}"
     chart_release_min_normalized: "{{ chart_release_min | regex_replace('^v', '') }}"
 
 - name: Check certmanager release
   ansible.builtin.assert:
-    fail_msg: "k8s_certmanager_chart.release must be at least '{{ _release_min }}'"
-    that:
-      - _release_string is version(_release_min, operator='ge' )
+    fail_msg: "k8s_certmanager_chart_release must be at least '{{ _release_min }}'"
+    that: _release_string is version(_release_min, operator='ge' )
   vars:
-    _release_string: "{{ (k8s_certmanager_chart.release | regex_replace('^v', '')) }}"
+    _release_string: "{{ (k8s_certmanager_chart_release | regex_replace('^v', '')) }}"
     _release_min: "{{ 'v1.6.1' | regex_replace('^v', '') }}"
 
 - name: Check certmanager name
   ansible.builtin.assert:
     fail_msg: >
       k8s_certmanager_issuer_name must be one of [{{ valid_issuer_names | join(', ') }}]
-    that:
-      - k8s_certmanager_issuer_name in valid_issuer_names
+    that: k8s_certmanager_issuer_name in valid_issuer_names
   vars:
     valid_issuer_names:
       - local
@@ -97,6 +106,5 @@
 - name: Check certmanager secret
   ansible.builtin.assert:
     fail_msg: k8s_certmanager_secret must be set for letsenrypt issuer
-    that:
-      - k8s_certmanager_secret is defined
+    that: k8s_certmanager_secret is defined
   when: k8s_certmanager_issuer_name == 'letsencrypt'

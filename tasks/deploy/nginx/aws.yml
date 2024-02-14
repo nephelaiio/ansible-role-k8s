@@ -4,7 +4,7 @@
     name: "{{ ingress_name }}"
     chart_ref: "{{ k8s_nginx_chart.name }}"
     chart_repo_url: "{{ k8s_nginx_chart.repo }}"
-    chart_version: "{{ k8s_nginx_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ ingress_namespace }}"
     state: present
     wait: true
@@ -31,6 +31,7 @@
               service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
               service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.name }}"
   vars:
+    _release: "{{ k8s_nginx_chart_release | default(k8s_nginx_chart.release) }}"
     ingress_class: "nginx-{{ item.name }}"
     ingress_name: "{{ item.name }}"
     ingress_namespace: "{{ ingress_class }}"

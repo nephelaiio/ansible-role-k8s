@@ -4,7 +4,7 @@
     name: metallb
     chart_ref: "{{ k8s_metallb_chart.name }}"
     chart_repo_url: "{{ k8s_metallb_chart.repo }}"
-    chart_version: "{{ k8s_metallb_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_metallb_namespace }}"
     create_namespace: true
     state: present
@@ -15,6 +15,8 @@
         secretValue: "{{ k8s_metallb_speaker_secret }}"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
+  vars:
+    _release: "{{ k8s_metallb_chart_release | default(k8s_metallb_chart.release) }}"
 
 - name: Create MetalLB pools
   kubernetes.core.k8s:

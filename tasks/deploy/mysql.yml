@@ -4,7 +4,7 @@
     name: mysql
     chart_ref: "{{ k8s_mysql_chart.name }}"
     chart_repo_url: "{{ k8s_mysql_chart.repo }}"
-    chart_version: "{{ k8s_mysql_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_mysql_namespace }}"
     create_namespace: true
     state: present
@@ -12,3 +12,5 @@
     wait_timeout: "{{ k8s_mysql_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
+  vars:
+    _release: "{{ k8s_mysql_chart_release | default(k8s_mysql_chart.release) }}"

@@ -4,7 +4,7 @@
     name: keel
     chart_ref: "{{ k8s_keel_chart.name }}"
     chart_repo_url: "{{ k8s_keel_chart.repo }}"
-    chart_version: "{{ k8s_keel_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_keel_namespace }}"
     create_namespace: true
     state: present
@@ -15,3 +15,5 @@
     values:
       helmProvider:
         version: "v3"
+  vars:
+    _release: "{{ k8s_keel_chart_release | default(k8s_keel_chart.release) }}"

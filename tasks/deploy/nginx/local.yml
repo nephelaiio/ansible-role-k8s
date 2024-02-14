@@ -4,7 +4,7 @@
     name: "{{ ingress_name }}"
     chart_ref: "{{ k8s_nginx_chart.name }}"
     chart_repo_url: "{{ k8s_nginx_chart.repo }}"
-    chart_version: "{{ k8s_nginx_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ ingress_namespace }}"
     state: present
     wait: true
@@ -22,6 +22,7 @@
           annotations:
             metallb.universe.tf/address-pool: "{{ item.name }}"
   vars:
+    _release: "{{ k8s_nginx_chart_release | default(k8s_nginx_chart.release) }}"
     ingress_class: "nginx-{{ item.name }}"
     ingress_name: "{{ ingress_class }}"
     ingress_namespace: "{{ ingress_class }}"
