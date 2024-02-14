@@ -4,7 +4,7 @@
     name: zalando
     chart_ref: "{{ k8s_zalando_chart.name }}"
     chart_repo_url: "{{ k8s_zalando_chart.repo }}"
-    chart_version: "{{ k8s_zalando_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_zalando_namespace }}"
     create_namespace: true
     state: present
@@ -17,3 +17,5 @@
         secret_name_template: "{{ k8s_zalando_secret_template }}"
       configLoadBalancer:
         db_hosted_zone: "{{ k8s_zalando_basedomain }}"
+  vars:
+    _release: "{{ k8s_zalando_chart_release | default(k8s_zalando_chart.release) }}"

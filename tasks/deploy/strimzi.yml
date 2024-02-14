@@ -4,7 +4,7 @@
     name: strimzi
     chart_ref: "{{ k8s_strimzi_chart.name }}"
     chart_repo_url: "{{ k8s_strimzi_chart.repo }}"
-    chart_version: "{{ k8s_strimzi_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_strimzi_namespace }}"
     create_namespace: true
     state: present
@@ -14,3 +14,5 @@
     binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
     values:
       watchAnyNamespace: true
+  vars:
+    _release: "{{ k8s_strimzi_chart_release | default(k8s_strimzi_chart.release) }}"

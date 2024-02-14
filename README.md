@@ -10,9 +10,8 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [Cert-Manager](https://cert-manager.io/docs/installation/helm/) (Helm deployment)
 * [NGINX ingress](https://github.com/kubernetes/ingress-nginx) controllers (Helm deployment)
 * [ArgoCD](https://github.com/argoproj/argo-cd) (Helm deployment)
-* [OLM](https://github.com/operator-framework/operator-lifecycle-manager) (Manifest deployment)
 * [LongHorn](https://github.com/longhorn/charts) (Helm deployment)
-* [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (OLM deployment)
+* [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (Helm deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
 * [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
 * [Grafana](https://github.com/grafana/grafana) (TODO)
@@ -27,7 +26,6 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 * All ingresses respond with HTTP 200
 * All volumes deployments are successful
 * All ArgoCD applications are successful
-* All OLM operator deployments are successful
 * All Zalando instances are deployed
 * All MySQL InnoDB clusters are deployed
 
@@ -44,74 +42,24 @@ The following is the list of parameters intended for end-user manipulation:
 
 Cluster wide parameters
 
-| Parameter                        |         Default | Type    | Description                          | Required |
-|:---------------------------------|----------------:|:--------|:-------------------------------------|:---------|
-| k8s_deploy                       |            true | boolean | Toggle flag for cluster deployer     | no       |
-| k8s_verify                       |           false | boolean | Toggle flag for cluster verification | no       |
-| k8s_service_verify               |            true | boolean | Toggle flag for service verification | no       |
-| k8s_ingress_verify               |            true | boolean | Toggle flag for ingress verification | no       |
-| k8s_volume_verify                |            true | boolean | Toggle flag for volume verification | no       |
-| k8s_cluster_type                 |           local | string  | One of ['local', 'aws']              | no       |
-| k8s_kubeconfig                   |  ~/.kube/config | string  | Kubeconfig deploy bin file path      | no       |
-| k8s_helm_bin                     |    _autodetect_ | string  | Helm deploy bin file path            | no       |
-| k8s_wait_timeout                 |             600 | int     | Global deploy wait timeout           | no       |
-| k8s_cluster_name                 | k8s.nephelai.io | string  | Cluster base fqdn                    | no       |
-| k8s_address_pool_private_name    |         private | string  | Private pool name                    | no       |
-| k8s_address_pool_private_iprange |     _undefined_ | string  | LB private network/prefix            | yes      |
-| k8s_address_pool_public_name     |          public | string  | LB public network name               | no       |
-| k8s_address_pool_public_iprange  |     _undefined_ | string  | LB public network/prefix             | yes      |
-| k8s_retry_num                    |               3 | int     | Retries for cluster operations       | no       |
-| k8s_retry_delay                  |              30 | int     | Retry delay for cluster operations   | no       |
-
-ArgoCD parameters
-
-| Parameter                |                   Default | Type    | Description                         | Required |
-|:-------------------------|--------------------------:|:--------|:------------------------------------|----------|
-| k8s_argocd_deploy        |                      true | boolean | Toggle flag for ArgoCD deployment   | no       |
-| k8s_argocd_verify        |                      true | boolean | Toggle flag for ArgoCD verification | no       |
-| k8s_argocd_chart.release |                    4.10.9 | string  | ArgoCD helm chart release           | no       |
-| k8s_argocd_hostname      | argocd.<k8s_cluster_name> | string  | ArgoCD ingress hostname             | no       |
-| k8s_argocd_exec_timeout  |                        3m | string  | ArgoCD git operation timeout        | no       |
-| k8s_argocd_apps_chart.release |                    1.4.1 | string  | ArgoCD Apss helm chart release    | no       |
-
-OLM paramters
-
-| Parameter       | Default | Type    | Description                                 | Required |
-|:----------------|--------:|:--------|:--------------------------------------------|----------|
-| k8s_olm_release | v0.22.0 | string  | From OLM [releases](https://bit.ly/41VF9kp) | no       |
-| k8s_olm_deploy  |   false | boolean | Toggle flag for OLM deployment              | no       |
-
-MetalLB parameters:
-
-| Parameter                  |     Default | Type   | Description                                     | Required |
-|:---------------------------|------------:|:-------|:------------------------------------------------|----------|
-| k8s_metallb_chart.release  |      2.6.14 | string | From command `helm search repo bitnami/metallb` | no       |
-| k8s_metallb_speaker_secret | _undefined_ | string |                                                 | yes      |
-
-Cert-Manager parameters:
-
-| Parameter                     |                                                Default | Type   | Description                    | Required |
-|:------------------------------|-------------------------------------------------------:|:-------|:-------------------------------|----------|
-| k8s_certmanager_chart.release |                                                 v1.9.1 | string | Certmanager helm chart release | no       |
-| k8s_certmanager_acme_secret   |                                            _undefined_ | string | Cloudflare api token           | yes      |
-| k8s_certmanager_acme_email    |                                            _undefined_ | string | Cloudflare api email           | yes      |
-| k8s_certmanager_issuer_server | https://acme-staging-v02.api.letsencrypt.org/directory | string | ACME registration server       | no       |
-
-Longhorn parameters:
-
-| Parameter                  |  Default | Type       | Description                           | Required |
-|:---------------------------|---------:|:-----------|:--------------------------------------|----------|
-| k8s_longhorn_deploy        |     true | boolean    | Toggle flag for Longhorn deployment   | no       |
-| k8s_longhorn_verify        |     true | boolean    | Toggle flag for Longhorn verification | no       |
-| k8s_longhorn_chart.release | _object_ | dictionary | Longhorn helm chart relesae           | no       |
-
-Strimzi parameters:
-| Parameter            |        Default | Type    | Description                             | Required |
-|:---------------------|---------------:|:--------|:----------------------------------------|----------|
-| k8s_strimzi_deploy   |           true | boolean | Toggle flag for Strimzi deployment      | no       |
-| k8s_strimzi_verify   |           true | boolean | Toggle flag for Strimzi verification    | no       |
-| k8s_strimzi_channel  | strimzi-0.31.x | string  | OLM deploy channel for Strimzi operator | no       |
-| k8s_strimzi_approval |      Automatic | Manual  | Automatic                               | no       |
+| Parameter                        |        Default | Type   | Description                          | Required |
+|:---------------------------------|---------------:|:-------|:-------------------------------------|:---------|
+| k8s_deploy                       |           true | bool   | Toggle flag for cluster deployer     | no       |
+| k8s_verify                       |          false | bool   | Toggle flag for cluster verification | no       |
+| k8s_service_verify               |           true | bool   | Toggle flag for service verification | no       |
+| k8s_ingress_verify               |           true | bool   | Toggle flag for ingress verification | no       |
+| k8s_volume_verify                |           true | bool   | Toggle flag for volume verification  | no       |
+| k8s_cluster_type                 |          local | string | One of ['local', 'aws']              | no       |
+| k8s_kubeconfig                   | ~/.kube/config | string | Kubeconfig deploy bin file path      | no       |
+| k8s_helm_bin                     |   _autodetect_ | string | Helm deploy bin file path            | no       |
+| k8s_wait_timeout                 |            600 | int    | Global deploy wait timeout           | no       |
+| k8s_cluster_name                 |    _undefined_ | string | Cluster base fqdn                    | yes      |
+| k8s_address_pool_private_name    |        private | string | Private pool name                    | no       |
+| k8s_address_pool_private_iprange |    _undefined_ | string | LB private network/prefix            | yes      |
+| k8s_address_pool_public_name     |         public | string | LB public network name               | no       |
+| k8s_address_pool_public_iprange  |    _undefined_ | string | LB public network/prefix             | yes      |
+| k8s_retry_num                    |              3 | int    | Retries for cluster operations       | no       |
+| k8s_retry_delay                  |             30 | int    | Retry delay for cluster operations   | no       |
 
 Secret parameters:
 
@@ -125,14 +73,94 @@ Verifier parameters:
 |:------------------|------------:|:-------|:--------------------------------|----------|
 | k8s_verifier_path | _undefined_ | string | Verification artifact directory | no       |
 
+ArgoCD parameters
+
+| Parameter                     |                   Default | Type   | Description              | Required |
+|:------------------------------|--------------------------:|:-------|:-------------------------|----------|
+| k8s_argocd_deploy             |                      true | bool   | ArgoCD deployment flag   | no       |
+| k8s_argocd_chart_release      |               _undefined_ | string | Chart release override   | no       |
+| k8s_argocd_apps_chart_release |               _undefined_ | string | Chart release override   | no       |
+| k8s_argocd_hostname           | argocd.<k8s_cluster_name> | string | ArgoCD ingress hostname  | no       |
+| k8s_argocd_exec_timeout       |                        3m | string | ArgoCD operation timeout | no       |
+
+MetalLB parameters:
+
+| Parameter                  |     Default | Type   | Description            | Required |
+|:---------------------------|------------:|:-------|:-----------------------|----------|
+| k8s_metallb_chart_release  | _undefined_ | string | Chart release override | no       |
+| k8s_metallb_speaker_secret | _undefined_ | string | Speaker Secret         | yes      |
+
+Nginx parameters:
+
+| Parameter               |     Default | Type   | Description            | Required |
+|:------------------------|------------:|:-------|:-----------------------|----------|
+| k8s_nginx_chart_release | _undefined_ | string | Chart release override | no       |
+
+Cert-Manager parameters:
+
+| Parameter                     |                 Default | Type   | Description              | Required |
+|:------------------------------|------------------------:|:-------|:-------------------------|----------|
+| k8s_certmanager_chart_release |             _undefined_ | string | Chart release override   | no       |
+| k8s_certmanager_acme_secret   |             _undefined_ | string | Cloudflare api token     | yes      |
+| k8s_certmanager_acme_email    |             _undefined_ | string | Cloudflare api email     | yes      |
+| k8s_certmanager_issuer_server | LetsEncrypt staging URL | string | ACME registration server | no       |
+
+Longhorn parameters:
+
+| Parameter                  |     Default | Type   | Description                           | Required |
+|:---------------------------|------------:|:-------|:--------------------------------------|----------|
+| k8s_longhorn_deploy        |        true | bool   | Toggle flag for Longhorn deployment   | no       |
+| k8s_longhorn_verify        |        true | bool   | Toggle flag for Longhorn verification | no       |
+| k8s_longhorn_chart_release | _undefined_ | string | Chart release override                | no       |
+
+Strimzi parameters:
+
+| Parameter                 |     Default | Type   | Description                          | Required |
+|:--------------------------|------------:|:-------|:-------------------------------------|----------|
+| k8s_strimzi_deploy        |        true | bool   | Toggle flag for Strimzi deployment   | no       |
+| k8s_strimzi_verify        |        true | bool   | Toggle flag for Strimzi verification | no       |
+| k8s_strimzi_chart_release | _undefined_ | string | Chart release override               | no       |
+| k8s_strimzi_approval      |   Automatic | Manual | Automatic                            | no       |
+
 Zalando parameters:
 
-| Parameter                 |            Default | Type    | Description                          | Required |
-|:--------------------------|-------------------:|:--------|:-------------------------------------|----------|
-| k8s_zalando_deploy        |               true | boolean | Toggle flag for Zalando deployment   | no       |
-| k8s_zalando_verify        |               true | boolean | Toggle flag for Zalando verification | no       |
-| k8s_zalando_chart.release |              1.8.2 | string  | Zalando helm chart release           | no       |
-| k8s_zalando_basedomain    | _k8s_cluster_name_ | string  | Domain for postgresql load balancers | no       |
+| Parameter                 |            Default | Type   | Description                          | Required |
+|:--------------------------|-------------------:|:-------|:-------------------------------------|----------|
+| k8s_zalando_deploy        |               true | bool   | Toggle flag for Zalando deployment   | no       |
+| k8s_zalando_verify        |               true | bool   | Toggle flag for Zalando verification | no       |
+| k8s_zalando_chart_release |        _undefined_ | string | Chart release override               | no       |
+| k8s_zalando_basedomain    | _k8s_cluster_name_ | string | Domain for postgresql load balancers | no       |
+
+OpenSearch parameters:
+
+| Parameter                    |     Default | Type   | Description                             | Required |
+|:-----------------------------|------------:|:-------|:----------------------------------------|----------|
+| k8s_opensearch_deploy        |        true | bool   | Toggle flag for OpenSearch deployment   | no       |
+| k8s_opensearch_verify        |        true | bool   | Toggle flag for OpenSearch verification | no       |
+| k8s_opensearch_chart_release | _undefined_ | string | Chart release override                  | no       |
+
+Sealed-secrets parameters:
+
+| Parameter                       |     Default | Type   | Description                              | Required |
+|:--------------------------------|------------:|:-------|:-----------------------------------------|----------|
+| k8s_sealedsecrets_deploy        |        true | bool   | Toggle flag for SealedSecrets deployment | no       |
+| k8s_sealedsecrets_chart_release | _undefined_ | string | Sealedsecrets helm chart release         | no       |
+| k8s_sealedsecrets_chart_values  | _undefined_ | string | Sealedsecrets chart values override      | no       |
+
+Reflector parameters:
+
+| Parameter                   |     Default | Type   | Description                          | Required |
+|:----------------------------|------------:|:-------|:-------------------------------------|----------|
+| k8s_reflector_deploy        |        true | bool   | Toggle flag for Reflector deployment | no       |
+| k8s_reflector_chart_release | _undefined_ | string | Reflector helm chart release         | no       |
+
+Keel parameters:
+
+| Parameter              |   Default | Type   | Description                     | Required |
+|:-----------------------|----------:|:-------|:--------------------------------|----------|
+| k8s_keel_deploy        |      true | bool   | Toggle flag for Keel deployment | no       |
+| k8s_keel_chart_release | undefined | string | Keel helm chart release         | no       |
+
 
 ## Data Types
 

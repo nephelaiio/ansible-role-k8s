@@ -4,7 +4,7 @@
     name: cert-manager
     chart_ref: "{{ k8s_certmanager_chart.name }}"
     chart_repo_url: "{{ k8s_certmanager_chart.repo }}"
-    chart_version: "{{ k8s_certmanager_chart.release }}"
+    chart_version: "{{ _release }}"
     release_namespace: "{{ k8s_certmanager_namespace }}"
     create_namespace: true
     state: present
@@ -19,6 +19,8 @@
         nameservers:
           - 1.1.1.1
           - 8.8.8.8
+  vars:
+    _release: "{{ k8s_certmanager_chart_release | default(k8s_certmanager_chart.release) }}"
 
 - name: Deploy cloudflare cluster issuer
   when: k8s_certmanager_issuer_name == 'letsencrypt'
