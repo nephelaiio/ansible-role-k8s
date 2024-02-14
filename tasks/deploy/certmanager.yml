@@ -20,7 +20,7 @@
           - 1.1.1.1
           - 8.8.8.8
   vars:
-    _version: "{{ k8s_certmanager_chart_release | default(k8s_certmanager_chart.release) }}"
+    _release: "{{ k8s_certmanager_chart_release | default(k8s_certmanager_chart.release) }}"
 
 - name: Deploy cloudflare cluster issuer
   when: k8s_certmanager_issuer_name == 'letsencrypt'
