@@ -61,6 +61,10 @@
       ansible.builtin.include_tasks: verify/service.yml
       when: k8s_service_verify | bool
 
+    - name: Include sealed-secrets checks
+      ansible.builtin.include_tasks: verify/sealedsecrets.yml
+      when: k8s_sealedsecrets_verify | bool
+
     - name: Include pod checks
       ansible.builtin.include_tasks: verify/pods.yml
 
