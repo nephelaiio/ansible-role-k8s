@@ -4,7 +4,7 @@
     _query: 'kubernetes.core.k8s'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Set service metadata
+- name: Set service facts
   ansible.builtin.set_fact:
     loadbalancer_data: "{{ _loadbalancers }}"
     loadbalancer_failed: "{{ _loadbalancers | json_query(status_filter) }}"
@@ -19,9 +19,9 @@
     service_query: "{{ query(_query, kind='Service', kubeconfig=_config) }}"
 
 - name: Validate service status
-  ansible.builtin.fail:
-    msg: "the following loadlabancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
-  when: loadbalancer_failed | length > 0
+  ansible.builtin.assert:
+    that: loadbalancer_failed | length == 0
+    fail_msg: "the following loadlabancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
 
 - name: Write service hostfile
   ansible.builtin.lineinfile:
