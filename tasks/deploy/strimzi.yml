@@ -1,5 +1,5 @@
 ---
-- name: Deploy strimzi chart
+- name: Deploy Strimzi chart
   kubernetes.core.helm:
     name: strimzi
     chart_ref: "{{ k8s_strimzi_chart.name }}"

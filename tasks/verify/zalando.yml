@@ -5,7 +5,7 @@
     _api: 'acid.zalan.do/v1'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Create zalando namespace
+- name: Create Zalando PostgreSQL namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -13,7 +13,7 @@
     kind: Namespace
     name: "{{ zalando_namespace | default('zalando-test') }}"
 
-- name: Create test postgresql cluster
+- name: Create test PostgreSQL cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -45,7 +45,7 @@
         postgresql:
           version: "13"
 
-- name: Validate postgresql cluster status
+- name: Validate PostgreSQL cluster status
   ansible.builtin.fail:
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:

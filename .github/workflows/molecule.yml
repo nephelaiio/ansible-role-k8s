@@ -44,12 +44,12 @@ jobs:
         with:
           path: 'nephelaiio.k8s'
 
-      - name: Set up python 3
+      - name: Set up Python 3
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Install helm
+      - name: Install Helm
         uses: azure/setup-helm@v3
         with:
           version: 'latest'

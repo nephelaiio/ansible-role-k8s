@@ -5,7 +5,7 @@
     _api: 'mysql.oracle.com/v2'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Create mysql namespace
+- name: Create MySQL namespace
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -13,7 +13,7 @@
     kind: Namespace
     name: "{{ mysql_namespace | default('mysql-test') }}"
 
-- name: Create test mysql secret
+- name: Create test MySQL secret
   kubernetes.core.k8s:
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     definition:
@@ -26,7 +26,7 @@
       data:
         rootPassword: "{{ mysql_password | b64encode }}"
 
-- name: Create test mysql cluster
+- name: Create test MySQL cluster
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -42,7 +42,7 @@
         secretName: {{ mysql_cluster_secret }}
         tlsUseSelfSigned: true
 
-- name: Validate mysql cluster status
+- name: Validate MySQL cluster status
   ansible.builtin.fail:
     msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
   vars:

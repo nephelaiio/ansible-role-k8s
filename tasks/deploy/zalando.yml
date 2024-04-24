@@ -1,5 +1,5 @@
 ---
-- name: Deploy zalando operator chart
+- name: Deploy Zalando PostgreSQL operator chart
   kubernetes.core.helm:
     name: zalando
     chart_ref: "{{ k8s_zalando_chart.name }}"
