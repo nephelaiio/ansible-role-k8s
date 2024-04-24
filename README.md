@@ -31,6 +31,10 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 
 ## Roadmap
 
+* Add local path provisioner
+* Add Grafana deployment
+* Add Kyverno deployment
+* Move deployments to ArgoCD apps deployed synchronously
 * Add statefulset status tests
 * Add deployment status tests
 * Add service status tests
@@ -162,33 +166,21 @@ Keel parameters:
 | k8s_keel_chart_release | undefined | string | Keel helm chart release         | no       |
 
 
-## Data Types
-
-### Secret
-```
-{
-  "name": string,
-   "namespace": string 
-   "type": [string]
-   "data": hash
-}
-```
-
 ## Dependencies
 
-The below Ansible collections are needed on the host that executes this module:
+The following Ansible collections are needed on the host that executes this module:
 * ansible.utils
 * nephelaiio.plugins
 
 ### System
 
-The below requirements are needed on the host that executes this module.
-* Linux 64 bit OS
+The following requirements are needed on the host that executes this module.
+* Linux 64 bit
 * kubectl binary is available on PATH
 
 ### Python
 
-The below requirements are needed on the host that executes this module.
+The following requirements are needed on the host that executes this module.
 
 * kubernetes = "^24.2.0"
 * openshift = "^0.13.1"
@@ -196,11 +188,7 @@ The below requirements are needed on the host that executes this module.
 
 ### Ansible
 
-The below Ansible roles are needed on the host that executes this module:
-
-* nephelaiio.plugins
-
-The below Ansible collections  are needed on the host that executes this module:
+The following Ansible collections are needed on the host that executes this module:
 
 * community.general
 
@@ -208,18 +196,12 @@ The below Ansible collections  are needed on the host that executes this module:
 
 ``` yaml
 ---
-- name: Deploy local kind cluster
-
+- name: Deploy local K8s cluster
   hosts: localhost
-
   gather_facts: false
-  
   roles:
-
-    - nephelaiio.plugins
     - nephelaiio.kind
     - nephelaiio.k8s
-
 ```
 
 ## Testing

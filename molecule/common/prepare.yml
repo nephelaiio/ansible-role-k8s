@@ -23,7 +23,7 @@
             url: https://api.github.com/repos/helm/helm/releases/latest
           register: helm_release_query
 
-        - name: Set kind release target
+        - name: Set Kind release target
           ansible.builtin.set_fact:
             helm_release: "{{ helm_release_query.json.tag_name }}"
 

@@ -35,7 +35,7 @@
       ansible.builtin.include_tasks: verify/volume.yml
       when: k8s_volume_verify | bool
 
-    - name: Include strimzi checks
+    - name: Include Strimzi checks
       ansible.builtin.include_tasks: verify/strimzi.yml
       when: k8s_strimzi_verify | bool
 
@@ -43,11 +43,11 @@
       ansible.builtin.include_tasks: verify/opensearch.yml
       when: k8s_opensearch_verify | bool
 
-    - name: Include zalando checks
+    - name: Include Zalando PostgreSQL checks
       ansible.builtin.include_tasks: verify/zalando.yml
       when: k8s_zalando_verify | bool
 
-    - name: Include mysql checks
+    - name: Include MySQL checks
       ansible.builtin.include_tasks: verify/mysql.yml
       when: k8s_mysql_verify | bool
 

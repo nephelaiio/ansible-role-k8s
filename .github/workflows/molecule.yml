@@ -24,22 +24,32 @@ jobs:
           - zalando
           - strimzi
         include:
-          - image: v1.27.3
-          - image: v1.26.6
-          - image: v1.25.11
-          - image: v1.24.15
+          - release: v0.22.0
+            image: v1.29.2
+          - release: v0.22.0
+            image: v1.28.7
+          - release: v0.22.0
+            image: v1.27.11
+          - release: 0.22.0
+            image: v1.26.14
+          - release: 0.22.0
+            image: v1.25.16
+          - release: 0.22.0
+            image: v1.24.17
+          - release: 0.22.0
+            image: v1.23.17
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v4
         with:
           path: 'nephelaiio.k8s'
 
-      - name: Set up python 3
+      - name: Set up Python 3
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Install helm
+      - name: Install Helm
         uses: azure/setup-helm@v3
         with:
           version: 'latest'
@@ -66,6 +76,7 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
+          KIND_RELEASE: ${{ matrix.release }}
           K8S_RELEASE: ${{ matrix.image }}
           HELM_BIN: ${{ steps.helm.outputs.helm-path }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

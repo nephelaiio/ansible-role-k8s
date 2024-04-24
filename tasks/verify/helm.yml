@@ -14,6 +14,6 @@
     helm_errors: "{{ helm_deployments | rejectattr('status', 'equalto', 'deployed') }}"
 
 - name: Validate Helm deployments
-  ansible.builtin.fail:
-    msg: "the following helm deployments failed [{{ helm_failed | join(', ') }}]"
-  when: helm_failed | length > 0
+  ansible.builtin.assert:
+    that: helm_failed | length == 0
+    fail_msg: "the following helm deployments failed [{{ helm_failed | join(', ') }}]"

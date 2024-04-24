@@ -1,4 +1,4 @@
-.PHONY: all ${MAKECMDGOALS}
+.PHONY: ${MAKECMDGOALS}
 
 KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
@@ -49,13 +49,21 @@ version:
 run:
 	$(MOLECULE_EPHEMERAL_DIR)/bwrap $(filter-out $@,$(MAKECMDGOALS))
 
-helm kubectl:
-	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ $(filter-out $@,$(MAKECMDGOALS))
+ifeq (helm,$(firstword $(MAKECMDGOALS)))
+    HELM_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    $(eval $(subst $(space),,$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))):;@:)
+endif
+
+helm:
+	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${HELM_ARGS}
+
+ifeq (kubectl,$(firstword $(MAKECMDGOALS)))
+    KUBECTL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    $(eval $(subst $(space),,$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))):;@:)
+endif
+
+kubectl:
+	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${KUBECTL_ARGS}
 
 psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)
-
-poetry: install
-
-%:
-	@:

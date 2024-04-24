@@ -3,10 +3,10 @@
   hosts: localhost
   gather_facts: true
   tasks:
-    - name: Destroy kind cluster
+    - name: Destroy Kind cluster
       when: k8s_molecule_cluster_type == 'kind'
       block:
-        - name: Destroy kind cluster
+        - name: Destroy Kind cluster
           ansible.builtin.include_role:
             name: nephelaiio.kind
           vars:
@@ -17,7 +17,7 @@
     - name: Destroy k3s cluster
       when: k8s_molecule_cluster_type == 'k3s'
       block:
-        - name: Stat mysql router state file
+        - name: Stat MySQL router state file
           ansible.builtin.stat:
             path: "/usr/local/bin/k3s-uninstall.sh"
           register: k8s_uninstaller
