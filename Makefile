@@ -14,10 +14,8 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 GITHUB_ORG = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 1)
 GITHUB_REPO = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 2)
 
-poetry:
+install:
 	@type poetry >/dev/null || pip3 install poetry
-
-install: poetry
 	@type yq || sudo apt-get install -y yq
 	@poetry install --no-root
 
