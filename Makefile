@@ -1,6 +1,6 @@
 .PHONY: ${MAKECMDGOALS}
 
-KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].kind ' .github/workflows/molecule.yml)
+KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default

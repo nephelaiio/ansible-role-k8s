@@ -24,19 +24,19 @@ jobs:
           - zalando
           - strimzi
         include:
-          - kind: v0.22.0
+          - release: v0.22.0
             image: v1.29.2
-          - kind: v0.22.0
+          - release: v0.22.0
             image: v1.28.7
           - release: v0.22.0
             image: v1.27.11
-          - kind: 0.22.0
+          - release: 0.22.0
             image: v1.26.14
-          - kind: 0.22.0
+          - release: 0.22.0
             image: v1.25.16
-          - kind: 0.22.0
+          - release: 0.22.0
             image: v1.24.17
-          - kind: 0.22.0
+          - release: 0.22.0
             image: v1.23.17
     steps:
       - name: Check out the codebase
@@ -76,7 +76,7 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          KIND_RELEASE: ${{ matrix. }}
+          KIND_RELEASE: ${{ matrix.release }}
           K8S_RELEASE: ${{ matrix.image }}
           HELM_BIN: ${{ steps.helm.outputs.helm-path }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
