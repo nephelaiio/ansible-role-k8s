@@ -1,6 +1,6 @@
-.PHONY: all ${MAKECMDGOALS}
+.PHONY: ${MAKECMDGOALS}
 
-KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
+KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].kind ' .github/workflows/molecule.yml)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
@@ -14,8 +14,10 @@ PG_HOST := $$(make --no-print-directory kubectl get service -- -n $(PG_NS) -o js
 GITHUB_ORG = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 1)
 GITHUB_REPO = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 2)
 
-install:
+poetry:
 	@type poetry >/dev/null || pip3 install poetry
+
+install: poetry
 	@type yq || sudo apt-get install -y yq
 	@poetry install --no-root
 
@@ -49,13 +51,21 @@ version:
 run:
 	$(MOLECULE_EPHEMERAL_DIR)/bwrap $(filter-out $@,$(MAKECMDGOALS))
 
-helm kubectl:
-	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ $(filter-out $@,$(MAKECMDGOALS))
+ifeq (helm,$(firstword $(MAKECMDGOALS)))
+    HELM_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    $(eval $(subst $(space),,$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))):;@:)
+endif
+
+helm:
+	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${HELM_ARGS}
+
+ifeq (kubectl,$(firstword $(MAKECMDGOALS)))
+    KUBECTL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    $(eval $(subst $(space),,$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))):;@:)
+endif
+
+kubectl:
+	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${KUBECTL_ARGS}
 
 psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)
-
-poetry: install
-
-%:
-	@:

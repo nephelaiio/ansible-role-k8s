@@ -7,7 +7,7 @@ dependency:
 platforms:
   - name: localhost
 driver:
-  name: delegated
+  name: default
 provisioner:
   name: ansible
   playbooks:

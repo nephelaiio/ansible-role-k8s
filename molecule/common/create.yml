@@ -4,10 +4,10 @@
   roles:
     - nephelaiio.plugins
   tasks:
-    - name: Deploy kind cluster
+    - name: Deploy Kind cluster
       when: k8s_molecule_cluster_type == 'kind'
       block:
-        - name: Deploy kind cluster
+        - name: Deploy Kind cluster
           ansible.builtin.include_role:
             name: nephelaiio.kind
           vars:

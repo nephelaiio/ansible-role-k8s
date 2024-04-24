@@ -208,18 +208,12 @@ The below Ansible collections  are needed on the host that executes this module:
 
 ``` yaml
 ---
-- name: Deploy local kind cluster
-
+- name: Deploy local K8s cluster
   hosts: localhost
-
   gather_facts: false
-  
   roles:
-
-    - nephelaiio.plugins
     - nephelaiio.kind
     - nephelaiio.k8s
-
 ```
 
 ## Testing
