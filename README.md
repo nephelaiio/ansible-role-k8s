@@ -196,11 +196,7 @@ The below requirements are needed on the host that executes this module.
 
 ### Ansible
 
-The below Ansible roles are needed on the host that executes this module:
-
-* nephelaiio.plugins
-
-The below Ansible collections  are needed on the host that executes this module:
+The following Ansible collections are needed on the host that executes this module:
 
 * community.general
 

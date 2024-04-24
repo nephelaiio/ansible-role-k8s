@@ -1,8 +1,6 @@
 ---
 - name: Create
   hosts: localhost
-  roles:
-    - nephelaiio.plugins
   tasks:
     - name: Deploy Kind cluster
       when: k8s_molecule_cluster_type == 'kind'
