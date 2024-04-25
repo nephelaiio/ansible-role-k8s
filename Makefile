@@ -25,7 +25,9 @@ lint: install
 	poetry run molecule syntax
 
 test dependency create prepare converge idempotence side-effect verify destroy login reset list:
-	KIND_RELEASE=$(KIND_RELEASE) K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+	KIND_RELEASE=$(KIND_RELEASE) \
+	K8S_RELEASE=$(K8S_RELEASE) \
+	poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 rebuild: destroy prepare create
 
