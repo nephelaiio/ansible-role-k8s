@@ -24,7 +24,7 @@
           ansible.builtin.get_url:
             url: https://get.k3s.io
             dest: "{{ tempdir.path }}/k3s"
-            mode: 0755
+            mode: "u=rwx,go=rx"
 
         - name: Deploy k3s cluster
           ansible.builtin.command: "{{ tempdir.path }}/k3s --disable=traefik"
@@ -50,7 +50,7 @@
             remote_src: true
             owner: "{{ ansible_user }}"
             group: "{{ ansible_user }}"
-            mode: 0600
+            mode: "u=rw,go-rwx"
           vars:
             ansible_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
           become: true
