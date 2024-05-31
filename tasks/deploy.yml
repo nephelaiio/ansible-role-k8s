@@ -23,7 +23,7 @@
   ansible.builtin.include_tasks: "deploy/longhorn.yml"
   when: k8s_longhorn_deploy | bool
 
-- name: Include argocd deployment tasks
+- name: Include ArgoCD deployment tasks
   ansible.builtin.include_tasks: "deploy/argocd.yml"
   when: k8s_argocd_deploy | bool
 

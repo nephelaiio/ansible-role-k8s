@@ -27,7 +27,7 @@
     - name: Include Helm checks
       ansible.builtin.include_tasks: verify/helm.yml
 
-    - name: Include argocd checks
+    - name: Include ArgoCD checks
       ansible.builtin.include_tasks: verify/argocd.yml
       when: k8s_argocd_verify | bool
 

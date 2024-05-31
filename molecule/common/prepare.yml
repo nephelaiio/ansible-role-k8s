@@ -12,7 +12,7 @@
       ansible.builtin.copy:
         src: "{{ helm_bin_query.stdout }}"
         dest: "{{ k8s_helm_bin }}"
-        mode: '0755'
+        mode: "u=rwx,go=rx"
       when: helm_bin_query is succeeded
 
     - name: Download Helm binary
@@ -61,7 +61,7 @@
               ansible.builtin.copy:
                 src: "{{ helm_bin.files[0].path }}"
                 dest: "{{ k8s_helm_bin }}"
-                mode: '0755'
+                mode: "u=rwx,go=rx"
 
           always:
             - name: Cleanup temp files

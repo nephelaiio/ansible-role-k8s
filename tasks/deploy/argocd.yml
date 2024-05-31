@@ -6,7 +6,7 @@
     _config: "{{ k8s_kubeconfig }}"
     _resource: 'argocd-repo-server'
 
-- name: Install argocd chart
+- name: Install ArgoCD chart
   kubernetes.core.helm:
     name: argocd
     chart_ref: "{{ k8s_argocd_chart.name }}"
@@ -49,6 +49,17 @@
     _reposerver_def: "{{ _reposerver_query | first }}"
     _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
   changed_when: false
+
+- name: Configure ArgoCD resource tracking method
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: ConfigMap
+    namespace: "{{ k8s_argocd_namespace }}"
+    name: argocd-cm
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    definition:
+      data:
+        application.resourceTrackingMethod: "{{ k8s_argocd_resource_tracking_method }}"
 
 - name: Deploy argocd ingress
   kubernetes.core.k8s:
