@@ -60,6 +60,8 @@
     definition:
       data:
         application.resourceTrackingMethod: "{{ k8s_argocd_resource_tracking_method }}"
+  notify: argocd_update
+  tags: skip_ansible_lint
 
 - name: Deploy argocd ingress
   kubernetes.core.k8s:
