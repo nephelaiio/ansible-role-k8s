@@ -10,10 +10,3 @@ k8s_keel_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_keel_chart_values:
   helmProvider:
     version: "v3"
-  resources:
-    limits:
-      cpu: 200m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
