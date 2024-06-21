@@ -12,8 +12,6 @@
     wait_timeout: "{{ k8s_keel_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
-    values:
-      helmProvider:
-        version: "v3"
+    values: "{{ k8s_keel_chart_values }}"
   vars:
     _release: "{{ k8s_keel_chart_release | default(k8s_keel_chart.release) }}"
