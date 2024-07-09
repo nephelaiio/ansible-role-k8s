@@ -8,8 +8,8 @@ k8s_argocd_exec_timeout: "3m"
 k8s_argocd_chart:
   name: "argo-cd"
   repo: "https://argoproj.github.io/argo-helm"
-  release: "6.7.14"
-  last_checked: "2024-04-23T22:53:28-06:00"
+  release: "7.3.4"
+  last_checked: "2024-07-09T16:00:20-05:00"
 k8s_argocd_chart_values:
   redis-ha:
     enabled: false
@@ -31,7 +31,7 @@ k8s_argocd_apps_chart:
   name: "argocd-apps"
   repo: "https://argoproj.github.io/argo-helm"
   release: "2.0.0"
-  last_checked: "2024-04-23T22:53:35-06:00"
+  last_checked: "2024-07-09T16:00:25-05:00"
 k8s_argocd_apps_chart_values:
   applications: []
   applicationsets: []

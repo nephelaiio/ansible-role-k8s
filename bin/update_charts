@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+date_darwin="-Iseconds"
+date_linux="--iso-8601=seconds"
 release_files=$(grep -Rl "k8s_.*_release:" defaults/)
 for file in $release_files; do
     ref_versions=$(grep --no-filename "k8s_.*_release:" "$file" | cut -d':' -f 1)
@@ -32,7 +34,11 @@ for file in $chart_files; do
             helm repo update >/dev/null 2>&1
             version=$(helm search repo "$chart/$chart" -o json | jq '.[0].version' -r)
             tmp="$(mktemp)"
-            timestamp=$(date --iso-8601=seconds)
+            if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+                timestamp=$(date $date_linux)
+            elif [[ "$OSTYPE" == "darwin"* ]]; then
+                timestamp=$(date $date_darwin)
+            fi
             # shellcheck disable=SC2016
             yq eval-all '. as $item ireduce ({}; . * $item)' \
                 "$file" \
