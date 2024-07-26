@@ -5,6 +5,6 @@ k8s_nginx_namespace: "nginx"
 k8s_nginx_chart:
   name: "ingress-nginx"
   repo: "https://kubernetes.github.io/ingress-nginx"
-  release: "4.11.0"
-  last_checked: "2024-07-09T16:00:40-05:00"
+  release: "4.11.1"
+  last_checked: "2024-07-26T12:51:59-05:00"
 k8s_nginx_wait_timeout: "{{ k8s_wait_timeout }}"
