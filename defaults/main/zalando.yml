@@ -9,4 +9,4 @@ k8s_zalando_chart:
   name: "postgres-operator"
   repo: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
   release: "1.12.2"
-  last_checked: "2024-07-09T16:01:22-05:00"
+  last_checked: "2024-07-26T12:52:34-05:00"
