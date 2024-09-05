@@ -41,17 +41,17 @@ provisioner:
           kind_proxy_cleanup: false
           kind_nodes: 1
 
-          # zalando vardefs
-          zalando_user: molecule
-          zalando_db: test
-          zalando_team: zalando
-          zalando_namespace: zalando-test
-
           # mysql vardefs
-          mysql_cluster_name: mysql-test
-          mysql_cluster_secret: mysql-secret
-          mysql_namespace: mysql-test
-          mysql_password: password
+          k8s_mysql_deployments:
+            - namespace: "mysql"
+              parameters:
+                architecture: standalone
+                auth:
+                  rootPassword: mysql
+                  database: mysql
+                primary:
+                  persistence:
+                    storageClass: longhorn
 
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
