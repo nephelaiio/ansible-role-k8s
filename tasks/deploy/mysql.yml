@@ -1,11 +1,11 @@
 ---
-- name: Deploy MySQL operator chart
+- name: Deploy bitnami MySQL chart
   kubernetes.core.helm:
-    name: mysql
+    name: "{{ _chart_name }}"
     chart_ref: "{{ k8s_mysql_chart.name }}"
     chart_repo_url: "{{ k8s_mysql_chart.repo }}"
     chart_version: "{{ _release }}"
-    release_namespace: "{{ _namespace }}"
+    release_namespace: "{{ item.namespace }}"
     create_namespace: true
     state: present
     wait: true
@@ -15,7 +15,7 @@
     values: "{{ item.parameters }}"
   vars:
     _release: "{{ k8s_mysql_chart_release | default(k8s_mysql_chart.release) }}"
-    _namespace: "{{ item.namespace }}"
+    _chart_name: "{{ item.name }}"
   loop: "{{ k8s_mysql_deployments }}"
   loop_control:
-    label: "{{ _namespace }}"
+    label: "{{ _chart_name }}"

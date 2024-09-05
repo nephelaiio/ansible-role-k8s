@@ -13,7 +13,7 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [LongHorn](https://github.com/longhorn/charts) (Helm deployment)
 * [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (Helm deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
-* [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
+* [MySQL](https://github.com/bitnami/charts/tree/main/bitnami/mysql) (Helm deployment)
 * [Metrics Server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server) (Helm deployment)
 * [Grafana](https://github.com/grafana/grafana) (TODO)
 * [Kyverno](https://github.com/kyverno/kyverno) (TODO)

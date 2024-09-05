@@ -43,7 +43,8 @@ provisioner:
 
           # mysql vardefs
           k8s_mysql_deployments:
-            - namespace: "mysql"
+            - name: "mysql"
+              namespace: "mysql"
               parameters:
                 architecture: standalone
                 auth:
@@ -60,7 +61,7 @@ provisioner:
           k8s_opensearch_deploy: false
           k8s_strimzi_deploy: false
           k8s_argocd_deploy: false
-          k8s_longhorn_deploy: false
+          k8s_longhorn_deploy: true
           k8s_zalando_deploy: false
           k8s_mysql_deploy: true
           k8s_nginx_deploy: false
