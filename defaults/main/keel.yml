@@ -4,7 +4,7 @@ k8s_keel_namespace: "keel-system"
 k8s_keel_chart:
   name: "keel"
   repo: "https://charts.keel.sh "
-  release: "1.0.4"
+  release: "1.0.3"
   last_checked: "2024-09-05T12:20:34-06:00"
 k8s_keel_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_keel_chart_values:
