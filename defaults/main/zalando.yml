@@ -8,5 +8,5 @@ k8s_zalando_secret_template: "{username}-{cluster}"
 k8s_zalando_chart:
   name: "postgres-operator"
   repo: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
-  release: "1.12.2"
-  last_checked: "2024-07-26T12:52:34-05:00"
+  release: "1.13.0"
+  last_checked: "2024-09-05T12:20:40-06:00"

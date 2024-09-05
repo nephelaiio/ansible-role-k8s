@@ -21,7 +21,7 @@
 - name: Validate service status
   ansible.builtin.assert:
     that: loadbalancer_failed | length == 0
-    fail_msg: "the following loadlabancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
+    fail_msg: "the following loadbalancers are in failed status [{{ loadbalancer_failed | join(', ') }}]"
 
 - name: Write service hostfile
   ansible.builtin.lineinfile:
