@@ -27,7 +27,7 @@
             mode: "u=rwx,go=rx"
 
         - name: Deploy k3s cluster
-          ansible.builtin.command: "{{ tempdir.path }}/k3s --disable=traefik"
+          ansible.builtin.command: "{{ tempdir.path }}/k3s --disable=traefik --disable=metrics-server"
           vars:
             k3s_version: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') }}+k3s1"
           environment:
