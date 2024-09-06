@@ -6,10 +6,13 @@
 
 - name: Validate statefulset status
   ansible.builtin.fail:
-    msg: "mysql statefulset for {{ item.name }} does not exist"
+    msg: "pods for mysql deployment in namespace {{ item.namespace }} do not exist"
   vars:
-    _mysql: "{{ _query | selectattr('metadata.name', 'match', item.name) }}"
-    _query: "{{ query(_query, kind='StatefulSet', kubeconfig=_config, namespace=item.namespace, api_version='apps/v1') }}"
+    pods_status: "{{ pods_query | selectattr('status', 'defined') }}"
+    pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
+    pods_completed: "{{ pods_phase | selectattr('status.phase', 'equalto', 'Running') }}"
+    pods_mysql: "{{ pods_completed | selectattr('metadata.name', 'match', item.name) }}"
+    pods_query: "{{ query(_query, kind='Pod', kubeconfig=_config, namespace=item.namespace) }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pods_mysql | length > 0
