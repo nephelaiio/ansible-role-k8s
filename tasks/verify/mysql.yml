@@ -4,7 +4,7 @@
     _query: 'kubernetes.core.k8s'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Validate statefulset status
+- name: Validate MySQL pod statuses
   ansible.builtin.fail:
     msg: "pods for mysql deployment in namespace {{ item.namespace }} do not exist"
   vars:
