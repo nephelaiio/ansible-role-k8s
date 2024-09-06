@@ -4,13 +4,13 @@
     _query: 'kubernetes.core.k8s'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Validate pod status
+- name: Validate statefulset status
   ansible.builtin.fail:
     msg: "mysql statefulset [{{ pods_mysql | map(attribute='metadata.name') | join(', ') }}] does not exist"
   vars:
     pods_status: "{{ pods_query | selectattr('status', 'defined') }}"
     pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
-    pods_completed: "{{ pods_phase | rejectattr('status.phase', 'equalto', 'Running') }}"
+    pods_completed: "{{ pods_phase | selectattr('status.phase', 'equalto', 'Running') }}"
     pods_mysql: "{{ pods_completed | selectattr('metadata.name', 'match', item.name) }}"
     pods_query: "{{ query(_query, kind='StatefulSet', kubeconfig=_config, namespace=item.namespace, api_version='apps/v1') }}"
   retries: "{{ k8s_retry_num }}"
