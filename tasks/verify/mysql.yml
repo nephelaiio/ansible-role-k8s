@@ -12,8 +12,7 @@
     pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
     pods_completed: "{{ pods_phase | rejectattr('status.phase', 'equalto', 'Running') }}"
     pods_mysql: "{{ pods_completed | selectattr('metadata.name', 'match', item.name) }}"
-    pods_query: "{{ query(_query, sts_query) }}"
-    sts_query: "kind='StatefulSet', kubeconfig=_config, namespace=item.namespace, api_version='apps/v1'"
+    pods_query: "{{ query(_query, kind='StatefulSet', kubeconfig=_config, namespace=item.namespace, api_version='apps/v1') }}"
   retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
   until: pods_mysql | length > 0
