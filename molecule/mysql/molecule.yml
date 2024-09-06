@@ -43,13 +43,13 @@ provisioner:
 
           # mysql vardefs
           k8s_mysql_deployments:
-            - name: "mysql"
+            - name: "molecule"
               namespace: "mysql"
               parameters:
                 architecture: standalone
                 auth:
-                  rootPassword: mysql
-                  database: mysql
+                  rootPassword: molecule
+                  database: molecule
                 primary:
                   persistence:
                     storageClass: longhorn
