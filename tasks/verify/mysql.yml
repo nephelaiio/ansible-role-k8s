@@ -2,56 +2,21 @@
 - name: Set verification facts
   ansible.builtin.set_fact:
     _query: 'kubernetes.core.k8s'
-    _api: 'mysql.oracle.com/v2'
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Create MySQL namespace
-  kubernetes.core.k8s:
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    api_version: v1
-    kind: Namespace
-    name: "{{ mysql_namespace | default('mysql-test') }}"
-
-- name: Create test MySQL secret
-  kubernetes.core.k8s:
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    definition:
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: "{{ mysql_cluster_secret }}"
-        namespace: "{{ mysql_namespace }}"
-      type: Opaque
-      data:
-        rootPassword: "{{ mysql_password | b64encode }}"
-
-- name: Create test MySQL cluster
-  kubernetes.core.k8s:
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition: "{{ _definition }}"
-  vars:
-    _definition: |
-      apiVersion: mysql.oracle.com/v2
-      kind: InnoDBCluster
-      metadata:
-        name: {{ mysql_cluster_name }}
-        namespace: {{ mysql_namespace }}
-      spec:
-        secretName: {{ mysql_cluster_secret }}
-        tlsUseSelfSigned: true
-
-- name: Validate MySQL cluster status
+- name: Validate MySQL pod statuses
   ansible.builtin.fail:
-    msg: "the following clusters are in failed status [{{ cluster_failed | join(', ') }}]"
+    msg: "pods for mysql deployment in namespace {{ item.namespace }} do not exist"
   vars:
-    cluster_status: "{{ cluster_query | selectattr('status', 'defined') }}"
-    cluster_failed: "{{ cluster_status | rejectattr('status.cluster.status', 'equalto', 'ONLINE') | map(attribute='metadata.name') }}"
-    cluster_query: "{{ query(_query, api_version=_api, kind='InnoDBCluster', kubeconfig=_config) }}"
-  retries: "{{ k8s_retry_num if ((k8s_retry_num * k8s_retry_delay) > 360) else ((360 / k8s_retry_delay) | round(0, 'ceil') | int) }}"
+    pods_status: "{{ pods_query | selectattr('status', 'defined') }}"
+    pods_phase: "{{ pods_status | selectattr('status.phase', 'defined') }}"
+    pods_completed: "{{ pods_phase | selectattr('status.phase', 'equalto', 'Running') }}"
+    pods_mysql: "{{ pods_completed | selectattr('metadata.name', 'match', item.name) }}"
+    pods_query: "{{ query(_query, kind='Pod', kubeconfig=_config, namespace=item.namespace) }}"
+  retries: "{{ k8s_retry_num }}"
   delay: "{{ k8s_retry_delay }}"
-  until:
-    - cluster_status | length > 0
-    - cluster_failed | length == 0
-  failed_when: (cluster_status | length == 0) or (cluster_failed | length > 0)
+  until: pods_mysql | length > 0
+  failed_when: pods_mysql | length == 0
+  loop: "{{ k8s_mysql_deployments }}"
+  loop_control:
+    label: "{{ item.name }}"

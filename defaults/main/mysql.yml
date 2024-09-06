@@ -1,10 +1,13 @@
 ---
 k8s_mysql_deploy: false
 k8s_mysql_verify: "{{ k8s_mysql_deploy }}"
-k8s_mysql_namespace: "mysql-operator"
 k8s_mysql_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_mysql_chart:
-  name: "mysql-operator"
-  repo: "https://mysql.github.io/mysql-operator"
-  release: "2.2.1"
-  last_checked: "2024-09-05T12:20:17-06:00"
+  name: "mysql"
+  repo: "https://charts.bitnami.com/bitnami"
+  release: "11.1.16"
+  last_checked: "2024-09-05T11:02:33-05:00"
+k8s_mysql_deployments:
+  - name: "mysql"
+    namespace: "mysql"
+    parameters: {}
