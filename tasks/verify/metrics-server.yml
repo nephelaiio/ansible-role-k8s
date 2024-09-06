@@ -1,0 +1,23 @@
+---
+- name: Ensure Metrics server deployment exists
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: metrics-server
+    namespace: kube-system
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+  register: metrics_server_deployment
+
+- name: Ensure kubectl top is working
+  ansible.builtin.command:
+    cmd: kubectl top nodes
+  environment:
+    KUBECONFIG: "{{ k8s_kubeconfig }}"
+  changed_when: false
+  register: kubectl_top
+
+- name: Validate Metrics server deployment
+  ansible.builtin.assert:
+    that:
+      - metrics_server_deployment.resources | length > 0
+      - kubectl_top.rc == 0
+    fail_msg: "Metrics server deployment is not working properly."

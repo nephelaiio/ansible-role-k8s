@@ -14,6 +14,7 @@ An opinionated [ansible role](https://galaxy.ansible.com/nephelaiio/k8s) to boot
 * [Strimzi](https://operatorhub.io/operator/strimzi-kafka-operator) (Helm deployment)
 * [Zalando Postgres](https://github.com/zalando/postgres-operator) Operator (Helm deployment)
 * [MySQL Operator](https://dev.mysql.com/doc/mysql-operator/en/) (Helm deployment)
+* [Metrics Server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server) (Helm deployment)
 * [Grafana](https://github.com/grafana/grafana) (TODO)
 * [Kyverno](https://github.com/kyverno/kyverno) (TODO)
 
@@ -28,6 +29,7 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 * All ArgoCD applications are successful
 * All Zalando instances are deployed
 * All MySQL InnoDB clusters are deployed
+* Metrics server is deployed
 
 ## Roadmap
 
@@ -42,7 +44,7 @@ Role includes a cluster verifier that can be activated by setting `k8s_verify: t
 
 ## Role Variables
 
-The following is the list of parameters intended for end-user manipulation: 
+The following is the list of parameters intended for end-user manipulation:
 
 Cluster wide parameters
 
@@ -165,6 +167,12 @@ Keel parameters:
 | k8s_keel_deploy        |      true | bool   | Toggle flag for Keel deployment | no       |
 | k8s_keel_chart_release | undefined | string | Keel helm chart release         | no       |
 
+Metrics server parameters:
+
+| Parameter                        |   Default | Type   | Description                               | Required |
+|:---------------------------------|----------:|:-------|:------------------------------------------|----------|
+| k8s_metrics_server_deploy        |      true | bool   | Toggle flag for Metrics server deployment | no       |
+| k8s_metrics_server_chart_release | undefined | string | Metrics server helm chart release         | no       |
 
 ## Dependencies
 
@@ -208,8 +216,8 @@ The following Ansible collections are needed on the host that executes this modu
 
 Please make sure your environment has [docker](https://www.docker.com) installed; then test the role from the project root using the following commands
 
-* ` poetry instasll`
-* ` SCENARIO=default make molecule test `
+* `poetry install`
+* `SCENARIO=default make molecule test`
 
 ## License
 
