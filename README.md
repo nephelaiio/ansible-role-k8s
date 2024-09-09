@@ -174,6 +174,14 @@ Metrics server parameters:
 | k8s_metrics_server_deploy        |      true | bool   | Toggle flag for Metrics server deployment | no       |
 | k8s_metrics_server_chart_release | undefined | string | Metrics server helm chart release         | no       |
 
+MySQL parameters:
+
+| Parameter                        |   Default  | Type   | Description                               | Required |
+|:---------------------------------|-----------:|:-------|:------------------------------------------|----------|
+| k8s_mysql_deploy                 |      false | bool   | Toggle flag for Bitnami MySQL  deployment | no       |
+| k8s_mysql_chart_release          |  undefined | string | Bitnami MySQL helm chart release          | no       |
+| k8s_mysql_deployments            |         [] | list   | MySQL name, namespace, and parameters     | no       |
+
 ## Dependencies
 
 The following Ansible collections are needed on the host that executes this module:

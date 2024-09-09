@@ -7,7 +7,4 @@ k8s_mysql_chart:
   repo: "https://charts.bitnami.com/bitnami"
   release: "11.1.16"
   last_checked: "2024-09-05T11:02:33-05:00"
-k8s_mysql_deployments:
-  - name: "mysql"
-    namespace: "mysql"
-    parameters: {}
+k8s_mysql_deployments: []
