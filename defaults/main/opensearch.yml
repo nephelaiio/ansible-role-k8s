@@ -4,7 +4,7 @@ k8s_opensearch_verify: "{{ k8s_opensearch_deploy }}"
 k8s_opensearch_chart:
   name: "opensearch-operator"
   repo: "https://opensearch-project.github.io/opensearch-k8s-operator"
-  release: "2.6.1"
-  last_checked: "2024-09-05T12:20:37-06:00"
+  release: "2.7.0"
+  last_checked: "2024-11-12T11:29:39-05:00"
 k8s_opensearch_namespace: opensearch
 k8s_opensearch_wait_timeout: "{{ k8s_wait_timeout }}"

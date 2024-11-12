@@ -3,6 +3,6 @@ k8s_metallb_namespace: "metallb-system"
 k8s_metallb_chart:
   name: "metallb"
   repo: "https://charts.bitnami.com/bitnami"
-  release: "6.3.10"
-  last_checked: "2024-09-05T12:20:08-06:00"
+  release: "6.3.15"
+  last_checked: "2024-11-12T11:28:32-05:00"
 k8s_metallb_wait_timeout: "{{ k8s_wait_timeout }}"
