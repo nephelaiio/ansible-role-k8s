@@ -1,4 +1,8 @@
 ---
+- name: Pause for one minute to build app cache
+  ansible.builtin.pause:
+    minutes: 1
+
 - name: Set verification facts
   ansible.builtin.set_fact:
     _query: 'kubernetes.core.k8s'
@@ -109,4 +113,4 @@
       vars:
         _app_data: "{{ argocd_app_data.json['items'] }}"
         _app_failed: "{{ _app_data | rejectattr('status.health.status', 'equalto', 'Healthy') }}"
-        _app_names: "{{ app_failed | map(attribute='metadata.name') }}"
+        _app_names: "{{ _app_failed | map(attribute='metadata.name') }}"
