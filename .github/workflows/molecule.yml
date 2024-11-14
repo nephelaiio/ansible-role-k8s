@@ -24,6 +24,8 @@ jobs:
           - zalando
           - strimzi
         include:
+          - release: v0.25.0
+            image: v1.31.2
           - release: v0.22.0
             image: v1.29.2
           - release: v0.22.0
