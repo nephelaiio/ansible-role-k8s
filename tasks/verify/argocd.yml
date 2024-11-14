@@ -1,8 +1,4 @@
 ---
-- name: Pause for one minute to build app cache
-  ansible.builtin.pause:
-    minutes: 1
-
 - name: Set verification facts
   ansible.builtin.set_fact:
     _query: 'kubernetes.core.k8s'
@@ -35,6 +31,17 @@
     - _ingress in ingress_query[0][_status][_lb]
     - ingress_query[0][_status][_lb][_ingress] | length > 0
     - _ip in ingress_query[0][_status][_lb][_ingress][0]
+
+- name: Query ArgoCD health status
+  ansible.builtin.uri:
+    url: "https://{{ ingress_argocd_ip }}/healthz"
+    method: GET
+    body_format: json
+    validate_certs: false
+  register: argocd_healthcheck
+  retries: 4
+  delay: 30
+  until: argocd_healthcheck is success
 
 - name: Record ArgoCD deployment env vars
   ansible.builtin.set_fact:
