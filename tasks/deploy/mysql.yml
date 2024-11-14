@@ -2,8 +2,7 @@
 - name: Deploy bitnami MySQL chart
   kubernetes.core.helm:
     name: "{{ _chart_name }}"
-    chart_ref: "{{ k8s_mysql_chart.name }}"
-    chart_repo_url: "{{ k8s_mysql_chart.repo }}"
+    chart_ref: "{{ k8s_mysql_chart.repo }}"
     chart_version: "{{ _release }}"
     release_namespace: "{{ item.namespace }}"
     create_namespace: true

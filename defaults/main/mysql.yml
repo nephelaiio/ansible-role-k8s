@@ -4,7 +4,7 @@ k8s_mysql_verify: "{{ k8s_mysql_deploy }}"
 k8s_mysql_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_mysql_chart:
   name: "mysql"
-  repo: "https://charts.bitnami.com/bitnami"
+  repo: "oci://registry-1.docker.io/bitnamicharts/mysql"
   release: "11.1.20"
   last_checked: "2024-11-12T11:28:54-05:00"
 k8s_mysql_deployments: []
