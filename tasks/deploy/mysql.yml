@@ -1,20 +1,43 @@
 ---
-- name: Deploy bitnami MySQL chart
-  kubernetes.core.helm:
-    name: "{{ _chart_name }}"
-    chart_ref: "{{ k8s_mysql_chart.repo }}"
-    chart_version: "{{ _release }}"
-    release_namespace: "{{ item.namespace }}"
-    create_namespace: true
-    state: present
-    wait: true
-    wait_timeout: "{{ k8s_mysql_wait_timeout }}s"
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    binary_path: "{{ k8s_helm_bin | default(omit) }}"
-    values: "{{ item.parameters }}"
-  vars:
-    _release: "{{ k8s_mysql_chart_release | default(k8s_mysql_chart.release) }}"
-    _chart_name: "{{ item.name }}"
-  loop: "{{ k8s_mysql_deployments }}"
-  loop_control:
-    label: "{{ _chart_name }}"
+- block:
+    - name: Deploy bitnami MySQL chart
+      kubernetes.core.helm:
+        name: "{{ _chart_name }}"
+        chart_ref: "{{ k8s_mysql_chart.repo }}"
+        chart_version: "{{ _release }}"
+        release_namespace: "{{ item.namespace }}"
+        create_namespace: true
+        state: present
+        wait: true
+        wait_timeout: "150"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        binary_path: "{{ k8s_helm_bin | default(omit) }}"
+        values: "{{ item.parameters }}"
+      vars:
+        _release: "{{ k8s_mysql_chart_release | default(k8s_mysql_chart.release) }}"
+        _chart_name: "{{ item.name }}"
+      loop: "{{ k8s_mysql_deployments }}"
+      loop_control:
+        label: "{{ _chart_name }}"
+
+  rescue:
+    - name: Gather mysql pods
+      kubernetes.core.k8s_info:
+        kind: Pod
+      register: k8s_output
+
+    - name: Gather information about test-chart with pending state
+      kubernetes.core.helm_info:
+        name: molecule
+        release_namespace: mysql
+        release_state:
+          - all
+      register: helm_output
+
+    - debug:
+        msg: "{{ k8s_output }}"
+
+    - debug:
+        msg: "{{ helm_output }}"
+
+    - fail:
