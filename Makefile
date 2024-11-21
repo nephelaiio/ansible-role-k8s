@@ -27,7 +27,7 @@ lint: install
 test dependency create prepare converge idempotence side-effect verify destroy login reset list:
 	KIND_RELEASE=$(KIND_RELEASE) \
 	K8S_RELEASE=$(K8S_RELEASE) \
-	${ANSIBLE_DEBUG}=True ${ANSIBLE_VERBOSITY}=5 poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+	ANSIBLE_DEBUG=True ANSIBLE_VERBOSITY=5 poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 rebuild: destroy prepare create
 
