@@ -8,7 +8,7 @@
     create_namespace: true
     state: present
     wait: true
-    wait_timeout: "150s"
+    wait_timeout: "{{ k8s_mysql_wait_timeout }}s"
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ k8s_helm_bin | default(omit) }}"
     values: "{{ item.parameters }}"
