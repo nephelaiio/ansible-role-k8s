@@ -32,6 +32,17 @@
     - ingress_query[0][_status][_lb][_ingress] | length > 0
     - _ip in ingress_query[0][_status][_lb][_ingress][0]
 
+- name: Query ArgoCD health status
+  ansible.builtin.uri:
+    url: "https://{{ ingress_argocd_ip }}/healthz"
+    method: GET
+    body_format: json
+    validate_certs: false
+  register: argocd_healthcheck
+  retries: 4
+  delay: 30
+  until: argocd_healthcheck is success
+
 - name: Record ArgoCD deployment env vars
   ansible.builtin.set_fact:
     argocd_env: "{{ _argocd_env }}"
@@ -109,4 +120,4 @@
       vars:
         _app_data: "{{ argocd_app_data.json['items'] }}"
         _app_failed: "{{ _app_data | rejectattr('status.health.status', 'equalto', 'Healthy') }}"
-        _app_names: "{{ app_failed | map(attribute='metadata.name') }}"
+        _app_names: "{{ _app_failed | map(attribute='metadata.name') }}"
