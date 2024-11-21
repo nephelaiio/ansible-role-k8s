@@ -24,6 +24,7 @@
     - name: Gather mysql pods
       kubernetes.core.k8s_info:
         kind: Pod
+      kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
       register: k8s_output
 
     - name: Gather information about test-chart with pending state
@@ -32,6 +33,8 @@
         release_namespace: mysql
         release_state:
           - all
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        binary_path: "{{ k8s_helm_bin | default(omit) }}"
       register: helm_output
 
     - debug:
