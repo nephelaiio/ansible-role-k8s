@@ -24,7 +24,7 @@
     - name: Gather mysql pods
       kubernetes.core.k8s_info:
         kind: Pod
-      kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
       register: k8s_output
 
     - name: Gather information about test-chart with pending state
