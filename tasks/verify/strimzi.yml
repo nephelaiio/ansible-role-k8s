@@ -15,52 +15,6 @@
   delay: "{{ k8s_retry_delay }}"
   until: strimzi_namespace_create is success
 
-- name: Create test Zookeeper Strimzi cluster
-  kubernetes.core.k8s:
-    state: present
-    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
-    resource_definition:
-      apiVersion: kafka.strimzi.io/v1beta2
-      kind: Kafka
-      metadata:
-        name: strimzi-zookeeper
-        namespace: "{{ _strimzi_test_namespace }}"
-      spec:
-        kafka:
-          version: 3.7.0
-          replicas: 1
-          brokers: 1
-          storage:
-            type: persistent-claim
-            size: 10Gi
-            class: standard
-          listeners:
-            - name: plain
-              port: 9092
-              type: internal
-              tls: false
-        zookeeper:
-          replicas: 1
-          storage:
-            type: persistent-claim
-            size: 10Gi
-            class: standard
-        entityOperator:
-          template:
-            topicOperatorContainer:
-              env:
-                - name: STRIMZI_USE_ZOOKEEPER_TOPIC_STORE
-                  value: "true"
-    wait: true
-    wait_condition:
-      type: Ready
-    wait_sleep: 10
-    wait_timeout: 60
-  register: strimzi_cluster_create
-  retries: "{{ k8s_retry_num }}"
-  delay: "{{ k8s_retry_delay }}"
-  until: strimzi_cluster_create is success
-
 - name: Create test Strimzi controller NodePool
   kubernetes.core.k8s:
     state: present
@@ -124,7 +78,7 @@
           strimzi.io/node-pools: enabled
       spec:
         kafka:
-          version: 3.7.0
+          version: 3.9.0
           listeners:
             - name: plain
               port: 9092
