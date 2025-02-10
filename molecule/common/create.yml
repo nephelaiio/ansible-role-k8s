@@ -33,6 +33,7 @@
           environment:
             INSTALL_K3S_VERSION: "{{ k3s_version }}"
           become: true
+          tags: skip_ansible_lint
 
         - name: Install iscsi tools
           ansible.builtin.package:

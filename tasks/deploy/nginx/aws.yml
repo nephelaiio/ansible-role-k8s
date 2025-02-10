@@ -14,6 +14,8 @@
     binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
     values:
       controller:
+        config:
+          annotations-risk-level: "Critical"
         allowSnippetAnnotations: true
         ingressClassResource:
           name: "{{ ingress_class }}"
@@ -25,7 +27,7 @@
             enabled: True
             annotations:
               service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-              service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
+              service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
               service.beta.kubernetes.io/aws-load-balancer-type: "external"
               service.beta.kubernetes.io/aws-load-balancer-scheme: "{{ item.scheme }}"
               service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
