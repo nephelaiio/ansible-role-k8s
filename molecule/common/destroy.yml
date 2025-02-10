@@ -31,3 +31,4 @@
       ansible.builtin.command: "certutil -d sql:$HOME/.pki/nssdb -D -n {{ k8s_cluster_name }}"
       changed_when: false
       ignore_errors: true
+      tags: skip_ansible_lint

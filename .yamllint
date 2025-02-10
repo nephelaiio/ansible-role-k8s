@@ -2,6 +2,7 @@
 extends: default
 
 ignore: |
+  roles/
   *.j2.yml
 
 rules:

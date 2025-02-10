@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Check local Helm binary
-      ansible.builtin.shell: "which {{ lookup('ansible.builtin.env', 'HELM_BIN', default='helm') }}"
+      ansible.builtin.command: "which {{ lookup('ansible.builtin.env', 'HELM_BIN', default='helm') }}"
       register: helm_bin_query
       changed_when: false
 
@@ -54,7 +54,7 @@
                 recurse: true
                 use_regex: true
                 patterns:
-                  - '^helm$'
+                  - "^helm$"
               register: helm_bin
 
             - name: Copy Helm copy Helm binary
