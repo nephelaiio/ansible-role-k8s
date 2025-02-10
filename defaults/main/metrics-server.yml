@@ -5,7 +5,7 @@ k8s_metrics_server_chart:
   name: "metrics-server"
   repo: "https://kubernetes-sigs.github.io/metrics-server/"
   release: "3.12.2"
-  last_checked: "2024-11-12T11:28:09-05:00"
+  last_checked: "2025-02-10T11:36:40-05:00"
 k8s_metrics_server_namespace: kube-system
 k8s_metrics_server_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_metrics_server_chart_values:
