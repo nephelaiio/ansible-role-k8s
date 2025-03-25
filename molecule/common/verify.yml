@@ -2,6 +2,7 @@
 - name: Verify
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Verify cluster
       ansible.builtin.include_role:

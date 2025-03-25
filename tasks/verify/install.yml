@@ -1,22 +1,16 @@
 ---
 - name: Set verification facts
   ansible.builtin.set_fact:
-    _query: 'kubernetes.core.k8s'
+    _query: "kubernetes.core.k8s"
     _ns: "{{ k8s_certmanager_namespace }}"
     _config: "{{ k8s_kubeconfig }}"
 
-- name: Install bubblewrap
+- name: Install test utilities
   ansible.builtin.package:
-    name: bubblewrap
-  retries: 3
-  delay: 10
-  register: package_install
-  until: package_install is succeeded
-  become: true
-
-- name: Install certutil
-  ansible.builtin.package:
-    name: libnss3-tools
+    name:
+      - bubblewrap
+      - libnss3-tools
+      - ca-certificates
   retries: 3
   delay: 10
   register: package_install
@@ -67,7 +61,7 @@
     _bind_dev: "--dev-bind / /"
     _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
     _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
-    _cmd: "sh -c 'update-ca-certificates'"
+    _cmd: "sh -c '/usr/sbin/update-ca-certificates'"
   changed_when: false
 
 - name: Create wrapper command
@@ -81,7 +75,7 @@
     dest: "{{ k8s_verifier_path }}/bwrap"
     mode: "u=rwx,go=rx"
   vars:
-    _cmd: "bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c \"$CMD\""
+    _cmd: 'bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c "$CMD"'
     _bind_dev: "--dev-bind / /"
     _bind_hosts: "--bind {{ k8s_verifier_path }}/hosts /etc/hosts"
     _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
