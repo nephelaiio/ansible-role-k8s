@@ -2,8 +2,9 @@
 .molecule/
 .cache/
 __pycache__/
+.ansible/
+.venv/
 .devbox/
-Gemfile.lock
 
 # globs
 *.swp
@@ -13,3 +14,4 @@ Gemfile.lock
 playbook.retry
 .tool-versions
 .DS_Store
+Gemfile.lock
