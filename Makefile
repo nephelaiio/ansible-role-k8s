@@ -1,6 +1,6 @@
 .PHONY: ${MAKECMDGOALS}
 
-K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
+K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].k8s' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
 MOLECULE_EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(MOLECULE_SCENARIO)"
@@ -22,8 +22,7 @@ lint: install
 	poetry run molecule syntax
 
 test dependency create prepare converge idempotence side-effect verify destroy login reset list:
-	K8S_RELEASE=$(K8S_RELEASE) \
-	poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+	K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 rebuild: destroy prepare create
 
