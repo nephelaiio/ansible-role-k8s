@@ -31,7 +31,7 @@ k8s_argocd_apps_chart:
   name: "argocd-apps"
   repo: "https://argoproj.github.io/argo-helm"
   release: "2.0.2"
-  last_checked: "2025-02-10T11:36:57-05:00"
+  last_checked: "2025-03-25T11:28:26-06:00"
 k8s_argocd_apps_chart_values:
   applications: []
   applicationsets: []
