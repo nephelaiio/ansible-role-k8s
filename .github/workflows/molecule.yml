@@ -1,10 +1,13 @@
 ---
 name: molecule
 
+env:
+  DEVBOX_VERSION: ${{ vars.DEVBOX_VERSION }}
+
 on:
   pull_request:
-  schedule:
-    - cron: "0 5 * * 5"
+    branches:
+      - master
 
 defaults:
   run:
@@ -24,53 +27,15 @@ jobs:
           - zalando
           - strimzi
         include:
-          - release: v0.26.0
-            image: v1.32.0
-          - release: v0.26.0
-            image: v1.31.4
-          - release: v0.26.0
-            image: v1.29.12
-          - release: v0.25.0
-            image: v1.28.15
-          - release: v0.25.0
-            image: v1.27.16
-          - release: 0.25.0
-            image: v1.26.15
-          - release: 0.24.0
-            image: v1.25.16
-          - release: 0.22.0
-            image: v1.24.17
-          - release: 0.22.0
-            image: v1.23.17
+          - k8s: v1.32.2
+          - k8s: v1.31.6
+          - k8s: v1.30.10
+          - k8s: v1.29.14
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v4
         with:
           path: "nephelaiio.k8s"
-
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Install helm
-        uses: azure/setup-helm@v4
-        with:
-          version: "latest"
-          token: ${{ secrets.GITHUB_TOKEN }}
-        id: helm
-
-      - name: Install Kind
-        uses: engineerd/setup-kind@v0.5.0
-        with:
-          version: "v0.25.0"
-          skipClusterCreation: true
-
-      - name: Install Make
-        run: sudo apt-get install -y make
-
-      - name: Install dependencies
-        run: make install
 
       - name: Disable apparmor
         run: |
@@ -78,11 +43,19 @@ jobs:
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
-      - name: run molecule tests.
-        run: make test
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.12.0
+        with:
+          project-path: "nephelaiio.k8s"
+
+      - name: Install dependencies
+        run: devbox run -- make install
+        working-directory: "nephelaiio.k8s"
+
+      - name: Run molecule tests
+        run: devbox run -- make test
+        working-directory: "nephelaiio.k8s"
         env:
-          PY_COLORS: "1"
-          ANSIBLE_FORCE_COLOR: "1"
-          HELM_BIN: ${{ steps.helm.outputs.helm-path }}
+          K8S_RELEASE: ${{ matrix.k8s }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           MOLECULE_SCENARIO: ${{ matrix.scenario }}

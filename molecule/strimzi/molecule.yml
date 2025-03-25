@@ -27,7 +27,7 @@ provisioner:
           ansible_connection: local
           ansible_python_interpreter: python
           k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
-          k8s_helm_bin: ${MOLECULE_EPHEMERAL_DIRECTORY}/helm
+          k8s_helm_bin: helm
           k8s_certmanager_issuer_name: local
           k8s_cluster_name: molecule.nephelai.io
 
