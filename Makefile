@@ -1,6 +1,5 @@
 .PHONY: ${MAKECMDGOALS}
 
-KIND_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].release ' .github/workflows/molecule.yml)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].image' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
@@ -15,8 +14,6 @@ GITHUB_ORG = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 1)
 GITHUB_REPO = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 2)
 
 install:
-	@type poetry >/dev/null || pip3 install poetry
-	@type yq || sudo apt-get install -y yq
 	@poetry install --no-root
 
 lint: install
@@ -25,7 +22,6 @@ lint: install
 	poetry run molecule syntax
 
 test dependency create prepare converge idempotence side-effect verify destroy login reset list:
-	KIND_RELEASE=$(KIND_RELEASE) \
 	K8S_RELEASE=$(K8S_RELEASE) \
 	poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
@@ -37,6 +33,9 @@ ignore:
 clean:
 	@find ${HOME}/.cache/ansible-compat/ -mindepth 2 -maxdepth 2 -type d -name "roles" | xargs -r rm -rf
 	@poetry env remove $$(which python) >/dev/null 2>&1 || exit 0
+
+update:
+	@bin/update_charts
 
 publish:
 	@echo publishing repository ${GITHUB_REPOSITORY}

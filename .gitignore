@@ -1,10 +1,15 @@
-*.swp
-.ansible/
+# directories
 .molecule/
 .cache/
 __pycache__/
+.devbox/
 Gemfile.lock
+
+# globs
+*.swp
 **/.ropeproject
+
+# files
 playbook.retry
 .tool-versions
 .DS_Store

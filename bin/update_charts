@@ -30,7 +30,7 @@ for file in $chart_files; do
         repo=$(yq ".$vardef.repo" <"$file")
         chart=$(yq ".$vardef.name" <"$file")
         if [[ "$repo" != "null" && "$chart" != "null" ]]; then
-            helm repo add "$chart" "$repo" >/dev/null 2>&1
+            helm repo add "${chart}" "${repo}" >/dev/null 2>&1
             helm repo update >/dev/null 2>&1
             version=$(helm search repo "$chart/$chart" -o json | jq '.[0].version' -r)
             tmp="$(mktemp)"

@@ -1,6 +1,9 @@
 ---
 name: lint
 
+env:
+  DEVBOX_VERSION: ${{ vars.DEVBOX_VERSION }}
+
 on:
   pull_request:
     branches:
@@ -8,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: 'nephelaiio.k8s'
+    working-directory: "nephelaiio.k8s"
 
 jobs:
   lint:
@@ -18,18 +21,10 @@ jobs:
       - name: Check out the codebase
         uses: actions/checkout@v4
         with:
-          path: 'nephelaiio.k8s'
+          path: "nephelaiio.k8s"
 
-      - name: Set up python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Update ubuntu repositories
-        run: sudo apt-get update
-
-      - name: Install Make
-        run: sudo apt-get install -y make
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.12.0
 
       - name: Lint code
-        run: make lint
+        run: devbox run -- make lint

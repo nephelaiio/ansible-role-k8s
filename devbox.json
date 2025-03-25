@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
+  "packages": [
+    "python@latest",
+    "poetry@latest",
+    "gnumake@latest",
+    "kubectl@latest",
+    "yq-go@latest",
+    "kubernetes-helm-wrapped@latest",
+    "kind@latest"
+  ],
+  "shell": {
+    "init_hook": [],
+    "scripts":   {}
+  }
+}
