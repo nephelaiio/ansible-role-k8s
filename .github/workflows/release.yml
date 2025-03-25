@@ -23,13 +23,13 @@ jobs:
         with:
           path: "nephelaiio.k8s"
 
-      - name: Generate devbox locale
-        run: sudo locale-gen C.UTF-8
-
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.12.0
+        with:
+          project_path: "nephelaiio.k8s"
 
       - name: Release collection
         run: devbox run -- make publish
+        working-directory: "nephelaiio.k8s"
         env:
           GALAXY_API_KEY: "${{ secrets.GALAXY_API_KEY }}"
