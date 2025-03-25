@@ -1,6 +1,6 @@
 .PHONY: ${MAKECMDGOALS}
 
-K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.include[0].k8s' .github/workflows/molecule.yml)
+K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.k8s[0]' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
 MOLECULE_EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(MOLECULE_SCENARIO)"

@@ -26,11 +26,11 @@ jobs:
           - mysql
           - zalando
           - strimzi
-        include:
-          - k8s: v1.32.2
-          - k8s: v1.31.6
-          - k8s: v1.30.10
-          - k8s: v1.29.14
+        k8s:
+          - v1.32.2
+          - v1.31.6
+          - v1.30.10
+          - v1.29.14
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v4
