@@ -5,6 +5,5 @@ k8s_mysql_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_mysql_chart:
   name: "mysql"
   repo: "oci://registry-1.docker.io/bitnamicharts/mysql"
-  release: "12.2.2"
-  last_checked: "2025-02-10T11:37:31-05:00"
+  last_checked: "2025-03-25T19:18:10-06:00"
 k8s_mysql_deployments: []

@@ -5,7 +5,7 @@ k8s_keel_chart:
   name: "keel"
   repo: "https://charts.keel.sh"
   release: "1.0.5"
-  last_checked: "2024-11-12T11:29:31-05:00"
+  last_checked: "2025-03-25T19:18:10-06:00"
 k8s_keel_wait_timeout: "{{ k8s_wait_timeout }}"
 k8s_keel_chart_values:
   helmProvider:

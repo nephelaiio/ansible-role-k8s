@@ -3,7 +3,6 @@
   kubernetes.core.helm:
     name: "{{ _chart_name }}"
     chart_ref: "{{ k8s_mysql_chart.repo }}"
-    chart_version: "{{ _release }}"
     release_namespace: "{{ item.namespace }}"
     create_namespace: true
     state: present
