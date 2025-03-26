@@ -49,6 +49,10 @@ for file in ${chart_files}; do
                     >"${tmp}"
               else
                 echo "Version query failed for chart ${chart} ... skipping"
+                yq eval-all '. as $item ireduce ({}; . * $item)' \
+                    "${file}" \
+                    <(printf '%s:\n  last_checked: "%s"' "${vardef}" "${timestamp}") \
+                    >"${tmp}"
               fi
             else
               echo "No release field set for chart ${chart} ... skipping"
