@@ -28,7 +28,7 @@ jobs:
         with:
           project-path: "nephelaiio.k8s"
 
-      - name: Release collection
+      - name: Release role
         run: devbox run -- make publish
         working-directory: "nephelaiio.k8s"
         env:
