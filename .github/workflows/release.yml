@@ -33,3 +33,4 @@ jobs:
         working-directory: "nephelaiio.k8s"
         env:
           GALAXY_API_KEY: "${{ secrets.GALAXY_API_KEY }}"
+          GITHUB_REPOSITORY: "${{ github.repository }}"

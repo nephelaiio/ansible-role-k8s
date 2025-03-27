@@ -1,7 +1,7 @@
 ---
 - name: Set verification facts
   ansible.builtin.set_fact:
-    _query: 'kubernetes.core.k8s'
+    _query: "kubernetes.core.k8s"
     _ns: "{{ k8s_argocd_namespace }}"
     _config: "{{ k8s_kubeconfig }}"
 
