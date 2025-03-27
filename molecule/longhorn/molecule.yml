@@ -26,6 +26,7 @@ provisioner:
           # test-only vardefs
           ansible_connection: local
           ansible_python_interpreter: python
+          gh_token: "{{ lookup('env', 'GH_TOKEN') }}"
           k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
           k8s_helm_bin: helm
           k8s_certmanager_issuer_name: local

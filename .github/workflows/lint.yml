@@ -30,4 +30,3 @@ jobs:
 
       - name: Lint code
         run: devbox run -- make lint
-        working-directory: "nephelaiio.k8s"

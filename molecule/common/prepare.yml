@@ -21,6 +21,11 @@
         - name: Query Helm releases
           ansible.builtin.uri:
             url: https://api.github.com/repos/helm/helm/releases/latest
+            headers: "{{ _headers }}"
+          vars:
+            _gh_token: "{{ lookup('ansible.builtin.env', 'GH_TOKEN') }}"
+            _github_token: "{{ lookup('ansible.builtin.env', 'GITHUB_TOKEN', default=_gh_token) }}"
+            _headers: "{{ {} if not _github_token else { 'Authorization': 'token ' + _github_token } }}"
           register: helm_release_query
 
         - name: Set Kind release target
