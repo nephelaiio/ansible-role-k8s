@@ -27,7 +27,7 @@ provisioner:
           ansible_connection: local
           ansible_python_interpreter: python
           gh_token: "{{ lookup('env', 'GH_TOKEN') }}"
-          k8s_kubeconfig: ${MOLECULE_EPHEMERAL_DIRECTORY}/config
+          k8s_kubeconfig: "{{ lookup('ansible.builtin.env', 'KUBECONFIG', default='${MOLECULE_EPHEMERAL_DIRECTORY}/config') }}"
           k8s_helm_bin: helm
           k8s_certmanager_issuer_name: local
           k8s_cluster_name: molecule.nephelai.io
@@ -51,7 +51,7 @@ provisioner:
           # role vardefs
           k8s_address_pool_private_iprange: "{{ kind_network_addr | ansible.utils.ipsubnet(24, 2) }}"
           k8s_metallb_speaker_secret: secret
-          k8s_verifier_path: ${MOLECULE_EPHEMERAL_DIRECTORY}
+          k8s_verifier_path: "{{ lookup('ansible.builtin.env', 'MOLECULE_EPHEMERAL_DIRECTORY', default='${MOLECULE_EPHEMERAL_DIRECTORY}') }}"
           k8s_opensearch_deploy: false
           k8s_strimzi_deploy: false
           k8s_argocd_deploy: false
@@ -59,6 +59,7 @@ provisioner:
           k8s_zalando_deploy: true
           k8s_mysql_deploy: false
           k8s_nginx_deploy: false
+          k8s_harbor_deploy: false
           k8s_molecule_cluster_type: k3s
 verifier:
   name: ansible

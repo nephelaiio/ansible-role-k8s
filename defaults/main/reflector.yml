@@ -4,6 +4,6 @@ k8s_reflector_namespace: "kube-system"
 k8s_reflector_chart:
   name: "reflector"
   repo: "https://emberstack.github.io/helm-charts"
-  release: "9.0.322"
-  last_checked: "2025-03-26T11:01:06-06:00"
+  release: "9.1.5"
+  last_checked: "2025-05-07T12:20:05-06:00"
 k8s_reflector_wait_timeout: "{{ k8s_wait_timeout }}"

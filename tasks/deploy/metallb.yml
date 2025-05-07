@@ -1,5 +1,5 @@
 ---
-- name: Deploy MetalLB chart
+- name: Deploy MetalLB Helm chart
   kubernetes.core.helm:
     name: metallb
     chart_ref: "{{ k8s_metallb_chart.name }}"

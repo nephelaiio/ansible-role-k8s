@@ -26,6 +26,7 @@ jobs:
           - mysql
           - zalando
           - strimzi
+          - harbor
         k8s:
           - v1.32.2
           - v1.31.6

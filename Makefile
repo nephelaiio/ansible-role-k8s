@@ -3,7 +3,8 @@
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.k8s[0]' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
-MOLECULE_EPHEMERAL_DIR := "$$HOME/.cache/molecule/$(ROLE_NAME)/$(MOLECULE_SCENARIO)"
+MOLECULE_EPHEMERAL_DIR := $$HOME/.cache/molecule/$(ROLE_NAME)/$(MOLECULE_SCENARIO)
+KUBECONFIG := ${MOLECULE_EPHEMERAL_DIR}/config
 PG_DB := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_db' molecule/default/molecule.yml -r)
 PG_NS := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_namespace' molecule/default/molecule.yml -r)
 PG_TEAM := $$(yq eval '.provisioner.inventory.hosts.all.vars.zalando_team' molecule/default/molecule.yml -r)
@@ -22,7 +23,10 @@ lint: install
 	poetry run molecule syntax
 
 test dependency create prepare converge idempotence side-effect verify destroy login reset list:
-	K8S_RELEASE=$(K8S_RELEASE) poetry run molecule $@ -s ${MOLECULE_SCENARIO}
+	K8S_RELEASE=$(K8S_RELEASE) \
+	MOLECULE_EPHEMERAL_DIRECTORY=$(MOLECULE_EPHEMERAL_DIR)	\
+	KUBECONFIG=$(KUBECONFIG) \
+	  poetry run molecule $@ -s $(MOLECULE_SCENARIO)
 
 rebuild: destroy prepare create
 
@@ -55,7 +59,7 @@ ifeq (helm,$(firstword $(MAKECMDGOALS)))
 endif
 
 helm:
-	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${HELM_ARGS}
+	KUBECONFIG=$(KUBECONFIG) $@ $(HELM_ARGS)
 
 ifeq (kubectl,$(firstword $(MAKECMDGOALS)))
     KUBECTL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -63,7 +67,7 @@ ifeq (kubectl,$(firstword $(MAKECMDGOALS)))
 endif
 
 kubectl:
-	KUBECONFIG=$(MOLECULE_EPHEMERAL_DIR)/config $@ ${KUBECTL_ARGS}
+	KUBECONFIG=$(KUBECONFIG) $@ $(KUBECTL_ARGS)
 
 psql:
 	PGPASSWORD=$(PG_PASS) psql -h $(PG_HOST) -U $(PG_USER) $(PG_DB)

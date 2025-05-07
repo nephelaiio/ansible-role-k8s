@@ -1,0 +1,11 @@
+---
+k8s_harbor_deploy: true
+k8s_harbor_namespace: "harbor"
+k8s_harbor_chart:
+  name: "harbor"
+  repo: "https://helm.goharbor.io"
+  release: "1.17.0"
+  last_checked: "2025-05-07T12:19:56-06:00"
+k8s_harbor_wait_timeout: "{{ k8s_wait_timeout }}"
+k8s_harbor_chart_values: {}
+k8s_harbor_hostname: "harbor.{{ k8s_cluster_name }}"

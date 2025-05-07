@@ -1,5 +1,5 @@
 ---
-- name: Deploy Metrics Server chart
+- name: Deploy Metrics Server Helm chart
   kubernetes.core.helm:
     name: metrics-server
     chart_ref: "{{ k8s_metrics_server_chart.name }}"

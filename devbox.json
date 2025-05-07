@@ -4,13 +4,16 @@
     "python@latest",
     "poetry@latest",
     "gnumake@latest",
-    "kubectl@latest",
     "yq-go@latest",
+    "kubectl@latest",
     "kubernetes-helm-wrapped@latest",
-    "kind@latest"
+    "ubernetes-helmPlugins.helm-diff@latest",
+    "kind@latest",
+    "bubblewrap@latest",
+    "nss@latest"
   ],
   "shell": {
     "init_hook": [],
-    "scripts":   {}
+    "scripts": {}
   }
 }

@@ -1,5 +1,5 @@
 ---
-- name: Manage keel Helm chart
+- name: Manage Keel Helm chart
   kubernetes.core.helm:
     name: keel
     chart_ref: "{{ k8s_keel_chart.name }}"

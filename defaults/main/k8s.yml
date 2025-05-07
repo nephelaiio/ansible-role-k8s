@@ -10,17 +10,17 @@ k8s_volume_verify: true
 k8s_kubeconfig: "~/.kube/config"
 k8s_wait_timeout: 600
 k8s_address_pools_local_private:
-  scheme: 'internal'
+  scheme: "internal"
   name: "{{ k8s_address_pool_private_name }}"
   pool: "{{ k8s_address_pool_private_iprange }}"
 k8s_address_pools_local_public:
-  scheme: 'internet-facing'
+  scheme: "internet-facing"
   name: "{{ k8s_address_pool_public_name }}"
   pool: "{{ k8s_address_pool_public_iprange }}"
 k8s_address_pools_aws:
-  - scheme: 'internal'
+  - scheme: "internal"
     name: private
-  - scheme: 'internet-facing'
+  - scheme: "internet-facing"
     name: public
 k8s_retry_delay: 30
 k8s_retry_num: 10

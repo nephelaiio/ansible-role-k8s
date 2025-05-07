@@ -8,7 +8,6 @@
 - name: Install test utilities
   ansible.builtin.package:
     name:
-      - bubblewrap
       - libnss3-tools
       - ca-certificates
   retries: 3
@@ -80,3 +79,7 @@
     _bind_hosts: "--bind {{ k8s_verifier_path }}/hosts /etc/hosts"
     _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
     _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
+
+- name: Debug wrapper command location
+  ansible.builtin.debug:
+    msg: "Wrapper command created at '{{ k8s_verifier_path }}/bwrap'"

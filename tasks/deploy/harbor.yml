@@ -1,0 +1,17 @@
+---
+- name: Deploy Harbor Helm chart
+  kubernetes.core.helm:
+    name: harbor
+    chart_ref: "{{ k8s_harbor_chart.name }}"
+    chart_repo_url: "{{ k8s_harbor_chart.repo }}"
+    chart_version: "{{ _release }}"
+    release_namespace: "{{ k8s_harbor_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    wait_timeout: "{{ k8s_harbor_wait_timeout }}s"
+    kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+    binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
+    values: "{{ k8s_harbor_chart_values | default(omit) }}"
+  vars:
+    _release: "{{ k8s_harbor_chart_release | default(k8s_harbor_chart.release) }}"

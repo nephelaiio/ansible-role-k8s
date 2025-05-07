@@ -53,7 +53,7 @@ provisioner:
           k8s_zalando_deploy: false
           k8s_mysql_deploy: false
           k8s_nginx_deploy: true
-          k8s_harbor_deploy: false
+          k8s_harbor_deploy: true
           k8s_molecule_cluster_type: kind
 verifier:
   name: ansible
