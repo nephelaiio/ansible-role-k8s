@@ -7,7 +7,7 @@
     "yq-go@latest",
     "kubectl@latest",
     "kubernetes-helm-wrapped@latest",
-    "ubernetes-helmPlugins.helm-diff@latest",
+    "kubernetes-helmPlugins.helm-diff@latest",
     "kind@latest",
     "bubblewrap@latest",
     "nss@latest"

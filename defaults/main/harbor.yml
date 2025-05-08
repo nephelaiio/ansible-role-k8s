@@ -7,5 +7,12 @@ k8s_harbor_chart:
   release: "1.17.0"
   last_checked: "2025-05-07T12:19:56-06:00"
 k8s_harbor_wait_timeout: "{{ k8s_wait_timeout }}"
-k8s_harbor_chart_values: {}
-k8s_harbor_hostname: "harbor.{{ k8s_cluster_name }}"
+k8s_harbor_chart_values:
+  expose:
+    type: ingress
+    ingress:
+      className: nginx-private
+      hosts:
+        core: "{{ k8s_harbor_ingress_hostname }}"
+k8s_harbor_ingress_hostname: "harbor.{{ k8s_cluster_name }}"
+k8s_harbor_ingress_classname: "nginx-private"
