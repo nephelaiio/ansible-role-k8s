@@ -1,6 +1,6 @@
 .PHONY: ${MAKECMDGOALS}
 
-PKGMAN := $$(if [ -x $$(command -v dnf) ]; then echo dnf; else echo apt-get; fi)
+PKGMAN := apt-get
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.k8s[0]' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default

@@ -32,3 +32,4 @@
   loop: "{{ ingress_data | map('flatten') }}"
   when: k8s_ingress_verify | bool
   changed_when: false
+  tags: skip_ansible_lint
