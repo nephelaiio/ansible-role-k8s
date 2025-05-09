@@ -1,5 +1,6 @@
 .PHONY: ${MAKECMDGOALS}
 
+PKGMAN := $$(if [ -x $$(command -v dnf) ]; then echo dnf; else echo apt-get; fi)
 K8S_RELEASE := $$(yq eval '.jobs.molecule.strategy.matrix.k8s[0]' .github/workflows/molecule.yml)
 ROLE_NAME := $$(pwd | xargs basename)
 MOLECULE_SCENARIO ?= default
@@ -23,6 +24,7 @@ UBUNTU_KVM_IMAGE = https://cloud-images.ubuntu.com/${UBUNTU_RELEASE}/current/${U
 MOLECULE_KVM_IMAGE := $(UBUNTU_KVM_IMAGE)
 
 install:
+	@sudo ${PKGMAN} install -y $$(if [ "${PKGMAN}" = "apt-get" ]; then echo libvirt-dev; else echo libvirt-devel; fi)
 	@poetry install --no-root
 
 lint: install
