@@ -1,0 +1,15 @@
+---
+- name: Create Kind cluster
+  hosts: localhost
+  tasks:
+    - name: Deploy Kind cluster
+      block:
+        - name: Deploy Kind cluster
+          ansible.builtin.include_role:
+            name: nephelaiio.kind
+          vars:
+            kind_image_tag: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') | default('v1.24.4') }}"
+
+        - name: Record kind kubeconfig
+          ansible.builtin.shell:
+            cmd: kind get kubeconfig --name {{ kind_cluster_name }} > {{ k8s_kubeconfig }}

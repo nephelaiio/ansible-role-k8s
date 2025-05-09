@@ -1,5 +1,5 @@
 ---
-- name: Deploy nginx aws ingress controllers
+- name: Deploy Nginx AWS ingress controllers
   kubernetes.core.helm:
     name: "{{ ingress_name }}"
     chart_ref: "{{ k8s_nginx_chart.name }}"

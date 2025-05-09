@@ -1,7 +1,9 @@
 ---
 roles:
-  - nephelaiio.kind
+  - name: nephelaiio.kind
+  - name: lablabs.rke2
 collections:
-  - nephelaiio.plugins
-  - community.general
-  - ansible.utils
+  - name: nephelaiio.plugins
+  - name: community.general
+  - name: ansible.utils
+  - name: nephelaiio.libvirt

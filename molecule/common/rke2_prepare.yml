@@ -1,0 +1,26 @@
+---
+- name: Prepare
+  hosts: localhost
+  tasks:
+    - name: Query local Helm binary
+      ansible.builtin.command: "which {{ lookup('ansible.builtin.env', 'HELM_BIN', default='helm') }}"
+      register: helm_bin_query
+      changed_when: false
+
+    - name: Copy Helm binary
+      ansible.builtin.copy:
+        src: "{{ helm_bin_query.stdout }}"
+        dest: "{{ k8s_helm_bin }}"
+        mode: "u=rwx,go=rx"
+      when: helm_bin_query is succeeded
+
+    - name: Fail on missing Helm binary
+      ansible.builtin.fail:
+        msg: "Helm binary not found"
+      when: helm_bin_query is failed
+
+- name: Deploy rke2 cluster
+  hosts: rke
+  become: true
+  roles:
+    - lablabs.rke2

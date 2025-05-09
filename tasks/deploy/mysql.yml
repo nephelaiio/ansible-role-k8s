@@ -1,5 +1,5 @@
 ---
-- name: Deploy bitnami MySQL chart
+- name: Deploy MySQL Helm chart
   kubernetes.core.helm:
     name: "{{ _chart_name }}"
     chart_ref: "{{ k8s_mysql_chart.repo }}"
