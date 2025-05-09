@@ -1,10 +1,10 @@
 ---
 - name: Set deployment facts
   ansible.builtin.set_fact:
-    _query: 'kubernetes.core.k8s'
+    _query: "kubernetes.core.k8s"
     _ns: "{{ k8s_argocd_namespace }}"
     _config: "{{ k8s_kubeconfig }}"
-    _resource: 'argocd-repo-server'
+    _resource: "argocd-repo-server"
 
 - name: Install ArgoCD chart
   kubernetes.core.helm:
@@ -23,13 +23,13 @@
   vars:
     _release: "{{ k8s_argocd_chart_release | default(k8s_argocd_chart.release) }}"
 
-- name: Query argocd-repo-server definition
+- name: Query ArgoCD reposerver definition
   ansible.builtin.set_fact:
     _reposerver_def: "{{ _reposerver_query | first }}"
   vars:
     _reposerver_query: "{{ query(_query, kind='Deployment', namespace=_ns, resource_name=_resource, kubeconfig=_config) }}"
 
-- name: Patch argocd reposerver deployment
+- name: Patch ArgoCD reposerver deployment
   kubernetes.core.k8s_json_patch:
     kind: Deployment
     name: argocd-repo-server
@@ -63,7 +63,7 @@
   notify: argocd_update
   tags: skip_ansible_lint
 
-- name: Deploy argocd ingress
+- name: Deploy ArgoCD ingress
   kubernetes.core.k8s:
     namespace: "{{ k8s_argocd_namespace }}"
     state: present
@@ -103,7 +103,7 @@
   register: argocd_ingress_create
   until: argocd_ingress_create is success
 
-- name: Install argocd-apps chart
+- name: Install ArgoCD apps chart
   kubernetes.core.helm:
     name: argocd-apps
     chart_ref: "{{ k8s_argocd_apps_chart.name }}"

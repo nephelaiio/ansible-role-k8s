@@ -1,5 +1,5 @@
 ---
-- name: Manage reflector Helm chart
+- name: Manage Reflector Helm chart
   kubernetes.core.helm:
     name: reflector
     chart_ref: "{{ k8s_reflector_chart.name }}"

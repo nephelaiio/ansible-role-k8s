@@ -1,0 +1,11 @@
+---
+- name: Destroy Kind cluster
+  hosts: localhost
+  tasks:
+    - name: Destroy Kind cluster
+      ansible.builtin.include_role:
+        name: nephelaiio.kind
+      vars:
+        kind_state: absent
+        kind_cluster_state: absent
+        kind_image_tag: "{{ lookup('ansible.builtin.env', 'K8S_RELEASE') }}"

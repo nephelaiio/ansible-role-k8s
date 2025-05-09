@@ -4,13 +4,21 @@
     "python@latest",
     "poetry@latest",
     "gnumake@latest",
-    "kubectl@latest",
     "yq-go@latest",
+    "kubectl@latest",
     "kubernetes-helm-wrapped@latest",
-    "kind@latest"
+    "kubernetes-helmPlugins.helm-diff@latest",
+    "kind@latest",
+    "bubblewrap@latest",
+    "nss@latest",
+    "libvirt@latest",
+    "networkmanager@latest",
+    "expect@latest",
+    "gnupg@latest",
+    "xfsprogs@latest"
   ],
   "shell": {
     "init_hook": [],
-    "scripts":   {}
+    "scripts": {}
   }
 }

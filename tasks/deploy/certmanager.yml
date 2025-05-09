@@ -22,7 +22,7 @@
   vars:
     _release: "{{ k8s_certmanager_chart_release | default(k8s_certmanager_chart.release) }}"
 
-- name: Deploy cloudflare cluster issuer
+- name: Deploy Cloudflare cluster issuer
   when: k8s_certmanager_issuer_name == 'letsencrypt'
   block:
     - name: Create certmanager secret
@@ -40,7 +40,7 @@
           data:
             api-token: "{{ k8s_certmanager_secret | b64encode }}"
 
-    - name: Create letsencrypt issuer
+    - name: Create LetsEncrypt issuer
       kubernetes.core.k8s:
         namespace: "{{ k8s_certmanager_namespace }}"
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"

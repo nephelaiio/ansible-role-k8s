@@ -9,17 +9,17 @@
 - name: Include secret management tasks
   ansible.builtin.include_tasks: "deploy/secrets.yml"
 
-- name: Include metallb deployment tasks
+- name: Include MetalLB deployment tasks
   ansible.builtin.include_tasks: "deploy/metallb.yml"
 
-- name: Include certmanager deployment tasks
+- name: Include CertManager deployment tasks
   ansible.builtin.include_tasks: "deploy/certmanager.yml"
 
-- name: Include ingress deployment tasks
+- name: Include Nginx ingress controller deployment tasks
   ansible.builtin.include_tasks: "deploy/nginx/{{ k8s_cluster_type }}.yml"
   when: k8s_nginx_deploy | bool
 
-- name: Include longhorn deployment tasks
+- name: Include Longhorn deployment tasks
   ansible.builtin.include_tasks: "deploy/longhorn.yml"
   when: k8s_longhorn_deploy | bool
 
@@ -35,23 +35,23 @@
   ansible.builtin.include_tasks: "deploy/zalando.yml"
   when: k8s_zalando_deploy | bool
 
-- name: Include opensearch operator deployment tasks
+- name: Include OpenSearch operator deployment tasks
   ansible.builtin.include_tasks: "deploy/opensearch.yml"
   when: k8s_opensearch_deploy | bool
 
-- name: Include Bitnami MySQL deployment tasks
+- name: Include MySQL deployment tasks
   ansible.builtin.include_tasks: "deploy/mysql.yml"
   when: k8s_mysql_deploy | bool
 
-- name: Include keel deployment tasks
+- name: Include Keel deployment tasks
   ansible.builtin.include_tasks: "deploy/keel.yml"
   when: k8s_keel_deploy | bool
 
-- name: Include reflector deployment tasks
+- name: Include Reflector deployment tasks
   ansible.builtin.include_tasks: "deploy/reflector.yml"
   when: k8s_reflector_deploy | bool
 
-- name: Include sealedsecrets deployment tasks
+- name: Include SealedSecrets deployment tasks
   ansible.builtin.include_tasks: "deploy/sealedsecrets.yml"
   when: k8s_sealedsecrets_deploy | bool
 

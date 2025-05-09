@@ -72,9 +72,6 @@
     - name: Include pod checks
       ansible.builtin.include_tasks: verify/pods.yml
 
-    - name: Include command checks
-      ansible.builtin.include_tasks: verify/cmds.yml
-
   always:
     - name: Cleanup temp files
       ansible.builtin.file:

@@ -1,9 +1,0 @@
----
-- name: Execute check commands
-  ansible.builtin.command: "{{ _cmd }}"
-  vars:
-    _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""
-  loop_control:
-    label: "{{ _cmd }}"
-  loop: "{{ k8s_verify_cmds | default([]) }}"
-  changed_when: false

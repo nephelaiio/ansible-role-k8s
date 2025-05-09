@@ -1,9 +1,8 @@
 ---
 - name: Prepare
   hosts: localhost
-  gather_facts: false
   tasks:
-    - name: Check local Helm binary
+    - name: Query local Helm binary
       ansible.builtin.command: "which {{ lookup('ansible.builtin.env', 'HELM_BIN', default='helm') }}"
       register: helm_bin_query
       changed_when: false
@@ -15,61 +14,7 @@
         mode: "u=rwx,go=rx"
       when: helm_bin_query is succeeded
 
-    - name: Download Helm binary
-      when: helm_bin_query is not succeeded
-      block:
-        - name: Query Helm releases
-          ansible.builtin.uri:
-            url: https://api.github.com/repos/helm/helm/releases/latest
-            headers: "{{ _headers }}"
-          vars:
-            _gh_token: "{{ lookup('ansible.builtin.env', 'GH_TOKEN') }}"
-            _github_token: "{{ lookup('ansible.builtin.env', 'GITHUB_TOKEN', default=_gh_token) }}"
-            _headers: "{{ {} if not _github_token else { 'Authorization': 'token ' + _github_token } }}"
-          register: helm_release_query
-
-        - name: Set Kind release target
-          ansible.builtin.set_fact:
-            helm_release: "{{ helm_release_query.json.tag_name }}"
-
-        - name: Create temporary directory
-          ansible.builtin.tempfile:
-            state: directory
-            prefix: kind
-          register: _tmpdir
-          changed_when: false
-
-        - name: Install Helm binary
-          block:
-            - name: Download Helm release package
-              ansible.builtin.unarchive:
-                src: "https://get.helm.sh/helm-{{ helm_release }}-linux-amd64.tar.gz"
-                dest: "{{ _tmpdir.path }}"
-                remote_src: true
-              register: helm_dl_op
-              retries: 3
-              delay: 10
-              until: helm_dl_op is success
-              changed_when: false
-
-            - name: Find Helm executable
-              ansible.builtin.find:
-                paths: "{{ _tmpdir.path }}"
-                file_type: file
-                recurse: true
-                use_regex: true
-                patterns:
-                  - "^helm$"
-              register: helm_bin
-
-            - name: Copy Helm copy Helm binary
-              ansible.builtin.copy:
-                src: "{{ helm_bin.files[0].path }}"
-                dest: "{{ k8s_helm_bin }}"
-                mode: "u=rwx,go=rx"
-
-          always:
-            - name: Cleanup temp files
-              ansible.builtin.file:
-                state: absent
-                path: "{{ _tmpdir.path }}"
+    - name: Fail on missing Helm binary
+      ansible.builtin.fail:
+        msg: "Helm binary not found"
+      when: helm_bin_query is failed

@@ -8,7 +8,6 @@
 - name: Install test utilities
   ansible.builtin.package:
     name:
-      - bubblewrap
       - libnss3-tools
       - ca-certificates
   retries: 3
@@ -17,19 +16,10 @@
   until: package_install is succeeded
   become: true
 
-- name: Set cert metadata
-  ansible.builtin.set_fact:
-    k8s_cacert_path: "{{ k8s_verifier_path }}/ca-certificates/{{ k8s_cluster_name }}.crt"
-
 - name: Create ca cert dir
   ansible.builtin.file:
     state: directory
-    path: "{{ k8s_verifier_path }}/ca-certificates"
-
-- name: Create ssl cert dir
-  ansible.builtin.file:
-    state: directory
-    path: "{{ k8s_verifier_path }}/certs"
+    path: "{{ k8s_cacert_path | dirname }}"
 
 - name: Write ca certificate file
   ansible.builtin.copy:
@@ -40,43 +30,3 @@
     _cacert: "{{ _cacert_data.data['ca.crt'] | b64decode }}"
     _cacert_data: "{{ _cacert_query | selectattr('metadata.name', 'equalto', 'cluster-issuer-secret') | first }}"
     _cacert_query: "{{ query(_query, kind='Secret', namespace=_ns, kubeconfig=_config) }}"
-
-- name: Detect edge truststore
-  ansible.builtin.stat:
-    path: "{{ _home }}/.pki/nssdb"
-  vars:
-    _home: "{{ lookup('ansible.builtin.env', 'HOME') }}"
-  register: truststore_file
-
-- name: Install certificate in edge truststore
-  ansible.builtin.command: "certutil -d sql:{{ _home }}/.pki/nssdb -A -t C,, -n {{ k8s_cluster_name }} -i {{ k8s_cacert_path }}"
-  vars:
-    _home: "{{ lookup('ansible.builtin.env', 'HOME') }}"
-  changed_when: false
-  when: truststore_file.stat.exists
-
-- name: Add cluster ca certificate to wrapped env
-  ansible.builtin.command: "bwrap {{ _bind_dev }} {{ _bind_ca }} {{ _bind_certs }} {{ _cmd }}"
-  vars:
-    _bind_dev: "--dev-bind / /"
-    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
-    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"
-    _cmd: "sh -c '/usr/sbin/update-ca-certificates'"
-  changed_when: false
-
-- name: Create wrapper command
-  ansible.builtin.copy:
-    content: |
-      #!/usr/bin/env bash
-
-      CMD="$@"
-      set -euo pipefail
-      {{ _cmd }}
-    dest: "{{ k8s_verifier_path }}/bwrap"
-    mode: "u=rwx,go=rx"
-  vars:
-    _cmd: 'bwrap {{ _bind_dev }} {{ _bind_hosts }} {{ _bind_ca }} {{ _bind_certs }} sh -c "$CMD"'
-    _bind_dev: "--dev-bind / /"
-    _bind_hosts: "--bind {{ k8s_verifier_path }}/hosts /etc/hosts"
-    _bind_ca: "--bind {{ k8s_verifier_path }}/ca-certificates/ /usr/local/share/ca-certificates"
-    _bind_certs: "--bind {{ k8s_verifier_path }}/certs /etc/ssl/certs"

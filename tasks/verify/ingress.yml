@@ -1,7 +1,7 @@
 ---
 - name: Set verification facts
   ansible.builtin.set_fact:
-    _query: 'kubernetes.core.k8s'
+    _query: "kubernetes.core.k8s"
     _config: "{{ k8s_kubeconfig }}"
 
 - name: Validate ingress status
@@ -25,30 +25,11 @@
     ingress_filter: "[].to_array([status.loadBalancer.ingress[].ip, spec.tls[0].hosts[]])"
     ingress_query: "{{ query(_query, kind='Ingress', kubeconfig=_config) }}"
 
-- name: Set ingress data
-  ansible.builtin.set_fact:
-    ingress_hosts: "{{ ingress_hosts + (ingress_hostentries | flatten) }}"
-    ingress_cmds: "{{ ingress_cmds + (ingress_cmdentries | flatten) }}"
-  vars:
-    ingress_hostentries: "{{ item[0] | product(item[1]) | map('join', ' ') }}"
-    ingress_cmdentries: "{{ ['curl -fLD- https://'] | product(item[1]) | map('join', '') }}"
+- name: Execute ingress checks
+  ansible.builtin.command: "curl -fLD- https://{{ item[1] }} --resolve {{ item[1] }}:443:{{ item[0] }} --cacert {{ k8s_cacert_path }}"
   loop_control:
     label: "{{ item | map('join', ' ') }}"
-  loop: "{{ ingress_data }}"
-
-- name: Write ingress hostfile
-  ansible.builtin.lineinfile:
-    path: "{{ k8s_verifier_path }}/hosts"
-    line: "{{ item }}"
-    create: true
-  loop: "{{ ingress_hosts }}"
-
-- name: Execute ingress checks
-  ansible.builtin.command: "{{ _cmd }}"
-  vars:
-    _cmd: "{{ k8s_verifier_path }}/bwrap \"{{ item }}\""
-  loop_control:
-    label: "{{ _cmd }}"
-  loop: "{{ ingress_cmds }}"
+  loop: "{{ ingress_data | map('flatten') }}"
   when: k8s_ingress_verify | bool
   changed_when: false
+  tags: skip_ansible_lint
