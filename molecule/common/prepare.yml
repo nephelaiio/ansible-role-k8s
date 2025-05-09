@@ -18,9 +18,3 @@
       ansible.builtin.fail:
         msg: "Helm binary not found"
       when: helm_bin_query is failed
-
-- name: Deploy rke2 cluster
-  hosts: rke
-  become: true
-  roles:
-    - lablabs.rke2

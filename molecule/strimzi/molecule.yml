@@ -11,6 +11,7 @@ driver:
 provisioner:
   name: ansible
   playbooks:
+    prepare: ../common/prepare.yml
     create: ../common/kind_create.yml
     converge: ../common/converge.yml
     verify: ../common/verify.yml

@@ -1,3 +1,9 @@
 ---
 - name: Import libvirt create playbook
   import_playbook: nephelaiio.libvirt.create
+
+- name: Deploy rke2 cluster
+  hosts: rke
+  become: true
+  roles:
+    - lablabs.rke2

@@ -11,6 +11,7 @@ driver:
 provisioner:
   name: ansible
   playbooks:
+    prepare: ../common/prepare.yml
     create: ../common/kind_create.yml
     converge: ../common/converge.yml
     verify: ../common/verify.yml
@@ -63,6 +64,5 @@ provisioner:
           k8s_zalando_deploy: false
           k8s_mysql_deploy: true
           k8s_nginx_deploy: false
-          k8s_molecule_cluster_type: k3s
 verifier:
   name: ansible
