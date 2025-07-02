@@ -12,26 +12,7 @@
     create_namespace: true
     kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
     binary_path: "{{ lookup('ansible.builtin.env', 'HELM_BIN', default=k8s_helm_bin) }}"
-    values:
-      controller:
-        config:
-          annotations-risk-level: "Critical"
-        allowSnippetAnnotations: true
-        ingressClassResource:
-          name: "{{ ingress_class }}"
-          controllerValue: "k8s.io/{{ ingress_name }}"
-        service:
-          external:
-            enabled: False
-          internal:
-            enabled: True
-            annotations:
-              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-              service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-              service.beta.kubernetes.io/aws-load-balancer-type: "external"
-              service.beta.kubernetes.io/aws-load-balancer-scheme: "{{ item.scheme }}"
-              service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
-              service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.name }}"
+    values: "{{ k8s_nginx_aws_chart_values }}"
   vars:
     _release: "{{ k8s_nginx_chart_release | default(k8s_nginx_chart.release) }}"
     ingress_class: "nginx-{{ item.name }}"

@@ -10,3 +10,9 @@ k8s_zalando_chart:
   repo: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
   release: "1.14.0"
   last_checked: "2025-05-07T12:19:55-06:00"
+k8s_zalando_chart_values:
+  configKubernetes:
+    secret_name_template: "{{ k8s_zalando_secret_template }}"
+    enable_pod_antiaffinity: true
+  configLoadBalancer:
+    db_hosted_zone: "{{ k8s_zalando_basedomain }}"

@@ -8,3 +8,34 @@ k8s_nginx_chart:
   release: "4.12.2"
   last_checked: "2025-05-07T12:20:52-06:00"
 k8s_nginx_wait_timeout: "{{ k8s_wait_timeout }}"
+k8s_nginx_aws_chart_values:
+  controller:
+    config:
+      annotations-risk-level: "Critical"
+    allowSnippetAnnotations: true
+    ingressClassResource:
+      name: "{{ ingress_class }}"
+      controllerValue: "k8s.io/{{ ingress_name }}"
+    service:
+      external:
+        enabled: False
+      internal:
+        enabled: True
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+          service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+          service.beta.kubernetes.io/aws-load-balancer-type: "external"
+          service.beta.kubernetes.io/aws-load-balancer-scheme: "{{ item.scheme }}"
+          service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
+          service.beta.kubernetes.io/aws-load-balancer-name: "{{ k8s_cluster_name }}-{{ item.name }}"
+k8s_nginx_local_chart_values:
+  controller:
+    config:
+      annotations-risk-level: "Critical"
+    allowSnippetAnnotations: true
+    ingressClassResource:
+      name: "{{ ingress_class }}"
+      controllerValue: "k8s.io/{{ ingress_name }}"
+    service:
+      annotations:
+        metallb.universe.tf/address-pool: "{{ item.name }}"

@@ -102,9 +102,11 @@ MetalLB parameters:
 
 Nginx parameters:
 
-| Parameter               |     Default | Type   | Description            | Required |
-| :---------------------- | ----------: | :----- | :--------------------- | -------- |
-| k8s_nginx_chart_release | _undefined_ | string | Chart release override | no       |
+| Parameter                    |     Default | Type   | Description            | Required |
+| :--------------------------- | ----------: | :----- | :--------------------- | -------- |
+| k8s_nginx_chart_release      | _undefined_ | string | Chart release override | no       |
+| k8s_nginx_aws_chart_values   |     defined | string | Chart values override  | no       |
+| k8s_nginx_local_chart_values |     defined | string | Chart values override  | no       |
 
 Cert-Manager parameters:
 
@@ -139,6 +141,7 @@ Zalando parameters:
 | k8s_zalando_deploy        |               true | bool   | Toggle flag for Zalando deployment   | no       |
 | k8s_zalando_verify        |               true | bool   | Toggle flag for Zalando verification | no       |
 | k8s_zalando_chart_release |        _undefined_ | string | Chart release override               | no       |
+| k8s_zalando_chart_values  |            defined | string | Chart values override                | no       |
 | k8s_zalando_basedomain    | _k8s_cluster_name_ | string | Domain for postgresql load balancers | no       |
 
 OpenSearch parameters:
@@ -166,25 +169,26 @@ Reflector parameters:
 
 Keel parameters:
 
-| Parameter              |   Default | Type   | Description                     | Required |
-| :--------------------- | --------: | :----- | :------------------------------ | -------- |
-| k8s_keel_deploy        |      true | bool   | Toggle flag for Keel deployment | no       |
-| k8s_keel_chart_release | undefined | string | Keel helm chart release         | no       |
+| Parameter              |     Default | Type   | Description                     | Required |
+| :--------------------- | ----------: | :----- | :------------------------------ | -------- |
+| k8s_keel_deploy        |        true | bool   | Toggle flag for Keel deployment | no       |
+| k8s_keel_chart_release | _undefined_ | string | Keel helm chart release         | no       |
+| k8s_keel_chart_values  |     defined | string | Chart values override           | no       |
 
 Metrics server parameters:
 
-| Parameter                        |   Default | Type   | Description                               | Required |
-| :------------------------------- | --------: | :----- | :---------------------------------------- | -------- |
-| k8s_metrics_server_deploy        |      true | bool   | Toggle flag for Metrics server deployment | no       |
-| k8s_metrics_server_chart_release | undefined | string | Metrics server helm chart release         | no       |
+| Parameter                        |     Default | Type   | Description                               | Required |
+| :------------------------------- | ----------: | :----- | :---------------------------------------- | -------- |
+| k8s_metrics_server_deploy        |      true   | bool   | Toggle flag for Metrics server deployment | no       |
+| k8s_metrics_server_chart_release | _undefined_ | string | Metrics server helm chart release         | no       |
 
 MySQL parameters:
 
-| Parameter               |   Default | Type   | Description                           | Required |
-| :---------------------- | --------: | :----- | :------------------------------------ | -------- |
-| k8s_mysql_deploy        |     false | bool   | Toggle flag for MySQL deployment      | no       |
-| k8s_mysql_chart_release | undefined | string | MySQL helm chart release              | no       |
-| k8s_mysql_deployments   |        [] | list   | MySQL name, namespace, and parameters | no       |
+| Parameter               |     Default | Type   | Description                           | Required |
+| :---------------------- | ----------: | :----- | :------------------------------------ | -------- |
+| k8s_mysql_deploy        |       false | bool   | Toggle flag for MySQL deployment      | no       |
+| k8s_mysql_chart_release | _undefined_ | string | MySQL helm chart release              | no       |
+| k8s_mysql_deployments   |          [] | list   | MySQL name, namespace, and parameters | no       |
 
 ## Dependencies
 
