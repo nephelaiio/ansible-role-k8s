@@ -13,6 +13,5 @@ k8s_zalando_chart:
 k8s_zalando_chart_values:
   configKubernetes:
     secret_name_template: "{{ k8s_zalando_secret_template }}"
-    enable_pod_antiaffinity: true
   configLoadBalancer:
     db_hosted_zone: "{{ k8s_zalando_basedomain }}"
